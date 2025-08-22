@@ -2299,19 +2299,22 @@
 /* Individual Review Cards with Navigation */
 .testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: var(--space-6);
-    margin-top: var(--space-10);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-8);
     position: relative;
     z-index: 1;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .testimonial-card-container {
     position: relative;
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    max-width: 500px;
+    gap: var(--space-2);
+    max-width: 400px;
     margin: 0 auto;
 }
 
@@ -2358,18 +2361,17 @@
 
 .testimonial-card {
     background: var(--white) !important;
-    border-radius: var(--radius-lg) !important;
-    padding: var(--space-5) !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--space-4) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
     border: 1px solid var(--gray-100) !important;
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
     flex: 1;
     margin: 0;
     opacity: 1;
-    min-height: 280px;
+    min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -2463,6 +2465,13 @@
 .customer-rating i {
     color: #fbbf24;
     font-size: var(--text-xs);
+    filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
+}
+
+.customer-rating .stars {
+    color: #fbbf24;
+    font-size: var(--text-sm);
+    margin-right: var(--space-2);
     filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
 }
 
