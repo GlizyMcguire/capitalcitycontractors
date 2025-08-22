@@ -55,13 +55,13 @@
     <script src="assets/js/reviews.js?v=20250822-003-FORCE"></script>
 
     <!-- Stylesheets with cache busting -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250822-003-FORCE">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250822-003-FORCE">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250822-003-FORCE">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250822-003-FORCE">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250822-003-FORCE">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250822-003-FORCE">
-    <link rel="stylesheet" href="assets/css/responsive.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250822-004-FIXED">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250822-004-FIXED">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250822-004-FIXED">
+    <link rel="stylesheet" href="assets/css/components.css?v=20250822-004-FIXED">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250822-004-FIXED">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250822-004-FIXED">
+    <link rel="stylesheet" href="assets/css/responsive.css?v=20250822-004-FIXED">
 </head>
 <body>
     <div id="top"></div>
@@ -460,52 +460,51 @@
                 </div>
             </div>
 
-            <!-- Individual Review Cards with Navigation -->
-            <div class="testimonials-grid" id="testimonials-container">
-                <!-- Fallback content while JavaScript loads -->
-                <div class="testimonial-card-container" id="fallback-review">
-                    <button class="card-nav-btn prev-btn" disabled>
+            <!-- Simple Review Display - No Conflicts -->
+            <div class="testimonials-simple" id="testimonials-container">
+                <div class="review-slideshow">
+                    <button class="review-nav-btn prev-btn" id="prevReview" disabled>
                         <i class="fas fa-chevron-left"></i>
                     </button>
 
-                    <div class="testimonial-card active">
-                        <div class="testimonial-header">
-                            <div class="customer-info">
-                                <div class="customer-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-                                    <span class="avatar-initials">MC</span>
-                                </div>
-                                <div class="customer-details">
-                                    <h4 class="customer-name">Moe Chamma</h4>
-                                    <div class="customer-rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <span class="rating-date">7 months ago</span>
+                    <div class="review-card-wrapper">
+                        <div class="review-card" id="currentReview">
+                            <div class="review-header">
+                                <div class="reviewer-info">
+                                    <div class="reviewer-avatar">
+                                        <span class="reviewer-initials">MC</span>
+                                    </div>
+                                    <div class="reviewer-details">
+                                        <h4 class="reviewer-name">Moe Chamma</h4>
+                                        <div class="review-rating">
+                                            <span class="stars">★★★★★</span>
+                                            <span class="review-date">7 months ago</span>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="google-badge">
+                                    <i class="fab fa-google"></i>
+                                </div>
                             </div>
-                            <div class="google-logo" title="Google Review">
-                                <i class="fab fa-google"></i>
+                            <div class="review-content">
+                                <div class="quote-mark">
+                                    <i class="fas fa-quote-left"></i>
+                                </div>
+                                <p class="review-text">"I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!"</p>
                             </div>
-                        </div>
-                        <div class="testimonial-content">
-                            <div class="quote-icon">
-                                <i class="fas fa-quote-left"></i>
+                            <div class="review-footer">
+                                <div class="service-type">
+                                    <i class="fas fa-tools"></i>
+                                    Interior Painting
+                                </div>
+                                <div class="verified-status">
+                                    <i class="fas fa-check-circle"></i> Verified
+                                </div>
                             </div>
-                            <p class="testimonial-text">"I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!"</p>
-                        </div>
-                        <div class="testimonial-footer">
-                            <div class="testimonial-service">
-                                <i class="fas fa-tools"></i>
-                                Interior Painting
-                            </div>
-                            <div class="verified-badge"><i class="fas fa-check-circle"></i> Verified</div>
                         </div>
                     </div>
 
-                    <button class="card-nav-btn next-btn">
+                    <button class="review-nav-btn next-btn" id="nextReview">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -726,28 +725,94 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/main.js?v=20250822-003-FORCE"></script>
 
-    <!-- Initialize Review Manager -->
+    <!-- Simple Review Navigation -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, checking for reviews...');
+            console.log('Initializing simple review navigation...');
 
-            // Wait a bit for all scripts to load
-            setTimeout(function() {
-                console.log('ReviewManager available:', typeof ReviewManager !== 'undefined');
-                console.log('reviewsData available:', typeof reviewsData !== 'undefined');
-
-                if (typeof ReviewManager !== 'undefined') {
-                    console.log('Initializing ReviewManager...');
-                    new ReviewManager();
-                } else {
-                    console.error('ReviewManager not found!');
-                    // Fallback: show a simple message
-                    const container = document.getElementById('testimonials-container');
-                    if (container) {
-                        container.innerHTML = '<div style="text-align: center; padding: 20px;">Loading reviews...</div>';
-                    }
+            // Review data
+            const reviews = [
+                {
+                    name: "Moe Chamma",
+                    initials: "MC",
+                    rating: 5,
+                    date: "7 months ago",
+                    text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
+                    service: "Interior Painting",
+                    color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                },
+                {
+                    name: "Tamer Salem",
+                    initials: "TS",
+                    rating: 5,
+                    date: "8 months ago",
+                    text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
+                    service: "Interior Painting",
+                    color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                },
+                {
+                    name: "Adam Zein",
+                    initials: "AZ",
+                    rating: 5,
+                    date: "1 year ago",
+                    text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
+                    service: "Multiple Services",
+                    color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                },
+                {
+                    name: "Al Cham",
+                    initials: "AC",
+                    rating: 5,
+                    date: "1 year ago",
+                    text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
+                    service: "Multiple Services",
+                    color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
                 }
-            }, 500);
+            ];
+
+            let currentIndex = 0;
+
+            function updateReview() {
+                const review = reviews[currentIndex];
+                const card = document.getElementById('currentReview');
+                const prevBtn = document.getElementById('prevReview');
+                const nextBtn = document.getElementById('nextReview');
+
+                if (!card) return;
+
+                // Update content
+                card.querySelector('.reviewer-initials').textContent = review.initials;
+                card.querySelector('.reviewer-avatar').style.background = review.color;
+                card.querySelector('.reviewer-name').textContent = review.name;
+                card.querySelector('.review-date').textContent = review.date;
+                card.querySelector('.review-text').textContent = '"' + review.text + '"';
+                card.querySelector('.service-type').innerHTML = '<i class="fas fa-tools"></i> ' + review.service;
+
+                // Update buttons
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === reviews.length - 1;
+
+                console.log('Updated to review:', currentIndex, review.name);
+            }
+
+            // Navigation handlers
+            document.getElementById('prevReview')?.addEventListener('click', function() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updateReview();
+                }
+            });
+
+            document.getElementById('nextReview')?.addEventListener('click', function() {
+                if (currentIndex < reviews.length - 1) {
+                    currentIndex++;
+                    updateReview();
+                }
+            });
+
+            // Initialize
+            updateReview();
+            console.log('Review navigation initialized with', reviews.length, 'reviews');
         });
     </script>
 </body>
