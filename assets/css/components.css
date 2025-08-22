@@ -1,3 +1,60 @@
+/* Review Navigation Components */
+.review-nav-btn {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: #ffffff !important;
+    border: 3px solid #667eea !important;
+    border-radius: 50% !important;
+    width: 55px !important;
+    height: 55px !important;
+    color: #667eea !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    z-index: 999 !important;
+    font-weight: bold !important;
+    transition: all 0.3s ease !important;
+}
+
+.review-nav-btn:hover {
+    background: #667eea !important;
+    color: white !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+.review-nav-btn.prev-btn {
+    left: -20px !important;
+}
+
+.review-nav-btn.next-btn {
+    right: -20px !important;
+}
+
+.review-dots .dot {
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    background: #ddd !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+    margin: 0 4px !important;
+}
+
+.review-dots .dot.active {
+    background: #667eea !important;
+    transform: scale(1.2) !important;
+}
+
+.review-dots .dot:hover {
+    background: #667eea !important;
+    opacity: 0.7 !important;
+}
+
 /* Navigation Components */
 .navbar {
     position: fixed;
