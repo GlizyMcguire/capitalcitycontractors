@@ -462,7 +462,7 @@
             </div>
 
             <!-- REVIEWS WITH CLEAN NAVIGATION -->
-            <div style="max-width: 800px; margin: 40px auto; padding: 0 20px; position: relative;">
+            <div style="max-width: 800px; margin: 40px auto; padding: 0 15px; position: relative;">
 
                 <!-- Review Card Container (with space for arrows) -->
                 <div id="reviewCard" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; min-height: 200px; transition: opacity 0.3s ease; position: relative;">
@@ -491,30 +491,31 @@
                 </div>
 
                 <!-- Navigation Controls Below Review -->
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 30px;">
+                <div style="text-align: center; margin-top: 30px;">
 
-                    <!-- Left Arrow -->
-                    <button id="prevReview" class="review-nav-btn prev-btn" style="background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important;">
-                        ‹
-                    </button>
-
-                    <!-- Center Navigation Dots -->
-                    <div style="text-align: center;">
-                        <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 10px;">
-                            <span class="dot active" style="width: 10px; height: 10px; border-radius: 50%; background: #667eea; cursor: pointer; transition: all 0.3s ease;"></span>
-                            <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
-                            <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
-                            <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
-                        </div>
-                        <div style="color: #666; font-size: 14px;">
-                            <span id="currentReviewNumber">1</span> of 4 reviews
-                        </div>
+                    <!-- Navigation Dots -->
+                    <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 15px; justify-content: center;">
+                        <span class="dot active" style="width: 10px; height: 10px; border-radius: 50%; background: #667eea; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
                     </div>
 
-                    <!-- Right Arrow -->
-                    <button id="nextReview" class="review-nav-btn next-btn" style="background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important;">
-                        ›
-                    </button>
+                    <!-- Review Counter -->
+                    <div style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                        <span id="currentReviewNumber">1</span> of 4 reviews
+                    </div>
+
+                    <!-- Arrow Navigation -->
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+                        <button id="prevReview" class="review-nav-btn prev-btn" style="background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important;">
+                            ‹
+                        </button>
+
+                        <button id="nextReview" class="review-nav-btn next-btn" style="background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important;">
+                            ›
+                        </button>
+                    </div>
 
                 </div>
 
