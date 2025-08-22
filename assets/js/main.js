@@ -187,12 +187,28 @@ function initTestimonialSlider() {
         const stars = '★'.repeat(review.rating);
 
         return `
-            <div class="testimonial-card-container">
-                <button class="card-nav-btn prev-btn" ${index === 0 ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
+            <div class="testimonial-wrapper" style="max-width: 800px; margin: 0 auto; padding: 0 80px; position: relative;">
+                <div class="testimonial-card" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; position: relative;">
 
-                <div class="testimonial-card">
+                    <!-- Navigation Arrows positioned outside card -->
+                    <button class="card-nav-btn prev-btn" ${index === 0 ? 'disabled' : ''}
+                            style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%);
+                                   background: white; border: 3px solid #667eea; border-radius: 50%;
+                                   width: 45px; height: 45px; color: #667eea; cursor: pointer;
+                                   font-size: 18px; display: flex; align-items: center; justify-content: center;
+                                   box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10;">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <button class="card-nav-btn next-btn" ${index === totalReviews - 1 ? 'disabled' : ''}
+                            style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+                                   background: white; border: 3px solid #667eea; border-radius: 50%;
+                                   width: 45px; height: 45px; color: #667eea; cursor: pointer;
+                                   font-size: 18px; display: flex; align-items: center; justify-content: center;
+                                   box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10;">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
                     <div class="testimonial-header">
                         <div class="customer-info">
                             <div class="customer-avatar" style="background: ${avatarColor}">
@@ -225,9 +241,24 @@ function initTestimonialSlider() {
                     </div>
                 </div>
 
-                <button class="card-nav-btn next-btn" ${index === totalReviews - 1 ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                <!-- Navigation dots below card -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <div class="review-dots" style="display: inline-flex; gap: 8px; margin-bottom: 10px;">
+                        ${reviewsData.map((_, i) =>
+                            `<span class="dot ${i === index ? 'active' : ''}"
+                                   style="width: 10px; height: 10px; border-radius: 50%;
+                                          background: ${i === index ? '#667eea' : '#ddd'};
+                                          cursor: pointer; transition: all 0.3s ease;"
+                                   data-index="${i}"></span>`
+                        ).join('')}
+                    </div>
+                    <div style="color: #666; font-size: 14px;">
+                        ${index + 1} of ${totalReviews} reviews
+                    </div>
+                    <div style="color: #999; font-size: 10px; margin-top: 10px;">
+                        JS Updated: 2025-08-22 15:15 - Arrows Fixed
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -242,6 +273,7 @@ function initTestimonialSlider() {
         // Add event listeners to navigation buttons
         const prevBtn = container.querySelector('.prev-btn');
         const nextBtn = container.querySelector('.next-btn');
+        const dots = container.querySelectorAll('.dot');
 
         if (prevBtn && !prevBtn.disabled) {
             prevBtn.addEventListener('click', () => {
@@ -260,6 +292,17 @@ function initTestimonialSlider() {
                 }
             });
         }
+
+        // Add event listeners to dots
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.getAttribute('data-index'));
+                if (index !== currentReviewIndex) {
+                    currentReviewIndex = index;
+                    displayReview(currentReviewIndex);
+                }
+            });
+        });
     }
 
     // Initialize with first review
