@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+    <url>
+        <loc>https://capitalcitycontractors.ca/</loc>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg</image:loc>
+            <image:title>Capital City Contractors Logo</image:title>
+            <image:caption>Professional painting and renovation contractors serving Ottawa, Richmond, Kanata, Nepean, Stittsville, and Orleans</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/pic1.jpg</image:loc>
+            <image:title>Interior Painting Project Ottawa</image:title>
+            <image:caption>Professional interior room transformation by Capital City Contractors</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/pic2.jpg</image:loc>
+            <image:title>Drywall Installation Ottawa</image:title>
+            <image:caption>Expert drywall installation and finishing work</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/pic3.jpg</image:loc>
+            <image:title>Carpet Installation Ottawa</image:title>
+            <image:caption>Professional carpet installation in residential space</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/pic4.jpg</image:loc>
+            <image:title>Drywall Taping and Mudding</image:title>
+            <image:caption>Professional taping and mudding drywall project</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/pic5.jpg</image:loc>
+            <image:title>Commercial Painting Ottawa</image:title>
+            <image:caption>Commercial painting project completion by licensed contractors</image:caption>
+        </image:image>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/aboutus.png</image:loc>
+            <image:title>Capital City Contractors Team</image:title>
+            <image:caption>Professional contracting team providing quality services in Ottawa area</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://capitalcitycontractors.ca/services.html</loc>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg</image:loc>
+            <image:title>Professional Contracting Services</image:title>
+            <image:caption>Comprehensive painting, drywall, and renovation services in Ottawa</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://capitalcitycontractors.ca/about.html</loc>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/aboutus.png</image:loc>
+            <image:title>About Capital City Contractors</image:title>
+            <image:caption>Meet our experienced team of licensed contractors serving Ottawa and surrounding areas</image:caption>
+        </image:image>
+    </url>
+</urlset>
