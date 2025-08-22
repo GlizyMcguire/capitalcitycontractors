@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.capitalcitycontractors.com/sitemap.xml
+Sitemap: https://capitalcitycontractors.ca/sitemap.xml
 
 # Disallow placeholder generator
 Disallow: /assets/images/placeholder-generator.html
