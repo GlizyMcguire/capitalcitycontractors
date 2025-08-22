@@ -1,0 +1,936 @@
+// Main JavaScript File for Capital City Contractors Website
+
+// DOM Content Loaded Event
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all components
+    initNavigation();
+    initScrollEffects();
+    initTestimonialSlider();
+    initAnimations();
+    initFormHandling();
+    initSmoothScrolling();
+    
+    // Initialize AOS (Animate On Scroll) if available
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out',
+            once: true,
+            offset: 100
+        });
+    }
+});
+
+// Navigation Functions - Simplified for reliability
+function initNavigation() {
+    // Simple, direct hamburger menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (hamburger && navMenu) {
+        // Remove any existing listeners
+        hamburger.onclick = null;
+
+        // Add click handler directly
+        hamburger.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Toggle classes
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            document.body.classList.toggle('nav-open');
+        };
+
+        // Close menu when clicking nav links
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.onclick = function() {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.classList.remove('nav-open');
+            };
+        });
+    }
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+    
+    // Active nav link highlighting
+    updateActiveNavLink();
+    window.addEventListener('scroll', updateActiveNavLink);
+}
+
+function updateActiveNavLink() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= (sectionTop - 200)) {
+            current = section.getAttribute('id');
+        }
+    });
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Scroll Effects
+function initScrollEffects() {
+    // Parallax effect for hero background
+    const heroBackground = document.querySelector('.hero-bg-img');
+    if (heroBackground) {
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            heroBackground.style.transform = `translateY(${rate}px)`;
+        });
+    }
+    
+    // Scroll indicator
+    const scrollIndicator = document.querySelector('.hero-scroll-indicator');
+    if (scrollIndicator) {
+        scrollIndicator.addEventListener('click', function() {
+            const servicesSection = document.querySelector('.services-preview');
+            if (servicesSection) {
+                servicesSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+    
+    // Hide scroll indicator when scrolling
+    window.addEventListener('scroll', function() {
+        if (scrollIndicator) {
+            if (window.scrollY > 100) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '0.8';
+            }
+        }
+    });
+}
+
+// Testimonial Slider
+function initTestimonialSlider() {
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
+    const navDots = document.querySelectorAll('.nav-dot');
+    let currentSlide = 0;
+    let slideInterval;
+    
+    if (testimonialCards.length === 0) return;
+    
+    function showSlide(index) {
+        // Hide all cards
+        testimonialCards.forEach(card => {
+            card.classList.remove('active');
+        });
+        
+        // Remove active class from all dots
+        navDots.forEach(dot => {
+            dot.classList.remove('active');
+        });
+        
+        // Show current card and activate dot
+        if (testimonialCards[index]) {
+            testimonialCards[index].classList.add('active');
+        }
+        if (navDots[index]) {
+            navDots[index].classList.add('active');
+        }
+        
+        currentSlide = index;
+    }
+    
+    function nextSlide() {
+        const nextIndex = (currentSlide + 1) % testimonialCards.length;
+        showSlide(nextIndex);
+    }
+    
+    function startSlideshow() {
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+    
+    function stopSlideshow() {
+        clearInterval(slideInterval);
+    }
+    
+    // Initialize first slide
+    showSlide(0);
+    
+    // Add click handlers to navigation dots
+    navDots.forEach((dot, index) => {
+        dot.addEventListener('click', function() {
+            showSlide(index);
+            stopSlideshow();
+            startSlideshow(); // Restart auto-play
+        });
+    });
+    
+    // Start automatic slideshow
+    startSlideshow();
+    
+    // Pause on hover
+    const testimonialSlider = document.querySelector('.testimonials-slider');
+    if (testimonialSlider) {
+        testimonialSlider.addEventListener('mouseenter', stopSlideshow);
+        testimonialSlider.addEventListener('mouseleave', startSlideshow);
+    }
+}
+
+// Animation Functions
+function initAnimations() {
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate');
+                
+                // Special handling for service cards
+                if (entry.target.classList.contains('services-grid')) {
+                    const serviceCards = entry.target.querySelectorAll('.service-card');
+                    serviceCards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    });
+                }
+                
+                // Special handling for feature items
+                if (entry.target.classList.contains('features-list')) {
+                    const featureItems = entry.target.querySelectorAll('.feature-item');
+                    featureItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateX(0)';
+                        }, index * 100);
+                    });
+                }
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for animation
+    const animateElements = document.querySelectorAll('.section-header, .services-grid, .features-list, .about-content');
+    animateElements.forEach(el => observer.observe(el));
+}
+
+// Form Handling
+function initFormHandling() {
+    const forms = document.querySelectorAll('form');
+    
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic form validation
+            const inputs = form.querySelectorAll('input[required], textarea[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('error');
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+            
+            // Email validation
+            const emailInputs = form.querySelectorAll('input[type="email"]');
+            emailInputs.forEach(input => {
+                if (input.value && !isValidEmail(input.value)) {
+                    isValid = false;
+                    input.classList.add('error');
+                }
+            });
+            
+            if (isValid) {
+                // Show success message
+                showNotification('Thank you! Your message has been sent successfully.', 'success');
+                form.reset();
+            } else {
+                showNotification('Please fill in all required fields correctly.', 'error');
+            }
+        });
+    });
+}
+
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+function showNotification(message, type) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    // Style the notification
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : '#ef4444'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 5000);
+}
+
+// Smooth Scrolling
+function initSmoothScrolling() {
+    const links = document.querySelectorAll('a[href^="#"]');
+    
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+                
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// Utility Functions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
+// Performance optimized scroll handler
+const optimizedScrollHandler = throttle(function() {
+    updateActiveNavLink();
+}, 100);
+
+window.addEventListener('scroll', optimizedScrollHandler);
+
+// Lazy loading for images
+function initLazyLoading() {
+    const images = document.querySelectorAll('img[data-src]');
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    images.forEach(img => imageObserver.observe(img));
+}
+
+// Initialize lazy loading
+initLazyLoading();
+
+// Initialize counter animations
+initCounterAnimations();
+
+// Counter Animation Function
+function initCounterAnimations() {
+    const counters = document.querySelectorAll('.stat-number');
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                animateCounter(counter);
+                counterObserver.unobserve(counter);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => {
+        counterObserver.observe(counter);
+    });
+}
+
+function animateCounter(element) {
+    const text = element.textContent;
+    const target = parseInt(text.replace(/[^\d]/g, ''));
+    const suffix = text.replace(/[\d]/g, '');
+    const isPercentage = text.includes('%');
+    const hasPlus = text.includes('+');
+
+    let current = 0;
+    const increment = target / 100;
+    const duration = 2000; // 2 seconds
+    const stepTime = duration / 100;
+
+    element.textContent = '0' + suffix;
+
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            let finalText = target.toString();
+            if (hasPlus) finalText += '+';
+            if (isPercentage) finalText += '%';
+            if (text.includes('/7')) finalText = '24/7';
+
+            element.textContent = finalText;
+            clearInterval(timer);
+        } else {
+            let displayValue = Math.floor(current).toString();
+            if (hasPlus && current > 0) displayValue += '+';
+            if (isPercentage) displayValue += '%';
+
+            element.textContent = displayValue;
+        }
+    }, stepTime);
+}
+
+// Error handling
+window.addEventListener('error', function(e) {
+    console.error('JavaScript error:', e.error);
+});
+
+// Service Worker registration (for future PWA features)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('ServiceWorker registration successful');
+            })
+            .catch(function(err) {
+                console.log('ServiceWorker registration failed');
+            });
+    });
+}
+
+// Portfolio Slideshow Functionality
+let currentSlideIndex = 0;
+let slideInterval;
+
+function initializeSlideshow() {
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.indicator');
+
+    if (slides.length === 0) return; // Exit if no slides found
+
+    // Start automatic slideshow
+    startSlideshow();
+
+    // Pause on hover
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    if (slideshowContainer) {
+        slideshowContainer.addEventListener('mouseenter', stopSlideshow);
+        slideshowContainer.addEventListener('mouseleave', startSlideshow);
+    }
+}
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.indicator');
+
+    // Hide all slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(indicator => indicator.classList.remove('active'));
+
+    // Wrap around if necessary
+    if (index >= slides.length) currentSlideIndex = 0;
+    if (index < 0) currentSlideIndex = slides.length - 1;
+
+    // Show current slide
+    if (slides[currentSlideIndex]) {
+        slides[currentSlideIndex].classList.add('active');
+    }
+    if (indicators[currentSlideIndex]) {
+        indicators[currentSlideIndex].classList.add('active');
+    }
+}
+
+function changeSlide(direction) {
+    currentSlideIndex += direction;
+    showSlide(currentSlideIndex);
+    stopSlideshow();
+    startSlideshow(); // Restart auto-play
+}
+
+function currentSlide(index) {
+    currentSlideIndex = index - 1;
+    showSlide(currentSlideIndex);
+    stopSlideshow();
+    startSlideshow(); // Restart auto-play
+}
+
+function nextSlide() {
+    currentSlideIndex++;
+    showSlide(currentSlideIndex);
+}
+
+function startSlideshow() {
+    slideInterval = setInterval(nextSlide, 3000); // Change slide every 3 seconds
+}
+
+function stopSlideshow() {
+    clearInterval(slideInterval);
+}
+
+// Initialize slideshow and other components when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all components
+    initializeSlideshow();
+    initializeQuoteForm();
+    initializeEmailJS();
+});
+
+// Initialize EmailJS
+function initializeEmailJS() {
+    // Initialize EmailJS with your public key
+    emailjs.init("3WPfc4g2tSskRQYAX");
+}
+
+// Send quote email using EmailJS
+function sendQuoteEmail(formData) {
+    return new Promise((resolve, reject) => {
+        // Check if EmailJS is loaded
+        if (typeof emailjs === 'undefined') {
+            console.error('EmailJS not loaded');
+            reject(new Error('EmailJS not loaded'));
+            return;
+        }
+
+        // EmailJS template parameters
+        const templateParams = {
+            from_name: formData.name,
+            from_email: formData.email,
+            phone: formData.phone,
+            service: formData.service,
+            message: formData.message
+        };
+
+        console.log('Sending email with params:', templateParams);
+        console.log('EmailJS service ID:', 'service_l2m9z4m');
+        console.log('EmailJS template ID:', 'template_kkjppjd');
+        console.log('EmailJS initialized:', typeof emailjs !== 'undefined');
+
+        // Send email using EmailJS
+        emailjs.send('service_l2m9z4m', 'template_kkjppjd', templateParams)
+            .then((response) => {
+                console.log('Email sent successfully via EmailJS:', response);
+                resolve(response);
+            })
+            .catch((error) => {
+                console.error('EmailJS sending failed:', error);
+                console.error('Error status:', error.status);
+                console.error('Error text:', error.text);
+                console.error('Full error object:', error);
+
+                // Fallback to mailto if EmailJS fails
+                console.log('Falling back to mailto');
+                const subject = `Quote Request - ${formData.service}`;
+                const body = `QUOTE REQUEST DETAILS:
+
+Name: ${formData.name}
+Phone: ${formData.phone}
+Email: ${formData.email}
+Service Requested: ${formData.service}
+
+Project Description:
+${formData.message}
+
+---
+This quote request was submitted through the Capital City Contractors website.
+Please respond to the customer within 24 hours.`;
+
+                const mailtoLink = `mailto:info@capitalcitycontractors.ca?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.open(mailtoLink, '_blank');
+
+                // Resolve anyway since we have a fallback
+                resolve({ fallback: true });
+            });
+    });
+}
+
+// Scroll to top function for Home button
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Simple mobile menu toggle function (global for inline onclick)
+function toggleMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (hamburger && navMenu) {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        document.body.classList.toggle('nav-open');
+    }
+}
+
+// Close mobile menu function
+function closeMobileMenu() {
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (hamburger && navMenu) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.classList.remove('nav-open');
+    }
+}
+
+// Home button function - simplified and reliable
+function goHome() {
+    console.log('goHome function called'); // Debug log
+
+    // Always close mobile menu (safe for desktop)
+    closeMobileMenu();
+
+    // Always scroll to top with a small delay
+    setTimeout(function() {
+        console.log('Scrolling to top'); // Debug log
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }, 150);
+}
+
+// Quote Form Functionality
+function initializeQuoteForm() {
+    const form = document.getElementById('quoteForm');
+    if (!form) return;
+
+    // Initialize file upload functionality
+    initializeFileUpload();
+
+    // Store form data on input changes to capture values before submission
+    let formData = {};
+
+    function updateFormData() {
+        const nameInput = form.querySelector('input[name="name"]');
+        const phoneInput = form.querySelector('input[name="phone"]');
+        const emailInput = form.querySelector('input[name="email"]');
+        const serviceSelect = form.querySelector('select[name="service"]');
+        const messageTextarea = form.querySelector('textarea[name="message"]');
+
+        formData = {
+            name: nameInput ? nameInput.value.trim() : '',
+            phone: phoneInput ? phoneInput.value.trim() : '',
+            email: emailInput ? emailInput.value.trim() : '',
+            service: serviceSelect ? serviceSelect.value : '',
+            message: messageTextarea ? messageTextarea.value.trim() : ''
+        };
+
+        console.log('Form data updated:', formData);
+    }
+
+    // Listen for changes on all form inputs
+    form.addEventListener('input', updateFormData);
+    form.addEventListener('change', updateFormData);
+
+    // Prevent form from submitting normally
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    });
+
+    // Capture form data immediately when submit button is clicked
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log('Submit button clicked');
+
+            // Update form data one more time
+            updateFormData();
+
+            console.log('Final form data:', formData);
+
+            // Validation using stored form data
+            if (!formData.name) {
+                alert('Please enter your name.');
+                form.querySelector('input[name="name"]').focus();
+                return false;
+            }
+
+            if (!formData.phone) {
+                alert('Please enter your phone number.');
+                form.querySelector('input[name="phone"]').focus();
+                return false;
+            }
+
+            if (!formData.email) {
+                alert('Please enter your email address.');
+                form.querySelector('input[name="email"]').focus();
+                return false;
+            }
+
+            if (!formData.service) {
+                alert('Please select a service.');
+                form.querySelector('select[name="service"]').focus();
+                return false;
+            }
+
+            if (!formData.message) {
+                alert('Please describe your project.');
+                form.querySelector('textarea[name="message"]').focus();
+                return false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                alert('Please enter a valid email address.');
+                form.querySelector('input[name="email"]').focus();
+                return false;
+            }
+
+            // Phone validation (basic)
+            const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+            if (!phoneRegex.test(formData.phone)) {
+                alert('Please enter a valid phone number.');
+                form.querySelector('input[name="phone"]').focus();
+                return false;
+            }
+
+            console.log('Validation passed, sending email');
+
+            // Show loading state
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            // Send email using EmailJS
+            sendQuoteEmail(formData)
+                .then((response) => {
+                    console.log('Email sent successfully:', response);
+
+                    // Reset form
+                    form.reset();
+                    clearFilePreview();
+
+                    // Reset button
+                    submitBtn.textContent = 'Send Quote Request';
+                    submitBtn.disabled = false;
+
+                    // Show success modal
+                    showSuccessModal();
+
+                    // Scroll to top
+                    scrollToTop();
+
+                    // Show different message if fallback was used
+                    if (response && response.fallback) {
+                        console.log('Used mailto fallback');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
+
+                    // Reset button
+                    submitBtn.textContent = 'Send Quote Request';
+                    submitBtn.disabled = false;
+
+                    // Show error message with more details
+                    alert('Sorry, there was an error sending your quote request. Please call us directly at (613) 301-1311 or email info@capitalcitycontractors.ca with your request.');
+                });
+
+            return false;
+        });
+    }
+
+
+}
+
+// File Upload Functionality
+function initializeFileUpload() {
+    const fileInput = document.getElementById('photos');
+    const filePreview = document.getElementById('filePreview');
+
+    if (!fileInput || !filePreview) return;
+
+    fileInput.addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+
+        // Validate files
+        const validFiles = files.filter(file => {
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert(`${file.name} is not an image file.`);
+                return false;
+            }
+
+            // Check file size (5MB limit)
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`${file.name} is too large. Maximum size is 5MB.`);
+                return false;
+            }
+
+            return true;
+        });
+
+        // Update file input with valid files only
+        if (validFiles.length !== files.length) {
+            const dt = new DataTransfer();
+            validFiles.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+        }
+
+        // Display file previews
+        displayFilePreview(validFiles);
+    });
+}
+
+function displayFilePreview(files) {
+    const filePreview = document.getElementById('filePreview');
+    filePreview.innerHTML = '';
+
+    files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'file-preview-item';
+            previewItem.innerHTML = `
+                <img src="${e.target.result}" alt="Preview" class="file-preview-img">
+                <button type="button" class="file-preview-remove" onclick="removeFile(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            filePreview.appendChild(previewItem);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+function removeFile(index) {
+    const fileInput = document.getElementById('photos');
+    const dt = new DataTransfer();
+
+    // Add all files except the one to remove
+    Array.from(fileInput.files).forEach((file, i) => {
+        if (i !== index) {
+            dt.items.add(file);
+        }
+    });
+
+    fileInput.files = dt.files;
+
+    // Refresh preview
+    displayFilePreview(Array.from(fileInput.files));
+}
+
+function clearFilePreview() {
+    const filePreview = document.getElementById('filePreview');
+    if (filePreview) {
+        filePreview.innerHTML = '';
+    }
+}
+
+// Success Modal Functions
+function showSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+function hideSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+// Initialize modal close functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.getElementById('closeModal');
+    const modal = document.getElementById('successModal');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideSuccessModal);
+    }
+
+    if (modal) {
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideSuccessModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.classList.contains('show')) {
+                hideSuccessModal();
+            }
+        });
+    }
+});
