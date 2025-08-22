@@ -34,7 +34,7 @@
     right: 10px !important;
 }
 
-/* Mobile Responsive Styles */
+/* Mobile Responsive Styles - Non-obstructive arrows */
 @media (max-width: 768px) {
     .review-nav-btn {
         width: 40px !important;
@@ -48,6 +48,12 @@
 
     .review-nav-btn.next-btn {
         right: 5px !important;
+    }
+
+    /* Reduce container padding on mobile */
+    .reviews-container {
+        padding: 0 50px !important;
+        max-width: 100% !important;
     }
 
     /* Adjust review card padding on mobile */
@@ -70,6 +76,11 @@
 
     .review-nav-btn.next-btn {
         right: 2px !important;
+    }
+
+    /* Minimal padding on small screens */
+    .reviews-container {
+        padding: 0 40px !important;
     }
 
     #reviewCard {
