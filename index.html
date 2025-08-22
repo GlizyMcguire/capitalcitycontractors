@@ -461,20 +461,15 @@
                 </div>
             </div>
 
-            <!-- WORKING REVIEWS WITH NAVIGATION -->
+            <!-- REVIEWS WITH MOBILE-OPTIMIZED NAVIGATION -->
             <div style="max-width: 800px; margin: 40px auto; padding: 0 20px; position: relative;">
 
-                <!-- VISIBILITY TEST -->
-                <div style="background: #ff0000; color: white; padding: 10px; text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 20px; border-radius: 5px;">
-                    🔍 ARROWS TEST: Look for ‹ and › buttons on the sides!
-                </div>
-
-                <!-- FORCE VISIBLE NAVIGATION ARROWS -->
-                <button id="prevReview" style="position: absolute; left: -20px; top: 50%; transform: translateY(-50%); background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 55px !important; height: 55px !important; color: #667eea !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; z-index: 999 !important; font-weight: bold !important;">
+                <!-- MOBILE-OPTIMIZED NAVIGATION ARROWS -->
+                <button id="prevReview" class="review-nav-btn prev-btn" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; z-index: 999 !important; font-weight: bold !important;">
                     ‹
                 </button>
 
-                <button id="nextReview" style="position: absolute; right: -20px; top: 50%; transform: translateY(-50%); background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 55px !important; height: 55px !important; color: #667eea !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; z-index: 999 !important; font-weight: bold !important;">
+                <button id="nextReview" class="review-nav-btn next-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; z-index: 999 !important; font-weight: bold !important;">
                     ›
                 </button>
 
@@ -772,7 +767,6 @@
             ];
 
             let currentReviewIndex = 0;
-            let autoRotateInterval;
 
             // Update review display
             function updateReview(index) {
@@ -814,31 +808,16 @@
             function nextReview() {
                 currentReviewIndex = (currentReviewIndex + 1) % reviews.length;
                 updateReview(currentReviewIndex);
-                resetAutoRotate();
             }
 
             function prevReview() {
                 currentReviewIndex = (currentReviewIndex - 1 + reviews.length) % reviews.length;
                 updateReview(currentReviewIndex);
-                resetAutoRotate();
             }
 
             function goToReview(index) {
                 currentReviewIndex = index;
                 updateReview(currentReviewIndex);
-                resetAutoRotate();
-            }
-
-            // Auto-rotate functionality
-            function startAutoRotate() {
-                autoRotateInterval = setInterval(() => {
-                    nextReview();
-                }, 7000); // 7 second delay
-            }
-
-            function resetAutoRotate() {
-                clearInterval(autoRotateInterval);
-                startAutoRotate();
             }
 
             // Initialize
@@ -855,17 +834,7 @@
             // Start with first review
             updateReview(0);
 
-            // Start auto-rotation
-            startAutoRotate();
-
-            // Pause auto-rotation on hover
-            const reviewContainer = document.getElementById('reviewCard');
-            if (reviewContainer) {
-                reviewContainer.addEventListener('mouseenter', () => clearInterval(autoRotateInterval));
-                reviewContainer.addEventListener('mouseleave', startAutoRotate);
-            }
-
-            console.log('Review navigation initialized with', reviews.length, 'reviews and 7-second auto-rotation');
+            console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
         });
     </script>
 </body>
