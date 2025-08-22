@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REVIEWS TEST - Arrow Positioning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 80px;
+            position: relative;
+        }
+        .review-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+            min-height: 200px;
+            position: relative;
+        }
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            border: 3px solid #667eea;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-weight: bold;
+            z-index: 10;
+        }
+        .arrow.left {
+            left: -60px;
+        }
+        .arrow.right {
+            right: -60px;
+        }
+        .reviewer-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .avatar {
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .reviewer-info h4 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+        }
+        .stars {
+            color: #ffd700;
+            font-size: 16px;
+            margin: 3px 0;
+        }
+        .date {
+            margin: 0;
+            color: #666;
+            font-size: 13px;
+        }
+        .review-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            margin: 0;
+            font-style: italic;
+        }
+        .service-tag {
+            margin-top: 15px;
+            display: inline-block;
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dots {
+            display: inline-flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+        }
+        .dot.active {
+            background: #667eea;
+        }
+        .timestamp {
+            color: #ff0000;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            background: #fff;
+            padding: 10px;
+            border: 2px solid #ff0000;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #333; margin-bottom: 30px;">
+            ARROW POSITIONING TEST
+        </h1>
+        
+        <div class="review-card">
+            <!-- Left Arrow -->
+            <div class="arrow left">‹</div>
+            
+            <!-- Right Arrow -->
+            <div class="arrow right">›</div>
+            
+            <!-- Review Content -->
+            <div class="reviewer-header">
+                <div class="avatar">MC</div>
+                <div class="reviewer-info">
+                    <h4>Moe Chamma</h4>
+                    <div class="stars">★★★★★</div>
+                    <p class="date">7 months ago • Google Review</p>
+                </div>
+            </div>
+            
+            <p class="review-text">
+                "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!"
+            </p>
+            
+            <div class="service-tag">Interior Painting</div>
+        </div>
+        
+        <div class="navigation">
+            <div class="dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <div style="color: #666; font-size: 14px;">1 of 4 reviews</div>
+        </div>
+        
+        <div class="timestamp">
+            🚨 DEPLOYMENT TEST: 2025-08-22 15:10 🚨<br>
+            If you see this, the new positioning is working!<br>
+            Arrows should be on the SIDES of the review card, not overlapping text.
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="index.html" style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px;">
+                ← Back to Main Site
+            </a>
+        </div>
+    </div>
+</body>
+</html>
