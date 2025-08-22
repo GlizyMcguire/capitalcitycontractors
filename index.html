@@ -461,11 +461,20 @@
                 </div>
             </div>
 
-            <!-- REVIEWS WITH CLEAN NAVIGATION -->
-            <div style="max-width: 800px; margin: 40px auto; padding: 0 15px; position: relative;">
+            <!-- REVIEWS WITH SIDE ARROWS -->
+            <div style="max-width: 800px; margin: 40px auto; padding: 0 80px; position: relative;">
 
-                <!-- Review Card Container (with space for arrows) -->
+                <!-- Review Card Container -->
                 <div id="reviewCard" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; min-height: 200px; transition: opacity 0.3s ease; position: relative;">
+
+                    <!-- Navigation Arrows - Positioned relative to card -->
+                    <button id="prevReview" class="review-nav-btn prev-btn" style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%); background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important; z-index: 10 !important;">
+                        ‹
+                    </button>
+
+                    <button id="nextReview" class="review-nav-btn next-btn" style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%); background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important; z-index: 10 !important;">
+                        ›
+                    </button>
 
                     <!-- Reviewer Header -->
                     <div style="display: flex; align-items: center; margin-bottom: 20px;">
@@ -490,44 +499,24 @@
                     </div>
                 </div>
 
-            </div>
-
-            <!-- NAVIGATION COMPLETELY SEPARATE FROM REVIEW CARD -->
-            <div style="max-width: 800px; margin: 0 auto; padding: 0 15px;">
-                <div style="text-align: center; margin-top: 20px; margin-bottom: 40px;">
-
-                    <!-- Navigation Dots -->
-                    <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 15px; justify-content: center;">
+                <!-- Navigation Dots Below Card -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 10px; justify-content: center;">
                         <span class="dot active" style="width: 10px; height: 10px; border-radius: 50%; background: #667eea; cursor: pointer; transition: all 0.3s ease;"></span>
                         <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
                         <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
                         <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
                     </div>
-
-                    <!-- Review Counter -->
-                    <div style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                    <div style="color: #666; font-size: 14px;">
                         <span id="currentReviewNumber">1</span> of 4 reviews
                     </div>
 
-                    <!-- Arrow Navigation - Side by Side -->
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-                        <button id="prevReview" class="review-nav-btn prev-btn" style="background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important;">
-                            ‹
-                        </button>
-
-                        <span style="color: #667eea; font-weight: 500; font-size: 14px; margin: 0 10px;">Navigate</span>
-
-                        <button id="nextReview" class="review-nav-btn next-btn" style="background: #ffffff !important; border: 3px solid #667eea !important; border-radius: 50% !important; width: 45px !important; height: 45px !important; color: #667eea !important; cursor: pointer !important; font-size: 18px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important; font-weight: bold !important; transition: all 0.3s ease !important;">
-                            ›
-                        </button>
-                    </div>
-
                     <!-- DEPLOYMENT TIMESTAMP -->
-                    <div style="color: #999; font-size: 10px; margin-top: 10px; text-align: center;">
-                        Updated: 2025-08-22 15:05 - Navigation Fixed
+                    <div style="color: #999; font-size: 10px; margin-top: 10px;">
+                        Updated: 2025-08-22 15:08 - Arrows Fixed
                     </div>
-
                 </div>
+
             </div>
 
 
