@@ -187,12 +187,23 @@ function initTestimonialSlider() {
         const stars = '★'.repeat(review.rating);
 
         return `
-            <div class="testimonial-wrapper" style="max-width: 800px; margin: 0 auto; padding: 0 80px; position: relative;">
-                <div class="testimonial-card" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; position: relative;">
+            <style>
+                @media (max-width: 768px) {
+                    .testimonial-wrapper { padding: 0 60px !important; max-width: 100% !important; }
+                    .card-nav-btn { left: -50px !important; right: -50px !important; width: 40px !important; height: 40px !important; font-size: 16px !important; }
+                }
+                @media (max-width: 480px) {
+                    .testimonial-wrapper { padding: 0 50px !important; }
+                    .card-nav-btn { left: -45px !important; right: -45px !important; width: 35px !important; height: 35px !important; font-size: 14px !important; }
+                    .testimonial-card { padding: 20px !important; }
+                }
+            </style>
+            <div class="testimonial-wrapper" style="max-width: 1000px; margin: 0 auto; padding: 0 70px; position: relative;">
+                <div class="testimonial-card" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; position: relative; word-wrap: break-word; overflow-wrap: break-word;">
 
                     <!-- Navigation Arrows positioned outside card -->
                     <button class="card-nav-btn prev-btn" ${index === 0 ? 'disabled' : ''}
-                            style="position: absolute; left: -60px; top: 50%; transform: translateY(-50%);
+                            style="position: absolute; left: -55px; top: 50%; transform: translateY(-50%);
                                    background: white; border: 3px solid #667eea; border-radius: 50%;
                                    width: 45px; height: 45px; color: #667eea; cursor: pointer;
                                    font-size: 18px; display: flex; align-items: center; justify-content: center;
@@ -201,7 +212,7 @@ function initTestimonialSlider() {
                     </button>
 
                     <button class="card-nav-btn next-btn" ${index === totalReviews - 1 ? 'disabled' : ''}
-                            style="position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+                            style="position: absolute; right: -55px; top: 50%; transform: translateY(-50%);
                                    background: white; border: 3px solid #667eea; border-radius: 50%;
                                    width: 45px; height: 45px; color: #667eea; cursor: pointer;
                                    font-size: 18px; display: flex; align-items: center; justify-content: center;
