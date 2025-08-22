@@ -201,6 +201,51 @@
     }
     </script>
 
+    <!-- Individual Review Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Review",
+        "reviewBody": "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
+        "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Moe Chamma"
+        },
+        "itemReviewed": {
+            "@type": "LocalBusiness",
+            "@id": "https://capitalcitycontractors.ca/#business"
+        },
+        "datePublished": "2024-01-15"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Review",
+        "reviewBody": "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
+        "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Tamer Salem"
+        },
+        "itemReviewed": {
+            "@type": "LocalBusiness",
+            "@id": "https://capitalcitycontractors.ca/#business"
+        },
+        "datePublished": "2023-12-15"
+    }
+    </script>
+
     <!-- Review Management System -->
     <script src="assets/data/reviews.js"></script>
 
@@ -815,19 +860,19 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Services</h3>
                     <ul class="footer-links">
-                        <li><a href="#services">Painting</a></li>
-                        <li><a href="#services">Drywall</a></li>
-                        <li><a href="#services">Taping</a></li>
-                        <li><a href="#services">Carpet Installation</a></li>
+                        <li><a href="services.html" title="Professional interior and exterior painting services in Ottawa">Painting Services Ottawa</a></li>
+                        <li><a href="services.html" title="Expert drywall installation and repair in Ottawa">Drywall Repair Ottawa</a></li>
+                        <li><a href="services.html" title="Professional taping and mudding services">Taping & Mudding</a></li>
+                        <li><a href="services.html" title="Quality carpet installation services">Carpet Installation</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h3 class="footer-title">Company</h3>
                     <ul class="footer-links">
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#portfolio">Portfolio</a></li>
-                        <li><a href="#contact">Get Quote</a></li>
+                        <li><a href="about.html" title="Learn about our experienced Ottawa contractors">About Our Team</a></li>
+                        <li><a href="portfolio.html" title="View our completed painting and renovation projects">Our Work Portfolio</a></li>
+                        <li><a href="contact.html" title="Get free estimate for your Ottawa renovation project">Free Estimate</a></li>
                     </ul>
                 </div>
                 
@@ -874,9 +919,9 @@
     <!-- AOS Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <!-- Scripts with cache busting -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="assets/js/main.js?v=20250822-003-FORCE"></script>
+    <!-- Scripts - Deferred for Performance -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
 
     <!-- Review Navigation with Auto-Rotation -->
     <script>

@@ -7,8 +7,9 @@ Disallow: /*.md$
 Disallow: /sw.js
 Disallow: /manifest.json
 
-# Sitemap location
+# Sitemap locations
 Sitemap: https://capitalcitycontractors.ca/sitemap.xml
+Sitemap: https://capitalcitycontractors.ca/image-sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
