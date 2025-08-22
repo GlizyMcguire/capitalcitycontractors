@@ -35,18 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Navigation Functions - Simplified for reliability
+// Navigation Functions - Clean and Modern
 function initNavigation() {
-    // Simple, direct hamburger menu functionality
     const hamburger = document.getElementById('hamburger');
     const navMenu = document.getElementById('nav-menu');
+    const navbar = document.getElementById('navbar');
 
+    // Hamburger menu toggle
     if (hamburger && navMenu) {
-        // Remove any existing listeners
-        hamburger.onclick = null;
-
-        // Add click handler directly
-        hamburger.onclick = function(e) {
+        hamburger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -54,16 +51,25 @@ function initNavigation() {
             hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
             document.body.classList.toggle('nav-open');
-        };
+        });
 
         // Close menu when clicking nav links
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
-            link.onclick = function() {
+            link.addEventListener('click', function() {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
                 document.body.classList.remove('nav-open');
-            };
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+                document.body.classList.remove('nav-open');
+            }
         });
     }
     
@@ -88,7 +94,6 @@ function updateActiveNavLink() {
     let current = '';
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
         if (window.scrollY >= (sectionTop - 200)) {
             current = section.getAttribute('id');
         }
@@ -503,7 +508,7 @@ window.addEventListener('scroll', optimizedScrollHandler);
 function initLazyLoading() {
     const images = document.querySelectorAll('img[data-src]');
     
-    const imageObserver = new IntersectionObserver((entries, observer) => {
+    const imageObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
@@ -585,10 +590,10 @@ window.addEventListener('error', function(e) {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js')
-            .then(function(registration) {
+            .then(() => {
                 console.log('ServiceWorker registration successful');
             })
-            .catch(function(err) {
+            .catch(() => {
                 console.log('ServiceWorker registration failed');
             });
     });
@@ -600,7 +605,6 @@ let slideInterval;
 
 function initializeSlideshow() {
     const slides = document.querySelectorAll('.slide');
-    const indicators = document.querySelectorAll('.indicator');
 
     if (slides.length === 0) return; // Exit if no slides found
 

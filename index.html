@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Prevent HTML caching -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <!-- FORCE REFRESH: 2025-08-22-15:05-NAVIGATION-FIXED -->
+    <!-- SEO and Performance Meta Tags -->
     <meta name="description" content="Capital City Contractors - Professional painting, drywall, taping, and carpet installation services. Quality craftsmanship for residential and commercial projects.">
     <meta name="keywords" content="painting, drywall, taping, carpet installation, contractors, home improvement, commercial renovation">
     <title>Capital City Contractors - Professional Painting, Drywall & Carpet Installation</title>
@@ -33,17 +29,23 @@
     <meta property="twitter:image" content="https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg?v=2025-08-22">
     <meta property="twitter:image:alt" content="Capital City Contractors Logo">
     
-    <!-- Favicon with cache busting -->
-    <link rel="icon" type="image/svg+xml" href="favicon-simple.svg?v=2025-08-22-2">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-simple.svg?v=2025-08-22-2">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-simple.svg?v=2025-08-22-2">
+    <!-- Favicon and PWA -->
+    <link rel="icon" type="image/svg+xml" href="favicon-simple.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-simple.svg">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-simple.svg">
     <link rel="alternate icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link rel="apple-touch-icon" href="favicon-simple.svg?v=2025-08-22-2">
+    <link rel="apple-touch-icon" href="favicon-simple.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
     
-    <!-- Fonts -->
+    <!-- Fonts - Optimized Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
     
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,18 +53,89 @@
     <!-- EmailJS for form submission -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-    <!-- Review Management System with cache busting -->
-    <script src="assets/data/reviews.js?v=20250822-003-FORCE"></script>
-    <script src="assets/js/reviews.js?v=20250822-003-FORCE"></script>
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Capital City Contractors",
+        "description": "Professional painting, drywall, taping, and carpet installation services in Ottawa",
+        "url": "https://capitalcitycontractors.ca",
+        "telephone": "+1-613-XXX-XXXX",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Ottawa",
+            "addressRegion": "ON",
+            "addressCountry": "CA"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "45.4215",
+            "longitude": "-75.6972"
+        },
+        "openingHours": "Mo-Fr 08:00-18:00, Sa 09:00-16:00",
+        "priceRange": "$$",
+        "serviceArea": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": "45.4215",
+                "longitude": "-75.6972"
+            },
+            "geoRadius": "50000"
+        },
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Construction Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Interior Painting",
+                        "description": "Professional interior painting services"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Drywall Installation",
+                        "description": "Expert drywall installation and repair"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Carpet Installation",
+                        "description": "Professional carpet installation services"
+                    }
+                }
+            ]
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "reviewCount": "4",
+            "bestRating": "5",
+            "worstRating": "5"
+        }
+    }
+    </script>
 
-    <!-- Stylesheets with cache busting -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250822-ARROWS-CENTERED">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250822-ARROWS-CENTERED">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250822-ARROWS-CENTERED">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250822-ARROWS-CENTERED">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250822-ARROWS-CENTERED">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250822-ARROWS-CENTERED">
-    <link rel="stylesheet" href="assets/css/responsive.css?v=20250822-ARROWS-CENTERED">
+    <!-- Review Management System -->
+    <script src="assets/data/reviews.js"></script>
+    <script src="assets/js/reviews.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/pages/home.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
 <body>
     <div id="top"></div>
@@ -75,36 +148,26 @@
             
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
-                    <a href="#top" class="nav-link active" onclick="
-                        var hamburger = document.getElementById('hamburger');
-                        var navMenu = document.getElementById('nav-menu');
-                        if (hamburger) hamburger.classList.remove('active');
-                        if (navMenu) navMenu.classList.remove('active');
-                        document.body.classList.remove('nav-open');
-                        setTimeout(function(){
-                            window.scrollTo({top: 0, behavior: 'smooth'});
-                        }, 200);
-                        return false;
-                    ">Home</a>
+                    <a href="#top" class="nav-link active" data-nav="home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#services" class="nav-link" onclick="closeMobileMenu();">Services</a>
+                    <a href="#services" class="nav-link" data-nav="services">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#portfolio" class="nav-link" onclick="closeMobileMenu();">Portfolio</a>
+                    <a href="#portfolio" class="nav-link" data-nav="portfolio">Portfolio</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#about" class="nav-link" onclick="closeMobileMenu();">About</a>
+                    <a href="#about" class="nav-link" data-nav="about">About</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#testimonials" class="nav-link" onclick="closeMobileMenu();">Reviews</a>
+                    <a href="#testimonials" class="nav-link" data-nav="reviews">Reviews</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#contact" class="nav-link cta-button" onclick="closeMobileMenu();">Get Quote</a>
+                    <a href="#contact" class="nav-link cta-button" data-nav="contact">Get Quote</a>
                 </li>
             </ul>
             
-            <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+            <div class="hamburger" id="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>

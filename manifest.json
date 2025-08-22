@@ -1,0 +1,73 @@
+{
+    "name": "Capital City Contractors",
+    "short_name": "CCC",
+    "description": "Professional painting, drywall, taping, and carpet installation services in Ottawa",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "lang": "en-CA",
+    "categories": ["business", "construction", "services"],
+    "icons": [
+        {
+            "src": "favicon-simple.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "assets/images/CCC logo.jpg",
+            "sizes": "512x512",
+            "type": "image/jpeg",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/images/hero-bg.jpg",
+            "sizes": "1280x720",
+            "type": "image/jpeg",
+            "form_factor": "wide"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Get Quote",
+            "short_name": "Quote",
+            "description": "Get a free estimate for your project",
+            "url": "/#contact",
+            "icons": [
+                {
+                    "src": "favicon-simple.svg",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "View Portfolio",
+            "short_name": "Portfolio",
+            "description": "See our completed projects",
+            "url": "/#portfolio",
+            "icons": [
+                {
+                    "src": "favicon-simple.svg",
+                    "sizes": "96x96"
+                }
+            ]
+        },
+        {
+            "name": "Our Services",
+            "short_name": "Services",
+            "description": "Learn about our services",
+            "url": "/#services",
+            "icons": [
+                {
+                    "src": "favicon-simple.svg",
+                    "sizes": "96x96"
+                }
+            ]
+        }
+    ]
+}

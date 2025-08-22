@@ -1,36 +1,58 @@
+/* Navigation Components */
+.nav-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: var(--font-medium);
+    transition: var(--transition-fast);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+    background-color: var(--gray-50);
+}
+
+.nav-link.active {
+    color: var(--primary-color);
+    font-weight: var(--font-semibold);
+}
+
 /* Review Navigation Components */
 .review-nav-btn {
-    position: absolute !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    background: #ffffff !important;
-    border: 3px solid #667eea !important;
-    border-radius: 50% !important;
-    width: 55px !important;
-    height: 55px !important;
-    color: #667eea !important;
-    cursor: pointer !important;
-    font-size: 20px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-    z-index: 999 !important;
-    font-weight: bold !important;
-    transition: all 0.3s ease !important;
+    background: var(--white);
+    border: 3px solid #667eea;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    font-weight: var(--font-bold);
+    transition: var(--transition-normal);
+    z-index: 10;
 }
 
 .review-nav-btn:hover {
-    background: #667eea !important;
-    color: white !important;
-    transform: translateY(-50%) scale(1.1) !important;
+    background: #667eea;
+    color: var(--white);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg);
 }
 
-/* Arrows are now positioned in flexbox layout, no absolute positioning needed */
-.review-nav-btn:hover {
-    background: #667eea !important;
-    color: white !important;
-    transform: scale(1.1) !important;
+.review-nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.review-nav-btn:disabled:hover {
+    transform: none;
+    background: var(--white);
+    color: #667eea;
 }
 
 /* Mobile Responsive Styles - Full width and proper spacing */
