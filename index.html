@@ -1,4 +1,4 @@
-it arthe  with and or<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -51,17 +51,17 @@ it arthe  with and or<!DOCTYPE html>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <!-- Review Management System with cache busting -->
-    <script src="assets/data/reviews.js?v=20250822-002"></script>
-    <script src="assets/js/reviews.js?v=20250822-002"></script>
+    <script src="assets/data/reviews.js?v=20250822-003-FORCE"></script>
+    <script src="assets/js/reviews.js?v=20250822-003-FORCE"></script>
 
     <!-- Stylesheets with cache busting -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250822-001">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250822-001">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250822-001">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250822-001">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250822-001">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250822-001">
-    <link rel="stylesheet" href="assets/css/responsive.css?v=20250822-001">
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/components.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250822-003-FORCE">
+    <link rel="stylesheet" href="assets/css/responsive.css?v=20250822-003-FORCE">
 </head>
 <body>
     <div id="top"></div>
@@ -462,7 +462,53 @@ it arthe  with and or<!DOCTYPE html>
 
             <!-- Individual Review Cards with Navigation -->
             <div class="testimonials-grid" id="testimonials-container">
-                <!-- Reviews will be loaded dynamically from reviews.js -->
+                <!-- Fallback content while JavaScript loads -->
+                <div class="testimonial-card-container" id="fallback-review">
+                    <button class="card-nav-btn prev-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-header">
+                            <div class="customer-info">
+                                <div class="customer-avatar" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                                    <span class="avatar-initials">MC</span>
+                                </div>
+                                <div class="customer-details">
+                                    <h4 class="customer-name">Moe Chamma</h4>
+                                    <div class="customer-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <span class="rating-date">7 months ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="google-logo" title="Google Review">
+                                <i class="fab fa-google"></i>
+                            </div>
+                        </div>
+                        <div class="testimonial-content">
+                            <div class="quote-icon">
+                                <i class="fas fa-quote-left"></i>
+                            </div>
+                            <p class="testimonial-text">"I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!"</p>
+                        </div>
+                        <div class="testimonial-footer">
+                            <div class="testimonial-service">
+                                <i class="fas fa-tools"></i>
+                                Interior Painting
+                            </div>
+                            <div class="verified-badge"><i class="fas fa-check-circle"></i> Verified</div>
+                        </div>
+                    </div>
+
+                    <button class="card-nav-btn next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
             </div>
 
 
@@ -678,7 +724,7 @@ it arthe  with and or<!DOCTYPE html>
 
     <!-- Scripts with cache busting -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="assets/js/main.js?v=20250822-002"></script>
+    <script src="assets/js/main.js?v=20250822-003-FORCE"></script>
 
     <!-- Initialize Review Manager -->
     <script>
