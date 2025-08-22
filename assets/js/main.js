@@ -1,5 +1,19 @@
 // Main JavaScript File for Capital City Contractors Website
 
+// Cache Busting - Force reload of cached resources when needed
+function forceCacheRefresh() {
+    const timestamp = new Date().getTime();
+    const links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    links.forEach(link => {
+        if (link.href.includes('assets/css/')) {
+            const url = new URL(link.href);
+            url.searchParams.set('v', timestamp);
+            link.href = url.toString();
+        }
+    });
+}
+
 // DOM Content Loaded Event
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components
