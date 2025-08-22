@@ -41,6 +41,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
     
+    <!-- Performance Optimizations -->
+    <link rel="preload" href="assets/css/variables.css" as="style">
+    <link rel="preload" href="assets/css/base.css" as="style">
+    <link rel="preload" href="assets/images/CCC logo.jpg" as="image">
+    <link rel="preload" href="assets/js/main.js" as="script">
+
     <!-- Fonts - Optimized Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -343,37 +349,37 @@
                 <div class="slideshow-container">
                     <!-- Slides -->
                     <div class="slide active">
-                        <img src="assets/images/pic1.jpg" alt="Project 1" class="slide-img">
+                        <img src="assets/images/pic1.jpg" alt="Professional painting project - interior room transformation" class="slide-img">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic2.jpg" alt="Project 2" class="slide-img">
+                        <img src="assets/images/pic2.jpg" alt="Drywall installation and finishing work" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic3.jpg" alt="Project 3" class="slide-img">
+                        <img src="assets/images/pic3.jpg" alt="Carpet installation in residential space" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic4.jpg" alt="Project 4" class="slide-img">
+                        <img src="assets/images/pic4.jpg" alt="Taping and mudding drywall project" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic5.jpg" alt="Project 5" class="slide-img">
+                        <img src="assets/images/pic5.jpg" alt="Commercial painting project completion" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic6.jpg" alt="Project 6" class="slide-img">
+                        <img src="assets/images/pic6.jpg" alt="Residential renovation and painting work" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic7.jpg" alt="Project 7" class="slide-img">
+                        <img src="assets/images/pic7.jpg" alt="Professional drywall repair and finishing" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic8.jpg" alt="Project 8" class="slide-img">
+                        <img src="assets/images/pic8.jpg" alt="Quality carpet installation service" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic9.jpg" alt="Project 9" class="slide-img">
+                        <img src="assets/images/pic9.jpg" alt="Interior painting and wall preparation" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic10.jpg" alt="Project 10" class="slide-img">
+                        <img src="assets/images/pic10.jpg" alt="Commercial contracting project showcase" class="slide-img" loading="lazy">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic11.jpg" alt="Project 11" class="slide-img">
+                        <img src="assets/images/pic11.jpg" alt="Completed renovation project by Capital City Contractors" class="slide-img" loading="lazy">
                     </div>
 
                     <!-- Navigation arrows -->
@@ -413,16 +419,16 @@
 
             <div class="partners-logos">
                 <div class="partner-logo">
-                    <img src="assets/images/partners/rona-logo.webp" alt="RONA" class="partner-img">
+                    <img src="assets/images/partners/rona-logo.webp" alt="RONA - Trusted building supply partner" class="partner-img" loading="lazy">
                 </div>
                 <div class="partner-logo">
-                    <img src="assets/images/partners/home-depot-logo.webp" alt="The Home Depot" class="partner-img">
+                    <img src="assets/images/partners/home-depot-logo.webp" alt="The Home Depot - Professional contractor partner" class="partner-img" loading="lazy">
                 </div>
                 <div class="partner-logo">
-                    <img src="assets/images/partners/home-hardware-logo.png" alt="Home Hardware" class="partner-img">
+                    <img src="assets/images/partners/home-hardware-logo.png" alt="Home Hardware - Quality materials supplier" class="partner-img" loading="lazy">
                 </div>
                 <div class="partner-logo">
-                    <img src="assets/images/partners/lowes-logo.png" alt="Lowe's" class="partner-img">
+                    <img src="assets/images/partners/lowes-logo.png" alt="Lowe's - Construction materials partner" class="partner-img" loading="lazy">
                 </div>
             </div>
         </div>
@@ -452,7 +458,7 @@
                     </p>
                 </div>
                 <div class="story-image">
-                    <img src="assets/images/aboutus.png" alt="Capital City Contractors professional work" class="story-img">
+                    <img src="assets/images/aboutus.png" alt="Capital City Contractors team providing professional contracting services" class="story-img" loading="lazy">
                 </div>
             </div>
 
@@ -904,5 +910,8 @@
             console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
         });
     </script>
+
+    <!-- Main JavaScript - Loaded at end for performance -->
+    <script src="assets/js/main.js" defer></script>
 </body>
 </html>
