@@ -51,8 +51,8 @@ it arthe  with and or<!DOCTYPE html>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <!-- Review Management System with cache busting -->
-    <script src="assets/data/reviews.js?v=20250822-001"></script>
-    <script src="assets/js/reviews.js?v=20250822-001"></script>
+    <script src="assets/data/reviews.js?v=20250822-002"></script>
+    <script src="assets/js/reviews.js?v=20250822-002"></script>
 
     <!-- Stylesheets with cache busting -->
     <link rel="stylesheet" href="assets/css/reset.css?v=20250822-001">
@@ -678,15 +678,30 @@ it arthe  with and or<!DOCTYPE html>
 
     <!-- Scripts with cache busting -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="assets/js/main.js?v=20250822-001"></script>
+    <script src="assets/js/main.js?v=20250822-002"></script>
 
     <!-- Initialize Review Manager -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the review manager to display dynamic reviews
-            if (typeof ReviewManager !== 'undefined') {
-                new ReviewManager();
-            }
+            console.log('DOM loaded, checking for reviews...');
+
+            // Wait a bit for all scripts to load
+            setTimeout(function() {
+                console.log('ReviewManager available:', typeof ReviewManager !== 'undefined');
+                console.log('reviewsData available:', typeof reviewsData !== 'undefined');
+
+                if (typeof ReviewManager !== 'undefined') {
+                    console.log('Initializing ReviewManager...');
+                    new ReviewManager();
+                } else {
+                    console.error('ReviewManager not found!');
+                    // Fallback: show a simple message
+                    const container = document.getElementById('testimonials-container');
+                    if (container) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px;">Loading reviews...</div>';
+                    }
+                }
+            }, 500);
         });
     </script>
 </body>
