@@ -137,127 +137,176 @@ function initScrollEffects() {
     });
 }
 
-// Testimonial Slideshow
+// Individual Review Card Navigation
 function initTestimonialSlider() {
-    const slides = document.querySelectorAll('.testimonial-slide');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const indicators = document.querySelectorAll('.indicator');
-    let currentSlide = 0;
-    let slideInterval;
+    const cards = document.querySelectorAll('.testimonial-card');
+    const navButtons = document.querySelectorAll('.card-nav-btn');
 
-    if (slides.length === 0) return;
+    if (cards.length === 0) return;
 
-    function showSlide(index) {
-        // Hide all slides
-        slides.forEach(slide => {
-            slide.classList.remove('active');
-        });
+    // Create array of reviews for each card to cycle through
+    const reviewsData = [
+        [
+            {
+                name: "Sarah Johnson",
+                initials: "SJ",
+                color: "#667eea",
+                rating: 5,
+                date: "2 weeks ago",
+                text: "Excellent work on our living room and kitchen painting. The team was professional, clean, and finished on time. Highly recommend Capital City Contractors!",
+                service: "Interior Painting"
+            },
+            {
+                name: "Robert Chen",
+                initials: "RC",
+                color: "#667eea",
+                rating: 5,
+                date: "1 month ago",
+                text: "Amazing exterior painting job! They transformed our house completely. Very professional team and great attention to detail.",
+                service: "Exterior Painting"
+            },
+            {
+                name: "Lisa Martinez",
+                initials: "LM",
+                color: "#667eea",
+                rating: 5,
+                date: "3 weeks ago",
+                text: "Perfect color consultation and flawless execution. Our home looks brand new thanks to Capital City Contractors!",
+                service: "Color Consultation"
+            }
+        ],
+        [
+            {
+                name: "Mike Thompson",
+                initials: "MT",
+                color: "#764ba2",
+                rating: 5,
+                date: "1 month ago",
+                text: "Outstanding drywall installation and finishing. The quality of work exceeded our expectations. Will definitely use them again for future projects.",
+                service: "Drywall Installation"
+            },
+            {
+                name: "Amanda Wilson",
+                initials: "AW",
+                color: "#764ba2",
+                rating: 5,
+                date: "2 months ago",
+                text: "Professional drywall repair service. They fixed all the holes and cracks perfectly. You can't even tell there was damage!",
+                service: "Drywall Repair"
+            },
+            {
+                name: "David Park",
+                initials: "DP",
+                color: "#764ba2",
+                rating: 5,
+                date: "6 weeks ago",
+                text: "Excellent taping and mudding work. Smooth walls ready for painting. Very clean and efficient workers.",
+                service: "Taping & Mudding"
+            }
+        ],
+        [
+            {
+                name: "Jennifer Davis",
+                initials: "JD",
+                color: "#4facfe",
+                rating: 5,
+                date: "3 weeks ago",
+                text: "Professional carpet installation service. They helped us choose the perfect carpet and installed it flawlessly. Great attention to detail!",
+                service: "Carpet Installation"
+            },
+            {
+                name: "Mark Rodriguez",
+                initials: "MR",
+                color: "#4facfe",
+                rating: 5,
+                date: "1 month ago",
+                text: "Fantastic flooring installation! Our new hardwood floors look amazing. Professional service from start to finish.",
+                service: "Hardwood Flooring"
+            },
+            {
+                name: "Emily Foster",
+                initials: "EF",
+                color: "#4facfe",
+                rating: 5,
+                date: "2 weeks ago",
+                text: "Great tile installation in our bathroom. Perfect alignment and professional finish. Highly recommend their services!",
+                service: "Tile Installation"
+            }
+        ]
+    ];
 
-        // Remove active class from all indicators
-        indicators.forEach(indicator => {
-            indicator.classList.remove('active');
-        });
+    // Track current review index for each card
+    const currentReviewIndex = [0, 0, 0];
 
-        // Show current slide and activate indicator
-        if (slides[index]) {
-            slides[index].classList.add('active');
+    function updateCard(cardIndex, reviewIndex) {
+        const card = cards[cardIndex];
+        const review = reviewsData[cardIndex][reviewIndex];
+
+        if (!card || !review) return;
+
+        // Update avatar
+        const avatar = card.querySelector('.customer-avatar');
+        const initials = card.querySelector('.avatar-initials');
+        if (avatar && initials) {
+            avatar.style.background = review.color;
+            initials.textContent = review.initials;
         }
-        if (indicators[index]) {
-            indicators[index].classList.add('active');
+
+        // Update name
+        const nameEl = card.querySelector('.customer-name');
+        if (nameEl) nameEl.textContent = review.name;
+
+        // Update date
+        const dateEl = card.querySelector('.rating-date');
+        if (dateEl) dateEl.textContent = review.date;
+
+        // Update text
+        const textEl = card.querySelector('.testimonial-text');
+        if (textEl) textEl.textContent = `"${review.text}"`;
+
+        // Update service
+        const serviceEl = card.querySelector('.testimonial-service');
+        if (serviceEl) {
+            serviceEl.innerHTML = `<i class="fas fa-tools"></i> ${review.service}`;
         }
 
-        currentSlide = index;
+        // Update navigation button states
+        const cardContainer = card.closest('.testimonial-card-container');
+        const prevBtn = cardContainer.querySelector('.prev-btn');
+        const nextBtn = cardContainer.querySelector('.next-btn');
+
+        if (prevBtn) {
+            prevBtn.disabled = reviewIndex === 0;
+        }
+        if (nextBtn) {
+            nextBtn.disabled = reviewIndex === reviewsData[cardIndex].length - 1;
+        }
     }
 
-    function nextSlide() {
-        const nextIndex = (currentSlide + 1) % slides.length;
-        showSlide(nextIndex);
-    }
-
-    function prevSlide() {
-        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(prevIndex);
-    }
-
-    function startAutoSlide() {
-        slideInterval = setInterval(nextSlide, 6000); // 6 seconds
-    }
-
-    function stopAutoSlide() {
-        clearInterval(slideInterval);
-    }
-
-    // Initialize first slide
-    showSlide(0);
-
-    // Add click handlers to navigation buttons
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function() {
-            nextSlide();
-            stopAutoSlide();
-            startAutoSlide(); // Restart auto-play
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', function() {
-            prevSlide();
-            stopAutoSlide();
-            startAutoSlide(); // Restart auto-play
-        });
-    }
-
-    // Add click handlers to indicators
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', function() {
-            showSlide(index);
-            stopAutoSlide();
-            startAutoSlide(); // Restart auto-play
-        });
+    // Initialize all cards
+    cards.forEach((card, index) => {
+        updateCard(index, 0);
     });
 
-    // Start automatic slideshow
-    startAutoSlide();
+    // Add click handlers to navigation buttons
+    navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const cardIndex = parseInt(this.dataset.card);
+            const isNext = this.classList.contains('next-btn');
 
-    // Pause on hover
-    const slideshow = document.querySelector('.testimonials-slideshow');
-    if (slideshow) {
-        slideshow.addEventListener('mouseenter', stopAutoSlide);
-        slideshow.addEventListener('mouseleave', startAutoSlide);
-    }
-
-    // Touch/swipe support for mobile
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    if (slideshow) {
-        slideshow.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
-        slideshow.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-    }
-
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = touchStartX - touchEndX;
-
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-                // Swipe left - next slide
-                nextSlide();
+            if (isNext) {
+                if (currentReviewIndex[cardIndex] < reviewsData[cardIndex].length - 1) {
+                    currentReviewIndex[cardIndex]++;
+                    updateCard(cardIndex, currentReviewIndex[cardIndex]);
+                }
             } else {
-                // Swipe right - previous slide
-                prevSlide();
+                if (currentReviewIndex[cardIndex] > 0) {
+                    currentReviewIndex[cardIndex]--;
+                    updateCard(cardIndex, currentReviewIndex[cardIndex]);
+                }
             }
-            stopAutoSlide();
-            startAutoSlide();
-        }
-    }
+        });
+    });
 }
 
 // Animation Functions
