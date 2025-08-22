@@ -461,38 +461,55 @@
                 </div>
             </div>
 
-            <!-- WORKING REVIEWS - SIMPLE AND CLEAN -->
-            <div style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+            <!-- WORKING REVIEWS WITH NAVIGATION -->
+            <div style="max-width: 800px; margin: 40px auto; padding: 0 20px; position: relative;">
 
-                <!-- Single Review Card - Properly Styled -->
-                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea;">
+                <!-- Navigation Arrows -->
+                <button id="prevReview" style="position: absolute; left: -20px; top: 50%; transform: translateY(-50%); background: white; border: 2px solid #667eea; border-radius: 50%; width: 50px; height: 50px; color: #667eea; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 10;">
+                    ‹
+                </button>
+
+                <button id="nextReview" style="position: absolute; right: -20px; top: 50%; transform: translateY(-50%); background: white; border: 2px solid #667eea; border-radius: 50%; width: 50px; height: 50px; color: #667eea; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 10;">
+                    ›
+                </button>
+
+                <!-- Review Card Container -->
+                <div id="reviewCard" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; min-height: 200px; transition: opacity 0.3s ease;">
 
                     <!-- Reviewer Header -->
                     <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                        <div style="background: #667eea; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; margin-right: 15px;">
+                        <div id="reviewerAvatar" style="background: #667eea; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; margin-right: 15px;">
                             MC
                         </div>
                         <div>
-                            <h4 style="margin: 0; font-size: 18px; color: #333; font-weight: 600;">Moe Chamma</h4>
+                            <h4 id="reviewerName" style="margin: 0; font-size: 18px; color: #333; font-weight: 600;">Moe Chamma</h4>
                             <div style="color: #ffd700; font-size: 16px; margin: 3px 0;">★★★★★</div>
-                            <p style="margin: 0; color: #666; font-size: 13px;">7 months ago • Google Review</p>
+                            <p id="reviewDate" style="margin: 0; color: #666; font-size: 13px;">7 months ago • Google Review</p>
                         </div>
                     </div>
 
                     <!-- Review Text -->
-                    <p style="font-size: 16px; line-height: 1.6; color: #444; margin: 0; font-style: italic;">
+                    <p id="reviewText" style="font-size: 16px; line-height: 1.6; color: #444; margin: 0; font-style: italic;">
                         "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!"
                     </p>
 
                     <!-- Service Tag -->
-                    <div style="margin-top: 15px; display: inline-block; background: #f0f4ff; color: #667eea; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;">
+                    <div id="serviceTag" style="margin-top: 15px; display: inline-block; background: #f0f4ff; color: #667eea; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;">
                         Interior Painting
                     </div>
                 </div>
 
-                <!-- Navigation Hint -->
-                <div style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
-                    Showing 1 of 4 reviews
+                <!-- Navigation Dots -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 10px;">
+                        <span class="dot active" style="width: 10px; height: 10px; border-radius: 50%; background: #667eea; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
+                    </div>
+                    <div style="color: #666; font-size: 14px;">
+                        <span id="currentReviewNumber">1</span> of 4 reviews
+                    </div>
                 </div>
 
             </div>
@@ -712,94 +729,138 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/main.js?v=20250822-003-FORCE"></script>
 
-    <!-- Simple Review Navigation -->
+    <!-- Review Navigation with Auto-Rotation -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Initializing simple review navigation...');
+            console.log('Initializing review navigation with auto-rotation...');
 
             // Review data
             const reviews = [
                 {
                     name: "Moe Chamma",
-                    initials: "MC",
-                    rating: 5,
-                    date: "7 months ago",
+                    avatar: "MC",
                     text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
-                    service: "Interior Painting",
-                    color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                    date: "7 months ago • Google Review",
+                    service: "Interior Painting"
                 },
                 {
                     name: "Tamer Salem",
-                    initials: "TS",
-                    rating: 5,
-                    date: "8 months ago",
+                    avatar: "TS",
                     text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
-                    service: "Interior Painting",
-                    color: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                    date: "8 months ago • Google Review",
+                    service: "Interior Painting"
                 },
                 {
                     name: "Adam Zein",
-                    initials: "AZ",
-                    rating: 5,
-                    date: "1 year ago",
+                    avatar: "AZ",
                     text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
-                    service: "Multiple Services",
-                    color: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                    date: "1 year ago • Google Review",
+                    service: "Multiple Services"
                 },
                 {
                     name: "Al Cham",
-                    initials: "AC",
-                    rating: 5,
-                    date: "1 year ago",
+                    avatar: "AC",
                     text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
-                    service: "Multiple Services",
-                    color: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+                    date: "1 year ago • Google Review",
+                    service: "Multiple Services"
                 }
             ];
 
-            let currentIndex = 0;
+            let currentReviewIndex = 0;
+            let autoRotateInterval;
 
-            function updateReview() {
-                const review = reviews[currentIndex];
-                const card = document.getElementById('currentReview');
-                const prevBtn = document.getElementById('prevReview');
-                const nextBtn = document.getElementById('nextReview');
+            // Update review display
+            function updateReview(index) {
+                const review = reviews[index];
+                const card = document.getElementById('reviewCard');
 
                 if (!card) return;
 
-                // Update content
-                card.querySelector('.reviewer-initials').textContent = review.initials;
-                card.querySelector('.reviewer-avatar').style.background = review.color;
-                card.querySelector('.reviewer-name').textContent = review.name;
-                card.querySelector('.review-date').textContent = review.date;
-                card.querySelector('.review-text').textContent = '"' + review.text + '"';
-                card.querySelector('.service-type').innerHTML = '<i class="fas fa-tools"></i> ' + review.service;
+                // Fade out
+                card.style.opacity = '0.5';
 
-                // Update buttons
-                prevBtn.disabled = currentIndex === 0;
-                nextBtn.disabled = currentIndex === reviews.length - 1;
+                setTimeout(() => {
+                    // Update content
+                    document.getElementById('reviewerAvatar').textContent = review.avatar;
+                    document.getElementById('reviewerName').textContent = review.name;
+                    document.getElementById('reviewText').textContent = `"${review.text}"`;
+                    document.getElementById('reviewDate').textContent = review.date;
+                    document.getElementById('serviceTag').textContent = review.service;
+                    document.getElementById('currentReviewNumber').textContent = index + 1;
 
-                console.log('Updated to review:', currentIndex, review.name);
+                    // Update dots
+                    const dots = document.querySelectorAll('.dot');
+                    dots.forEach((dot, i) => {
+                        if (i === index) {
+                            dot.style.background = '#667eea';
+                            dot.classList.add('active');
+                        } else {
+                            dot.style.background = '#ddd';
+                            dot.classList.remove('active');
+                        }
+                    });
+
+                    // Fade in
+                    card.style.opacity = '1';
+                }, 150);
             }
 
-            // Navigation handlers
-            document.getElementById('prevReview')?.addEventListener('click', function() {
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateReview();
-                }
-            });
+            // Navigation functions
+            function nextReview() {
+                currentReviewIndex = (currentReviewIndex + 1) % reviews.length;
+                updateReview(currentReviewIndex);
+                resetAutoRotate();
+            }
 
-            document.getElementById('nextReview')?.addEventListener('click', function() {
-                if (currentIndex < reviews.length - 1) {
-                    currentIndex++;
-                    updateReview();
-                }
-            });
+            function prevReview() {
+                currentReviewIndex = (currentReviewIndex - 1 + reviews.length) % reviews.length;
+                updateReview(currentReviewIndex);
+                resetAutoRotate();
+            }
+
+            function goToReview(index) {
+                currentReviewIndex = index;
+                updateReview(currentReviewIndex);
+                resetAutoRotate();
+            }
+
+            // Auto-rotate functionality
+            function startAutoRotate() {
+                autoRotateInterval = setInterval(() => {
+                    nextReview();
+                }, 7000); // 7 second delay
+            }
+
+            function resetAutoRotate() {
+                clearInterval(autoRotateInterval);
+                startAutoRotate();
+            }
 
             // Initialize
-            updateReview();
-            console.log('Review navigation initialized with', reviews.length, 'reviews');
+            // Add click events to navigation buttons
+            document.getElementById('nextReview')?.addEventListener('click', nextReview);
+            document.getElementById('prevReview')?.addEventListener('click', prevReview);
+
+            // Add click events to dots
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => goToReview(index));
+            });
+
+            // Start with first review
+            updateReview(0);
+
+            // Start auto-rotation
+            startAutoRotate();
+
+            // Pause auto-rotation on hover
+            const reviewContainer = document.getElementById('reviewCard');
+            if (reviewContainer) {
+                reviewContainer.addEventListener('mouseenter', () => clearInterval(autoRotateInterval));
+                reviewContainer.addEventListener('mouseleave', startAutoRotate);
+            }
+
+            console.log('Review navigation initialized with', reviews.length, 'reviews and 7-second auto-rotation');
         });
     </script>
 </body>
