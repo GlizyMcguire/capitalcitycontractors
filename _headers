@@ -1,24 +1,41 @@
-# Cache Control Headers for GitHub Pages / Netlify
-# Prevent aggressive caching to ensure updates are immediately visible
+# Security and Performance Headers for Capital City Contractors
 
-# HTML files - no cache
+# Security Headers (applied to all files)
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+# HTML files - optimized caching with security
 /*.html
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'
 
 # Root index file
 /
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-# CSS and JS files - short cache with validation
-/*.css
   Cache-Control: public, max-age=300, must-revalidate
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'
+
+# CSS and JS files - optimized caching
+/*.css
+  Cache-Control: public, max-age=86400, must-revalidate
+  Content-Type: text/css; charset=utf-8
 
 /*.js
+  Cache-Control: public, max-age=86400, must-revalidate
+  Content-Type: application/javascript; charset=utf-8
+
+# Service Worker - short cache for updates
+/sw.js
   Cache-Control: public, max-age=300, must-revalidate
+  Content-Type: application/javascript; charset=utf-8
+
+# Web App Manifest
+/manifest.json
+  Cache-Control: public, max-age=86400, must-revalidate
+  Content-Type: application/manifest+json; charset=utf-8
 
 # Images - longer cache but with validation
 /*.jpg
