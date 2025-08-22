@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- DEPLOYMENT FIX: 2025-08-22-14:35 -->
+    <!-- FORCE CACHE REFRESH: 2025-08-22-14:45-MOBILE-FINAL -->
     <meta name="description" content="Capital City Contractors - Professional painting, drywall, taping, and carpet installation services. Quality craftsmanship for residential and commercial projects.">
     <meta name="keywords" content="painting, drywall, taping, carpet installation, contractors, home improvement, commercial renovation">
     <title>Capital City Contractors - Professional Painting, Drywall & Carpet Installation</title>
@@ -835,6 +835,19 @@
             updateReview(0);
 
             console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
+
+            // Add temporary version indicator
+            const versionIndicator = document.createElement('div');
+            versionIndicator.style.cssText = 'position: fixed; top: 10px; right: 10px; background: green; color: white; padding: 5px 10px; font-size: 12px; z-index: 9999; border-radius: 3px;';
+            versionIndicator.textContent = 'v2.0 - No Auto-Rotation';
+            document.body.appendChild(versionIndicator);
+
+            // Remove indicator after 5 seconds
+            setTimeout(() => {
+                if (versionIndicator.parentNode) {
+                    versionIndicator.parentNode.removeChild(versionIndicator);
+                }
+            }, 5000);
         });
     </script>
 </body>
