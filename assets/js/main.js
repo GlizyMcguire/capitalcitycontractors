@@ -137,176 +137,133 @@ function initScrollEffects() {
     });
 }
 
-// Individual Review Card Navigation
+// Load and Display Real Reviews from reviews.js
 function initTestimonialSlider() {
-    const cards = document.querySelectorAll('.testimonial-card');
-    const navButtons = document.querySelectorAll('.card-nav-btn');
+    const container = document.getElementById('testimonials-container');
 
-    if (cards.length === 0) return;
+    if (!container || typeof reviewsData === 'undefined') {
+        console.log('Reviews container or data not found');
+        return;
+    }
 
-    // Create array of reviews for each card to cycle through
-    const reviewsData = [
-        [
-            {
-                name: "Sarah Johnson",
-                initials: "SJ",
-                color: "#667eea",
-                rating: 5,
-                date: "2 weeks ago",
-                text: "Excellent work on our living room and kitchen painting. The team was professional, clean, and finished on time. Highly recommend Capital City Contractors!",
-                service: "Interior Painting"
-            },
-            {
-                name: "Robert Chen",
-                initials: "RC",
-                color: "#667eea",
-                rating: 5,
-                date: "1 month ago",
-                text: "Amazing exterior painting job! They transformed our house completely. Very professional team and great attention to detail.",
-                service: "Exterior Painting"
-            },
-            {
-                name: "Lisa Martinez",
-                initials: "LM",
-                color: "#667eea",
-                rating: 5,
-                date: "3 weeks ago",
-                text: "Perfect color consultation and flawless execution. Our home looks brand new thanks to Capital City Contractors!",
-                service: "Color Consultation"
-            }
-        ],
-        [
-            {
-                name: "Mike Thompson",
-                initials: "MT",
-                color: "#764ba2",
-                rating: 5,
-                date: "1 month ago",
-                text: "Outstanding drywall installation and finishing. The quality of work exceeded our expectations. Will definitely use them again for future projects.",
-                service: "Drywall Installation"
-            },
-            {
-                name: "Amanda Wilson",
-                initials: "AW",
-                color: "#764ba2",
-                rating: 5,
-                date: "2 months ago",
-                text: "Professional drywall repair service. They fixed all the holes and cracks perfectly. You can't even tell there was damage!",
-                service: "Drywall Repair"
-            },
-            {
-                name: "David Park",
-                initials: "DP",
-                color: "#764ba2",
-                rating: 5,
-                date: "6 weeks ago",
-                text: "Excellent taping and mudding work. Smooth walls ready for painting. Very clean and efficient workers.",
-                service: "Taping & Mudding"
-            }
-        ],
-        [
-            {
-                name: "Jennifer Davis",
-                initials: "JD",
-                color: "#4facfe",
-                rating: 5,
-                date: "3 weeks ago",
-                text: "Professional carpet installation service. They helped us choose the perfect carpet and installed it flawlessly. Great attention to detail!",
-                service: "Carpet Installation"
-            },
-            {
-                name: "Mark Rodriguez",
-                initials: "MR",
-                color: "#4facfe",
-                rating: 5,
-                date: "1 month ago",
-                text: "Fantastic flooring installation! Our new hardwood floors look amazing. Professional service from start to finish.",
-                service: "Hardwood Flooring"
-            },
-            {
-                name: "Emily Foster",
-                initials: "EF",
-                color: "#4facfe",
-                rating: 5,
-                date: "2 weeks ago",
-                text: "Great tile installation in our bathroom. Perfect alignment and professional finish. Highly recommend their services!",
-                service: "Tile Installation"
-            }
-        ]
-    ];
+    let currentReviewIndex = 0;
+    const totalReviews = reviewsData.length;
 
-    // Track current review index for each card
-    const currentReviewIndex = [0, 0, 0];
+    // Generate initials from name
+    function getInitials(name) {
+        return name.split(' ').map(word => word[0]).join('').toUpperCase();
+    }
 
-    function updateCard(cardIndex, reviewIndex) {
-        const card = cards[cardIndex];
-        const review = reviewsData[cardIndex][reviewIndex];
+    // Generate color based on name
+    function getAvatarColor(name) {
+        const colors = ['#667eea', '#764ba2', '#4facfe', '#43e97b', '#f093fb', '#f5576c'];
+        const index = name.length % colors.length;
+        return colors[index];
+    }
 
-        if (!card || !review) return;
+    // Format date
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // Update avatar
-        const avatar = card.querySelector('.customer-avatar');
-        const initials = card.querySelector('.avatar-initials');
-        if (avatar && initials) {
-            avatar.style.background = review.color;
-            initials.textContent = review.initials;
-        }
-
-        // Update name
-        const nameEl = card.querySelector('.customer-name');
-        if (nameEl) nameEl.textContent = review.name;
-
-        // Update date
-        const dateEl = card.querySelector('.rating-date');
-        if (dateEl) dateEl.textContent = review.date;
-
-        // Update text
-        const textEl = card.querySelector('.testimonial-text');
-        if (textEl) textEl.textContent = `"${review.text}"`;
-
-        // Update service
-        const serviceEl = card.querySelector('.testimonial-service');
-        if (serviceEl) {
-            serviceEl.innerHTML = `<i class="fas fa-tools"></i> ${review.service}`;
-        }
-
-        // Update navigation button states
-        const cardContainer = card.closest('.testimonial-card-container');
-        const prevBtn = cardContainer.querySelector('.prev-btn');
-        const nextBtn = cardContainer.querySelector('.next-btn');
-
-        if (prevBtn) {
-            prevBtn.disabled = reviewIndex === 0;
-        }
-        if (nextBtn) {
-            nextBtn.disabled = reviewIndex === reviewsData[cardIndex].length - 1;
+        if (diffDays < 30) {
+            return `${diffDays} days ago`;
+        } else if (diffDays < 365) {
+            const months = Math.floor(diffDays / 30);
+            return `${months} month${months > 1 ? 's' : ''} ago`;
+        } else {
+            const years = Math.floor(diffDays / 365);
+            return `${years} year${years > 1 ? 's' : ''} ago`;
         }
     }
 
-    // Initialize all cards
-    cards.forEach((card, index) => {
-        updateCard(index, 0);
-    });
+    // Create review card HTML
+    function createReviewCard(review, index) {
+        const initials = getInitials(review.customerName);
+        const avatarColor = getAvatarColor(review.customerName);
+        const formattedDate = formatDate(review.date);
+        const stars = '★'.repeat(review.rating);
 
-    // Add click handlers to navigation buttons
-    navButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const cardIndex = parseInt(this.dataset.card);
-            const isNext = this.classList.contains('next-btn');
+        return `
+            <div class="testimonial-card-container">
+                <button class="card-nav-btn prev-btn" ${index === 0 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
 
-            if (isNext) {
-                if (currentReviewIndex[cardIndex] < reviewsData[cardIndex].length - 1) {
-                    currentReviewIndex[cardIndex]++;
-                    updateCard(cardIndex, currentReviewIndex[cardIndex]);
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="customer-info">
+                            <div class="customer-avatar" style="background: ${avatarColor}">
+                                <span class="avatar-initials">${initials}</span>
+                            </div>
+                            <div class="customer-details">
+                                <h4 class="customer-name">${review.customerName}</h4>
+                                <div class="customer-rating">
+                                    <span class="stars">${stars}</span>
+                                    <span class="rating-date">${formattedDate}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="google-logo" title="Google Review">
+                            <i class="fab fa-google"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        <div class="quote-icon">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">"${review.reviewText}"</p>
+                    </div>
+                    <div class="testimonial-footer">
+                        <div class="testimonial-service">
+                            <i class="fas fa-tools"></i>
+                            ${review.service}
+                        </div>
+                        ${review.verified ? '<div class="verified-badge"><i class="fas fa-check-circle"></i> Verified</div>' : ''}
+                    </div>
+                </div>
+
+                <button class="card-nav-btn next-btn" ${index === totalReviews - 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    // Display current review
+    function displayReview(index) {
+        if (index < 0 || index >= totalReviews) return;
+
+        const review = reviewsData[index];
+        container.innerHTML = createReviewCard(review, index);
+
+        // Add event listeners to navigation buttons
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+
+        if (prevBtn && !prevBtn.disabled) {
+            prevBtn.addEventListener('click', () => {
+                if (currentReviewIndex > 0) {
+                    currentReviewIndex--;
+                    displayReview(currentReviewIndex);
                 }
-            } else {
-                if (currentReviewIndex[cardIndex] > 0) {
-                    currentReviewIndex[cardIndex]--;
-                    updateCard(cardIndex, currentReviewIndex[cardIndex]);
+            });
+        }
+
+        if (nextBtn && !nextBtn.disabled) {
+            nextBtn.addEventListener('click', () => {
+                if (currentReviewIndex < totalReviews - 1) {
+                    currentReviewIndex++;
+                    displayReview(currentReviewIndex);
                 }
-            }
-        });
-    });
+            });
+        }
+    }
+
+    // Initialize with first review
+    displayReview(0);
 }
 
 // Animation Functions
