@@ -1,0 +1,40 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#heroGrad)"/>
+  
+  <!-- Construction elements -->
+  <g opacity="0.3" fill="#ffffff">
+    <!-- Building silhouettes -->
+    <rect x="100" y="600" width="200" height="400" rx="10"/>
+    <rect x="350" y="500" width="150" height="500" rx="8"/>
+    <rect x="550" y="650" width="180" height="350" rx="10"/>
+    <rect x="780" y="550" width="160" height="450" rx="8"/>
+    
+    <!-- Construction crane -->
+    <rect x="1200" y="200" width="8" height="600" rx="4"/>
+    <rect x="1100" y="196" width="200" height="8" rx="4"/>
+    <rect x="1300" y="196" width="150" height="4" rx="2"/>
+    
+    <!-- Tools -->
+    <circle cx="1500" cy="800" r="30" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <rect x="1485" y="785" width="30" height="30" fill="none" stroke="#ffffff" stroke-width="3"/>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="960" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#ffffff" opacity="0.8">
+    Professional Contracting Services
+  </text>
+  <text x="960" y="460" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" fill="#e5e7eb" opacity="0.8">
+    Quality • Reliability • Excellence
+  </text>
+  
+  <!-- Placeholder indicator -->
+  <text x="960" y="900" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" opacity="0.5">
+    Hero Background Placeholder - Replace with professional contracting image
+  </text>
+</svg>
