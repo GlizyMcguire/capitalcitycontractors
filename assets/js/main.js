@@ -192,36 +192,17 @@ function initTestimonialSlider() {
         const stars = '★'.repeat(review.rating);
 
         return `
-            <style>
-                @media (max-width: 768px) {
-                    .testimonial-wrapper { padding: 0 60px !important; max-width: 100% !important; }
-                    .card-nav-btn { left: -50px !important; right: -50px !important; width: 40px !important; height: 40px !important; font-size: 16px !important; }
-                }
-                @media (max-width: 480px) {
-                    .testimonial-wrapper { padding: 0 50px !important; }
-                    .card-nav-btn { left: -45px !important; right: -45px !important; width: 35px !important; height: 35px !important; font-size: 14px !important; }
-                    .testimonial-card { padding: 20px !important; }
-                }
-            </style>
-            <div class="testimonial-wrapper" style="max-width: 1000px; margin: 0 auto; padding: 0 70px; position: relative;">
-                <div class="testimonial-card" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; position: relative; word-wrap: break-word; overflow-wrap: break-word;">
+            <div class="testimonial-wrapper">
+                <div class="testimonial-card">
 
                     <!-- Navigation Arrows positioned outside card -->
                     <button class="card-nav-btn prev-btn" ${index === 0 ? 'disabled' : ''}
-                            style="position: absolute; left: -55px; top: 50%; transform: translateY(-50%);
-                                   background: white; border: 3px solid #667eea; border-radius: 50%;
-                                   width: 45px; height: 45px; color: #667eea; cursor: pointer;
-                                   font-size: 18px; display: flex; align-items: center; justify-content: center;
-                                   box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10;">
+                            style="position: absolute; left: -55px; top: 50%; transform: translateY(-50%); z-index: 10;">
                         <i class="fas fa-chevron-left"></i>
                     </button>
 
                     <button class="card-nav-btn next-btn" ${index === totalReviews - 1 ? 'disabled' : ''}
-                            style="position: absolute; right: -55px; top: 50%; transform: translateY(-50%);
-                                   background: white; border: 3px solid #667eea; border-radius: 50%;
-                                   width: 45px; height: 45px; color: #667eea; cursor: pointer;
-                                   font-size: 18px; display: flex; align-items: center; justify-content: center;
-                                   box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10;">
+                            style="position: absolute; right: -55px; top: 50%; transform: translateY(-50%); z-index: 10;">
                         <i class="fas fa-chevron-right"></i>
                     </button>
 
@@ -258,17 +239,13 @@ function initTestimonialSlider() {
                 </div>
 
                 <!-- Navigation dots below card -->
-                <div style="text-align: center; margin-top: 20px;">
-                    <div class="review-dots" style="display: inline-flex; gap: 8px; margin-bottom: 10px;">
+                <div class="review-navigation">
+                    <div class="review-dots">
                         ${reviewsData.map((_, i) =>
-                            `<span class="dot ${i === index ? 'active' : ''}"
-                                   style="width: 10px; height: 10px; border-radius: 50%;
-                                          background: ${i === index ? '#667eea' : '#ddd'};
-                                          cursor: pointer; transition: all 0.3s ease;"
-                                   data-index="${i}"></span>`
+                            `<span class="dot ${i === index ? 'active' : ''}" data-index="${i}"></span>`
                         ).join('')}
                     </div>
-                    <div style="color: #666; font-size: 14px;">
+                    <div class="review-counter">
                         ${index + 1} of ${totalReviews} reviews
                     </div>
                 </div>
