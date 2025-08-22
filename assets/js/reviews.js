@@ -12,37 +12,58 @@ class ReviewManager {
         this.updateRatingDisplay();
     }
 
-    // Display all reviews in the testimonials section
+    // Display reviews as a slideshow with navigation
     displayReviews() {
-        const reviewsContainer = document.querySelector('.testimonials-grid');
+        const reviewsContainer = document.querySelector('#testimonials-container');
         if (!reviewsContainer) return;
 
-        // Clear existing reviews
-        reviewsContainer.innerHTML = '';
+        this.currentReviewIndex = 0;
+        this.totalReviews = this.reviews.length;
 
-        // Display each review
-        this.reviews.forEach(review => {
-            const reviewCard = this.createReviewCard(review);
-            reviewsContainer.appendChild(reviewCard);
-        });
+        // Create slideshow structure
+        this.createSlideshow(reviewsContainer);
+        this.displayCurrentReview();
     }
 
-    // Create a review card element with enhanced styling
-    createReviewCard(review) {
-        const card = document.createElement('div');
-        card.className = 'testimonial-card';
+    // Create slideshow structure
+    createSlideshow(container) {
+        container.innerHTML = `
+            <div class="testimonial-card-container">
+                <button class="card-nav-btn prev-btn" id="prevReviewBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
 
-        // Add animation delay for staggered entrance
-        const index = this.reviews.indexOf(review);
-        card.style.animationDelay = `${index * 0.2}s`;
+                <div class="testimonial-card" id="currentReviewCard">
+                    <!-- Review content will be inserted here -->
+                </div>
 
-        // Get customer initials for avatar
+                <button class="card-nav-btn next-btn" id="nextReviewBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+
+        // Add event listeners
+        const prevBtn = document.getElementById('prevReviewBtn');
+        const nextBtn = document.getElementById('nextReviewBtn');
+
+        prevBtn.addEventListener('click', () => this.previousReview());
+        nextBtn.addEventListener('click', () => this.nextReview());
+    }
+
+    // Display current review in the slideshow
+    displayCurrentReview() {
+        const reviewCard = document.getElementById('currentReviewCard');
+        const prevBtn = document.getElementById('prevReviewBtn');
+        const nextBtn = document.getElementById('nextReviewBtn');
+
+        if (!reviewCard || !this.reviews[this.currentReviewIndex]) return;
+
+        const review = this.reviews[this.currentReviewIndex];
         const initials = this.getCustomerInitials(review.customerName);
-
-        // Format date nicely
         const formattedDate = this.formatDate(review.date);
 
-        card.innerHTML = `
+        reviewCard.innerHTML = `
             <div class="testimonial-header">
                 <div class="customer-info">
                     <div class="customer-avatar" style="background: ${this.getAvatarColor(review.customerName)}">
@@ -64,7 +85,7 @@ class ReviewManager {
                 <div class="quote-icon">
                     <i class="fas fa-quote-left"></i>
                 </div>
-                <p class="testimonial-text">${review.reviewText}</p>
+                <p class="testimonial-text">"${review.reviewText}"</p>
             </div>
             <div class="testimonial-footer">
                 <div class="testimonial-service">
@@ -75,7 +96,25 @@ class ReviewManager {
             </div>
         `;
 
-        return card;
+        // Update button states
+        prevBtn.disabled = this.currentReviewIndex === 0;
+        nextBtn.disabled = this.currentReviewIndex === this.totalReviews - 1;
+    }
+
+    // Navigate to previous review
+    previousReview() {
+        if (this.currentReviewIndex > 0) {
+            this.currentReviewIndex--;
+            this.displayCurrentReview();
+        }
+    }
+
+    // Navigate to next review
+    nextReview() {
+        if (this.currentReviewIndex < this.totalReviews - 1) {
+            this.currentReviewIndex++;
+            this.displayCurrentReview();
+        }
     }
 
     // Get customer initials for avatar
@@ -141,7 +180,7 @@ class ReviewManager {
         
         if (ratingText) {
             const avgRating = calculateAverageRating();
-            const totalReviews = getTotalReviews();
+            const totalReviews = this.reviews.length;
             ratingText.textContent = `${avgRating} on Google Reviews (${totalReviews} reviews)`;
         }
 
