@@ -1,28 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
   <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#333333;stop-opacity:1" />
     </linearGradient>
   </defs>
-  
-  <!-- Background circle -->
-  <circle cx="16" cy="16" r="15" fill="url(#grad1)" stroke="#fff" stroke-width="1"/>
-  
-  <!-- House/Building icon -->
-  <path d="M8 24h16v-8l-8-6-8 6v8z" fill="#fff" opacity="0.9"/>
-  <path d="M6 16l10-8 10 8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  
-  <!-- Door -->
-  <rect x="14" y="20" width="4" height="4" fill="url(#grad1)"/>
-  
-  <!-- Windows -->
-  <rect x="10" y="18" width="2" height="2" fill="url(#grad1)"/>
-  <rect x="20" y="18" width="2" height="2" fill="url(#grad1)"/>
-  
-  <!-- Tools overlay (hammer and wrench) -->
-  <g opacity="0.8">
-    <path d="M12 12l2 2-1 1-2-2z" fill="#fff"/>
-    <path d="M18 12c1 0 2 1 2 2s-1 2-2 2-2-1-2-2 1-2 2-2z" fill="#fff"/>
+
+  <!-- Background with rounded corners -->
+  <rect width="32" height="32" fill="url(#bgGrad)" rx="4"/>
+
+  <!-- Building silhouette (simplified from your logo) -->
+  <g fill="#ffffff">
+    <!-- Main building -->
+    <rect x="8" y="12" width="8" height="12" rx="1"/>
+    <!-- Tower with clock -->
+    <rect x="10" y="8" width="4" height="4" rx="0.5"/>
+    <circle cx="12" cy="10" r="1.5" fill="none" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="12" y1="10" x2="12" y2="9" stroke="#ffffff" stroke-width="0.5"/>
+    <line x1="12" y1="10" x2="13" y2="10" stroke="#ffffff" stroke-width="0.5"/>
+
+    <!-- Side buildings -->
+    <rect x="4" y="16" width="3" height="8" rx="0.5"/>
+    <rect x="17" y="14" width="4" height="10" rx="0.5"/>
+
+    <!-- Windows (simplified) -->
+    <rect x="9" y="14" width="1" height="1.5" fill="#000000"/>
+    <rect x="11" y="14" width="1" height="1.5" fill="#000000"/>
+    <rect x="9" y="16" width="1" height="1.5" fill="#000000"/>
+    <rect x="11" y="16" width="1" height="1.5" fill="#000000"/>
+    <rect x="9" y="18" width="1" height="1.5" fill="#000000"/>
+    <rect x="11" y="18" width="1" height="1.5" fill="#000000"/>
+
+    <!-- Side building windows -->
+    <rect x="5" y="18" width="0.8" height="1" fill="#000000"/>
+    <rect x="5" y="20" width="0.8" height="1" fill="#000000"/>
+    <rect x="18" y="16" width="0.8" height="1" fill="#000000"/>
+    <rect x="19.2" y="16" width="0.8" height="1" fill="#000000"/>
+    <rect x="18" y="18" width="0.8" height="1" fill="#000000"/>
+    <rect x="19.2" y="18" width="0.8" height="1" fill="#000000"/>
   </g>
+
+  <!-- Company initials -->
+  <text x="24" y="14" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#ffffff">
+    CCC
+  </text>
 </svg>
