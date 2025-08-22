@@ -835,19 +835,6 @@
             updateReview(0);
 
             console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
-
-            // Add temporary version indicator
-            const versionIndicator = document.createElement('div');
-            versionIndicator.style.cssText = 'position: fixed; top: 10px; right: 10px; background: green; color: white; padding: 5px 10px; font-size: 12px; z-index: 9999; border-radius: 3px;';
-            versionIndicator.textContent = 'v2.0 - No Auto-Rotation';
-            document.body.appendChild(versionIndicator);
-
-            // Remove indicator after 5 seconds
-            setTimeout(() => {
-                if (versionIndicator.parentNode) {
-                    versionIndicator.parentNode.removeChild(versionIndicator);
-                }
-            }, 5000);
         });
     </script>
 </body>
