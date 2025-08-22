@@ -255,9 +255,6 @@ function initTestimonialSlider() {
                     <div style="color: #666; font-size: 14px;">
                         ${index + 1} of ${totalReviews} reviews
                     </div>
-                    <div style="color: #999; font-size: 10px; margin-top: 10px;">
-                        JS Updated: 2025-08-22 15:15 - Arrows Fixed
-                    </div>
                 </div>
             </div>
         `;
