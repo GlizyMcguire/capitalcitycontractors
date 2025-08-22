@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View our portfolio of completed contracting projects including painting, drywall, taping, and carpet installation work throughout Capital City.">
+    <meta name="keywords" content="contractor portfolio, completed projects, before after, painting projects, drywall work, carpet installation">
+    <title>Portfolio - Capital City Contractors</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/variables.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/images/logo.svg" alt="Capital City Contractors" class="logo-img">
+                <span class="logo-text">Capital City Contractors</span>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link cta-button">Get Quote</a>
+                </li>
+            </ul>
+            
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="page-header-content">
+                <h1 class="page-title">Our Portfolio</h1>
+                <p class="page-subtitle">Showcasing our completed projects and quality craftsmanship</p>
+                <nav class="breadcrumb">
+                    <a href="index.html">Home</a>
+                    <span class="separator">/</span>
+                    <span class="current">Portfolio</span>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Filter -->
+    <section class="portfolio-filter-section">
+        <div class="container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="painting">Painting</button>
+                <button class="filter-btn" data-filter="drywall">Drywall</button>
+                <button class="filter-btn" data-filter="taping">Taping</button>
+                <button class="filter-btn" data-filter="carpet">Carpet</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Gallery -->
+    <section class="portfolio-gallery">
+        <div class="container">
+            <div class="portfolio-grid">
+                <!-- Painting Projects -->
+                <div class="portfolio-item" data-category="painting">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-painting-1.jpg" alt="Interior painting project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Modern Living Room</h3>
+                                <p class="portfolio-category">Interior Painting</p>
+                                <button class="portfolio-btn" onclick="openModal('painting-1')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="painting">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-painting-2.jpg" alt="Exterior painting project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Victorian Home Exterior</h3>
+                                <p class="portfolio-category">Exterior Painting</p>
+                                <button class="portfolio-btn" onclick="openModal('painting-2')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drywall Projects -->
+                <div class="portfolio-item" data-category="drywall">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-drywall-1.jpg" alt="Drywall installation project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Office Renovation</h3>
+                                <p class="portfolio-category">Drywall Installation</p>
+                                <button class="portfolio-btn" onclick="openModal('drywall-1')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="drywall">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-drywall-2.jpg" alt="Basement drywall project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Basement Finishing</h3>
+                                <p class="portfolio-category">Drywall & Insulation</p>
+                                <button class="portfolio-btn" onclick="openModal('drywall-2')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Taping Projects -->
+                <div class="portfolio-item" data-category="taping">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-taping-1.jpg" alt="Taping and finishing project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Seamless Finish</h3>
+                                <p class="portfolio-category">Taping & Finishing</p>
+                                <button class="portfolio-btn" onclick="openModal('taping-1')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carpet Projects -->
+                <div class="portfolio-item" data-category="carpet">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-carpet-1.jpg" alt="Carpet installation project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Luxury Bedroom</h3>
+                                <p class="portfolio-category">Carpet Installation</p>
+                                <button class="portfolio-btn" onclick="openModal('carpet-1')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="carpet">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-carpet-2.jpg" alt="Commercial carpet project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Corporate Office</h3>
+                                <p class="portfolio-category">Commercial Carpet</p>
+                                <button class="portfolio-btn" onclick="openModal('carpet-2')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mixed Projects -->
+                <div class="portfolio-item" data-category="painting drywall">
+                    <div class="portfolio-image">
+                        <img src="assets/images/portfolio-mixed-1.jpg" alt="Complete renovation project" class="portfolio-img">
+                        <div class="portfolio-overlay">
+                            <div class="portfolio-info">
+                                <h3 class="portfolio-title">Complete Renovation</h3>
+                                <p class="portfolio-category">Drywall & Painting</p>
+                                <button class="portfolio-btn" onclick="openModal('mixed-1')">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Start Your Project?</h2>
+                <p class="cta-subtitle">Let us help you achieve the same quality results for your space</p>
+                <div class="cta-buttons">
+                    <a href="contact.html" class="btn btn-primary btn-large">Get Free Quote</a>
+                    <a href="services.html" class="btn btn-secondary btn-large">View Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="assets/images/logo.svg" alt="Capital City Contractors" class="footer-logo-img">
+                        <span class="footer-logo-text">Capital City Contractors</span>
+                    </div>
+                    <p class="footer-description">
+                        Professional contracting services with a commitment to quality, reliability, and customer satisfaction.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="services.html#painting">Painting</a></li>
+                        <li><a href="services.html#drywall">Drywall</a></li>
+                        <li><a href="services.html#taping">Taping</a></li>
+                        <li><a href="services.html#carpet">Carpet Installation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="contact.html">Get Quote</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">Contact Info</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>(613) 301-1311</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@capitalcitycontractors.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>123 Main Street, Capital City, ST 12345</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p class="copyright">
+                        &copy; 2024 Capital City Contractors. All rights reserved.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/portfolio.js"></script>
+</body>
+</html>

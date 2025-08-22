@@ -1,0 +1,24 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" fill="#2563eb" rx="4"/>
+  <g fill="#ffffff">
+    <!-- Simplified building -->
+    <rect x="8" y="12" width="16" height="16" rx="1"/>
+    <!-- Tower -->
+    <rect x="14" y="8" width="4" height="4" rx="0.5"/>
+    <!-- Clock -->
+    <circle cx="16" cy="10" r="1.5" fill="none" stroke="#ffffff" stroke-width="0.5"/>
+    <!-- Windows -->
+    <rect x="10" y="15" width="2" height="2" fill="#2563eb"/>
+    <rect x="13" y="15" width="2" height="2" fill="#2563eb"/>
+    <rect x="17" y="15" width="2" height="2" fill="#2563eb"/>
+    <rect x="20" y="15" width="2" height="2" fill="#2563eb"/>
+    <rect x="10" y="19" width="2" height="2" fill="#2563eb"/>
+    <rect x="13" y="19" width="2" height="2" fill="#2563eb"/>
+    <rect x="17" y="19" width="2" height="2" fill="#2563eb"/>
+    <rect x="20" y="19" width="2" height="2" fill="#2563eb"/>
+    <rect x="10" y="23" width="2" height="2" fill="#2563eb"/>
+    <rect x="13" y="23" width="2" height="2" fill="#2563eb"/>
+    <rect x="17" y="23" width="2" height="2" fill="#2563eb"/>
+    <rect x="20" y="23" width="2" height="2" fill="#2563eb"/>
+  </g>
+</svg>
