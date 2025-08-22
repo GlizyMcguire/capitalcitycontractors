@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     <url>
         <loc>https://capitalcitycontractors.ca/</loc>
         <lastmod>2025-08-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg</image:loc>
+            <image:title>Capital City Contractors Logo</image:title>
+            <image:caption>Professional painting and renovation contractors in Ottawa</image:caption>
+        </image:image>
     </url>
     <url>
         <loc>https://capitalcitycontractors.ca/services.html</loc>
@@ -29,5 +35,11 @@
         <lastmod>2025-08-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://capitalcitycontractors.ca/thank-you.html</loc>
+        <lastmod>2025-08-22</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
     </url>
 </urlset>

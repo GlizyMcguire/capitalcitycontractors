@@ -1,33 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-CA">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- SEO and Performance Meta Tags -->
-    <meta name="description" content="Capital City Contractors - Professional painting, drywall, taping, and carpet installation services. Quality craftsmanship for residential and commercial projects.">
-    <meta name="keywords" content="painting, drywall, taping, carpet installation, contractors, home improvement, commercial renovation">
-    <title>Capital City Contractors - Professional Painting, Drywall & Carpet Installation</title>
+    <!-- SEO Meta Tags -->
+    <title>Capital City Contractors | Painting & Renovations in Ottawa</title>
+    <meta name="description" content="Trusted Ottawa contractors for painting, drywall repair, and home renovations. Serving Ottawa, Richmond, Kanata. Free estimates: (613) 301-1311.">
+    <meta name="keywords" content="Ottawa contractors, painting Ottawa, drywall repair Ottawa, home renovations Ottawa, Richmond contractors, Kanata contractors">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://capitalcitycontractors.ca/">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://capitalcitycontractors.ca/">
-    <meta property="og:title" content="Capital City Contractors - Professional Painting, Drywall & Carpet Installation">
-    <meta property="og:description" content="Professional painting, drywall, taping, and carpet installation services. Quality craftsmanship for residential and commercial projects in Ottawa.">
-    <meta property="og:image" content="https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg?v=2025-08-22">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:image:alt" content="Capital City Contractors Logo">
+    <meta property="og:title" content="Capital City Contractors | Painting & Renovations in Ottawa">
+    <meta property="og:description" content="Trusted Ottawa contractors for painting, drywall repair, and home renovations. Serving Ottawa, Richmond, Kanata. Free estimates: (613) 301-1311.">
+    <meta property="og:image" content="https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Capital City Contractors - Ottawa's Trusted Painting & Renovation Experts">
     <meta property="og:site_name" content="Capital City Contractors">
     <meta property="og:locale" content="en_CA">
-    <meta property="og:updated_time" content="2025-08-22T02:00:00Z">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://capitalcitycontractors.ca/">
-    <meta property="twitter:title" content="Capital City Contractors - Professional Painting, Drywall & Carpet Installation">
-    <meta property="twitter:description" content="Professional painting, drywall, taping, and carpet installation services. Quality craftsmanship for residential and commercial projects in Ottawa.">
-    <meta property="twitter:image" content="https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg?v=2025-08-22">
-    <meta property="twitter:image:alt" content="Capital City Contractors Logo">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://capitalcitycontractors.ca/">
+    <meta name="twitter:title" content="Capital City Contractors | Painting & Renovations in Ottawa">
+    <meta name="twitter:description" content="Trusted Ottawa contractors for painting, drywall repair, and home renovations. Serving Ottawa, Richmond, Kanata. Free estimates: (613) 301-1311.">
+    <meta name="twitter:image" content="https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg">
+    <meta name="twitter:image:alt" content="Capital City Contractors - Ottawa's Trusted Painting & Renovation Experts">
+
+    <!-- Analytics & Verification Placeholders -->
+    <meta name="google-site-verification" content="PLACEHOLDER_GOOGLE_VERIFICATION_CODE">
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
     
     <!-- Favicon and PWA -->
     <link rel="icon" type="image/svg+xml" href="favicon-simple.svg">
@@ -45,6 +58,7 @@
     <link rel="preload" href="assets/css/variables.css" as="style">
     <link rel="preload" href="assets/css/base.css" as="style">
     <link rel="preload" href="assets/images/CCC logo.jpg" as="image">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" as="style">
     <link rel="preload" href="assets/js/main.js" as="script">
 
     <!-- Fonts - Optimized Loading -->
@@ -63,11 +77,14 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
+        "@type": ["LocalBusiness", "Contractor"],
+        "@id": "https://capitalcitycontractors.ca/#business",
         "name": "Capital City Contractors",
-        "description": "Professional painting, drywall, taping, and carpet installation services in Ottawa",
-        "url": "https://capitalcitycontractors.ca",
-        "telephone": "+1-613-XXX-XXXX",
+        "description": "Professional painting, drywall repair, and home renovation services in Ottawa and surrounding areas",
+        "url": "https://capitalcitycontractors.ca/",
+        "telephone": "+16133011311",
+        "image": "https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg",
+        "logo": "https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Ottawa",
@@ -79,43 +96,54 @@
             "latitude": "45.4215",
             "longitude": "-75.6972"
         },
-        "openingHours": "Mo-Fr 08:00-18:00, Sa 09:00-16:00",
+        "areaServed": [
+            {"@type": "City", "name": "Ottawa", "addressRegion": "ON", "addressCountry": "CA"},
+            {"@type": "City", "name": "Richmond", "addressRegion": "ON", "addressCountry": "CA"},
+            {"@type": "City", "name": "Kanata", "addressRegion": "ON", "addressCountry": "CA"},
+            {"@type": "City", "name": "Nepean", "addressRegion": "ON", "addressCountry": "CA"},
+            {"@type": "City", "name": "Stittsville", "addressRegion": "ON", "addressCountry": "CA"},
+            {"@type": "City", "name": "Orleans", "addressRegion": "ON", "addressCountry": "CA"}
+        ],
+        "openingHours": ["Mo-Fr 08:00-18:00", "Sa 09:00-16:00"],
         "priceRange": "$$",
-        "serviceArea": {
-            "@type": "GeoCircle",
-            "geoMidpoint": {
-                "@type": "GeoCoordinates",
-                "latitude": "45.4215",
-                "longitude": "-75.6972"
-            },
-            "geoRadius": "50000"
-        },
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
-            "name": "Construction Services",
+            "name": "Professional Contracting Services",
             "itemListElement": [
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
                         "name": "Interior Painting",
-                        "description": "Professional interior painting services"
+                        "description": "Professional interior painting services for residential and commercial properties",
+                        "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
                     }
                 },
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Drywall Installation",
-                        "description": "Expert drywall installation and repair"
+                        "name": "Exterior Painting",
+                        "description": "Expert exterior painting and surface preparation",
+                        "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
                     }
                 },
                 {
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Carpet Installation",
-                        "description": "Professional carpet installation services"
+                        "name": "Drywall Repair",
+                        "description": "Professional drywall installation, repair, and finishing",
+                        "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Home Renovations",
+                        "description": "Complete home renovation and improvement services",
+                        "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
                     }
                 }
             ]
@@ -126,6 +154,49 @@
             "reviewCount": "4",
             "bestRating": "5",
             "worstRating": "5"
+        },
+        "sameAs": [
+            "PLACEHOLDER_FACEBOOK_URL",
+            "PLACEHOLDER_GOOGLE_BUSINESS_URL"
+        ]
+    }
+    </script>
+
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://capitalcitycontractors.ca/#organization",
+        "name": "Capital City Contractors",
+        "url": "https://capitalcitycontractors.ca/",
+        "logo": "https://capitalcitycontractors.ca/assets/images/CCC%20logo.jpg",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+16133011311",
+            "contactType": "customer service",
+            "availableLanguage": ["English", "French"]
+        }
+    }
+    </script>
+
+    <!-- Website Schema with SearchAction -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://capitalcitycontractors.ca/#website",
+        "url": "https://capitalcitycontractors.ca/",
+        "name": "Capital City Contractors",
+        "description": "Professional painting, drywall repair, and home renovation services in Ottawa",
+        "publisher": {"@id": "https://capitalcitycontractors.ca/#organization"},
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://capitalcitycontractors.ca/?s={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
         }
     }
     </script>
@@ -183,7 +254,8 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-logo-container">
-            <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="hero-full-logo">
+            <h1 class="visually-hidden">Capital City Contractors - Professional Painting & Renovations in Ottawa</h1>
+            <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors - Professional Painting & Renovation Services in Ottawa" class="hero-full-logo" width="800" height="400">
             <div class="hero-cta">
                 <a href="#contact" class="btn btn-primary btn-large">
                     <i class="fas fa-calculator"></i>
@@ -349,7 +421,7 @@
                 <div class="slideshow-container">
                     <!-- Slides -->
                     <div class="slide active">
-                        <img src="assets/images/pic1.jpg" alt="Professional painting project - interior room transformation" class="slide-img">
+                        <img src="assets/images/pic1.jpg" alt="Professional painting project - interior room transformation" class="slide-img" width="600" height="400">
                     </div>
                     <div class="slide">
                         <img src="assets/images/pic2.jpg" alt="Drywall installation and finishing work" class="slide-img" loading="lazy">
@@ -764,11 +836,15 @@
                     <div class="contact-info">
                         <div class="contact-item">
                             <i class="fas fa-phone"></i>
-                            <span>(613) 301-1311</span>
+                            <a href="tel:+16133011311">(613) 301-1311</a>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
-                            <span>info@capitalcitycontractors.ca</span>
+                            <a href="mailto:info@capitalcitycontractors.ca">info@capitalcitycontractors.ca</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Serving Ottawa, Richmond, Kanata, Nepean, Stittsville, Orleans</span>
                         </div>
                     </div>
                 </div>

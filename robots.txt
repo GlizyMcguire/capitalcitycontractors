@@ -1,8 +1,14 @@
 User-agent: *
 Allow: /
 
+# Disallow admin and development files
+Disallow: /assets/data/
+Disallow: /*.md$
+Disallow: /sw.js
+Disallow: /manifest.json
+
 # Sitemap location
 Sitemap: https://capitalcitycontractors.ca/sitemap.xml
 
-# Disallow placeholder generator
-Disallow: /assets/images/placeholder-generator.html
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
