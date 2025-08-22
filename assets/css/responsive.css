@@ -278,11 +278,11 @@
     
     /* Mobile Testimonials */
     .testimonial-card {
-        padding: var(--space-6);
+        padding: var(--space-4);
     }
-    
+
     .testimonial-text {
-        font-size: var(--text-base);
+        font-size: var(--text-sm);
     }
     
     /* Mobile CTA */
