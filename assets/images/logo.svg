@@ -1,0 +1,60 @@
+<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="200" height="80" fill="#000000" rx="8"/>
+
+  <!-- Building silhouette -->
+  <g fill="#ffffff">
+    <!-- Main building -->
+    <rect x="20" y="25" width="30" height="35" rx="2"/>
+    <!-- Tower -->
+    <rect x="30" y="15" width="10" height="10" rx="1"/>
+    <!-- Clock -->
+    <circle cx="35" cy="20" r="3" fill="none" stroke="#ffffff" stroke-width="1"/>
+    <line x1="35" y1="20" x2="35" y2="18" stroke="#ffffff" stroke-width="1"/>
+    <line x1="35" y1="20" x2="37" y2="20" stroke="#ffffff" stroke-width="1"/>
+    
+    <!-- Side buildings -->
+    <rect x="10" y="35" width="8" height="25" rx="1"/>
+    <rect x="52" y="30" width="12" height="30" rx="1"/>
+    
+    <!-- Windows -->
+    <rect x="23" y="30" width="3" height="4" fill="#000000"/>
+    <rect x="28" y="30" width="3" height="4" fill="#000000"/>
+    <rect x="23" y="36" width="3" height="4" fill="#000000"/>
+    <rect x="28" y="36" width="3" height="4" fill="#000000"/>
+    <rect x="23" y="42" width="3" height="4" fill="#000000"/>
+    <rect x="28" y="42" width="3" height="4" fill="#000000"/>
+    <rect x="23" y="48" width="3" height="4" fill="#000000"/>
+    <rect x="28" y="48" width="3" height="4" fill="#000000"/>
+
+    <!-- Side building windows -->
+    <rect x="12" y="40" width="2" height="3" fill="#000000"/>
+    <rect x="15" y="40" width="2" height="3" fill="#000000"/>
+    <rect x="12" y="45" width="2" height="3" fill="#000000"/>
+    <rect x="15" y="45" width="2" height="3" fill="#000000"/>
+    <rect x="12" y="50" width="2" height="3" fill="#000000"/>
+    <rect x="15" y="50" width="2" height="3" fill="#000000"/>
+
+    <rect x="55" y="35" width="2" height="3" fill="#000000"/>
+    <rect x="58" y="35" width="2" height="3" fill="#000000"/>
+    <rect x="55" y="40" width="2" height="3" fill="#000000"/>
+    <rect x="58" y="40" width="2" height="3" fill="#000000"/>
+    <rect x="55" y="45" width="2" height="3" fill="#000000"/>
+    <rect x="58" y="45" width="2" height="3" fill="#000000"/>
+    <rect x="55" y="50" width="2" height="3" fill="#000000"/>
+    <rect x="58" y="50" width="2" height="3" fill="#000000"/>
+  </g>
+  
+  <!-- Company name -->
+  <text x="75" y="30" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">
+    Capital City
+  </text>
+  <text x="75" y="45" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff">
+    Contractors
+  </text>
+  
+  <!-- Tagline -->
+  <text x="75" y="58" font-family="Arial, sans-serif" font-size="8" fill="#e5e7eb">
+    Quality • Reliability • Excellence
+  </text>
+</svg>
