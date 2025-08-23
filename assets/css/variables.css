@@ -1,5 +1,8 @@
 /* CSS Custom Properties (Variables) */
 :root {
+    /* Force light color scheme across all browsers/in-app browsers */
+    color-scheme: light;
+
     /* Colors - Professional Black & White Theme (Matching Logo) */
     --primary-color: #000000;          /* Black (matching logo) */
     --primary-dark: #1f2937;           /* Dark gray */
@@ -28,7 +31,7 @@
     --orange-50: #fff7ed;              /* Light orange */
     --orange-200: #fed7aa;             /* Orange border */
     --orange-500: #f97316;             /* Orange accent */
-    
+
     /* Neutral Colors */
     --white: #ffffff;
     --gray-50: #f9fafb;
@@ -42,26 +45,26 @@
     --gray-800: #1f2937;
     --gray-900: #111827;
     --black: #000000;
-    
+
     /* Text Colors */
     --text-primary: var(--gray-900);
     --text-secondary: var(--gray-600);
     --text-muted: var(--gray-500);
     --text-light: var(--gray-400);
     --text-white: var(--white);
-    
+
     /* Background Colors */
     --bg-primary: var(--white);
     --bg-secondary: var(--gray-50);
     --bg-dark: var(--gray-900);
     --bg-overlay: rgba(0, 0, 0, 0.5);
     --bg-overlay-light: rgba(255, 255, 255, 0.9);
-    
+
     /* Typography - Professional System */
     --font-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-heading: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-accent: 'Roboto Slab', Georgia, serif;
-    
+
     /* Font Sizes */
     --text-xs: 0.75rem;      /* 12px */
     --text-sm: 0.875rem;     /* 14px */
@@ -74,21 +77,21 @@
     --text-5xl: 3rem;        /* 48px */
     --text-6xl: 3.75rem;     /* 60px */
     --text-7xl: 4.5rem;      /* 72px */
-    
+
     /* Font Weights */
     --font-light: 300;
     --font-normal: 400;
     --font-medium: 500;
     --font-semibold: 600;
     --font-bold: 700;
-    
+
     /* Line Heights */
     --leading-tight: 1.25;
     --leading-snug: 1.375;
     --leading-normal: 1.5;
     --leading-relaxed: 1.625;
     --leading-loose: 2;
-    
+
     /* Spacing */
     --space-1: 0.25rem;      /* 4px */
     --space-2: 0.5rem;       /* 8px */
@@ -103,7 +106,7 @@
     --space-20: 5rem;        /* 80px */
     --space-24: 6rem;        /* 96px */
     --space-32: 8rem;        /* 128px */
-    
+
     /* Border Radius */
     --radius-sm: 0.125rem;   /* 2px */
     --radius: 0.25rem;       /* 4px */
@@ -113,7 +116,7 @@
     --radius-2xl: 1rem;      /* 16px */
     --radius-3xl: 1.5rem;    /* 24px */
     --radius-full: 9999px;
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -121,12 +124,12 @@
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    
+
     /* Transitions */
     --transition-fast: 150ms ease-in-out;
     --transition-normal: 250ms ease-in-out;
     --transition-slow: 350ms ease-in-out;
-    
+
     /* Z-Index */
     --z-dropdown: 1000;
     --z-sticky: 1020;
@@ -135,21 +138,21 @@
     --z-modal: 1050;
     --z-popover: 1060;
     --z-tooltip: 1070;
-    
+
     /* Breakpoints (for reference in media queries) */
     --breakpoint-sm: 640px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 1024px;
     --breakpoint-xl: 1280px;
     --breakpoint-2xl: 1536px;
-    
+
     /* Container Widths */
     --container-sm: 640px;
     --container-md: 768px;
     --container-lg: 1024px;
     --container-xl: 1280px;
     --container-2xl: 1536px;
-    
+
     /* Animation Durations */
     --duration-75: 75ms;
     --duration-100: 100ms;
@@ -159,7 +162,7 @@
     --duration-500: 500ms;
     --duration-700: 700ms;
     --duration-1000: 1000ms;
-    
+
     /* Easing Functions */
     --ease-linear: linear;
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
@@ -167,13 +170,5 @@
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark mode variables (optional for future implementation) */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-primary: var(--gray-900);
-        --bg-secondary: var(--gray-800);
-        --text-primary: var(--gray-100);
-        --text-secondary: var(--gray-300);
-        --text-muted: var(--gray-400);
-    }
-}
+/* Dark mode variables intentionally disabled for now to prevent low-contrast in in-app dark mode browsers.
+   When implementing dark mode, use an explicit .theme-dark class instead of prefers-color-scheme. */
