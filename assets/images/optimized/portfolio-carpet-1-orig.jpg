@@ -1,0 +1,54 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="carpetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+    </linearGradient>
+    <pattern id="carpetTexture" patternUnits="userSpaceOnUse" width="4" height="4">
+      <rect width="4" height="4" fill="#ffffff" opacity="0.1"/>
+      <circle cx="2" cy="2" r="0.5" fill="#ffffff" opacity="0.3"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="300" fill="url(#carpetGrad)"/>
+  
+  <!-- Carpet installation elements -->
+  <g fill="#ffffff" opacity="0.4">
+    <!-- Floor/subfloor -->
+    <rect x="20" y="180" width="360" height="100" fill="none" stroke="#ffffff" stroke-width="2"/>
+    
+    <!-- Carpet roll -->
+    <ellipse cx="80" cy="120" rx="15" ry="60" fill="#ffffff" opacity="0.3"/>
+    <rect x="65" y="60" width="30" height="120" fill="url(#carpetTexture)"/>
+    
+    <!-- Installed carpet area -->
+    <rect x="150" y="180" width="230" height="100" fill="url(#carpetTexture)"/>
+    
+    <!-- Carpet tucker/knee kicker -->
+    <rect x="200" y="140" width="50" height="12" rx="6"/>
+    <rect x="195" y="135" width="10" height="22" rx="5"/>
+    
+    <!-- Seaming iron -->
+    <rect x="280" y="160" width="40" height="15" rx="7"/>
+    <rect x="275" y="155" width="8" height="25" rx="4"/>
+    
+    <!-- Tack strips -->
+    <rect x="150" y="275" width="230" height="5" rx="2"/>
+    <rect x="150" y="180" width="5" height="95" rx="2"/>
+    <rect x="375" y="180" width="5" height="95" rx="2"/>
+  </g>
+  
+  <!-- Icon -->
+  <g fill="#ffffff" opacity="0.8">
+    <rect x="185" y="15" width="30" height="20" rx="3"/>
+    <rect x="180" y="10" width="5" height="30" rx="2"/>
+    <rect x="215" y="10" width="5" height="30" rx="2"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff">
+    Carpet Installation
+  </text>
+  <text x="200" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" opacity="0.6">
+    Service Placeholder - Replace with carpet installation image
+  </text>
+</svg>
