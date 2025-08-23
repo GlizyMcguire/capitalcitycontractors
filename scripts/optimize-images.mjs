@@ -8,7 +8,15 @@ await fs.mkdir(outDir, { recursive: true });
 
 const targets = [
   'aboutus.png',
-  'pic1.jpg', 'pic2.jpg', 'pic3.jpg', 'pic4.jpg', 'pic5.jpg', 'pic6.jpg', 'pic7.jpg', 'pic8.jpg', 'pic9.jpg', 'pic10.jpg', 'pic11.jpg'
+  'pic1.jpg', 'pic2.jpg', 'pic3.jpg', 'pic4.jpg', 'pic5.jpg', 'pic6.jpg', 'pic7.jpg', 'pic8.jpg', 'pic9.jpg', 'pic10.jpg', 'pic11.jpg',
+  // Services hero/service tiles
+  'painting-service.jpg', 'drywall-service.jpg', 'taping-service.jpg', 'carpet-service.jpg',
+  // Portfolio grid images
+  'portfolio-painting-1.jpg', 'portfolio-painting-2.jpg',
+  'portfolio-drywall-1.jpg', 'portfolio-drywall-2.jpg',
+  'portfolio-taping-1.jpg',
+  'portfolio-carpet-1.jpg', 'portfolio-carpet-2.jpg',
+  'portfolio-mixed-1.jpg'
 ];
 
 const sizes = [768, 1280, 1920];
