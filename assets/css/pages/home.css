@@ -598,6 +598,23 @@
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
     text-align: center;
+
+/* Slideshow layout stability */
+.portfolio-slideshow .slideshow-container {
+  position: relative;
+}
+.portfolio-slideshow .slide picture,
+.portfolio-slideshow .slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* Reserve 3:2 space to prevent CLS during slide changes */
+.portfolio-slideshow .slide .slide-img {
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
 }
 
 .contact-cta .cta-title {
@@ -1661,19 +1678,19 @@
     .hero-title {
         font-size: var(--text-3xl);
     }
-    
+
     .hero-subtitle {
         font-size: var(--text-base);
     }
-    
+
     .services-grid {
         gap: var(--space-6);
     }
-    
+
     .about-content {
         gap: var(--space-8);
     }
-    
+
     .about-img {
         height: 300px;
     }
@@ -1692,7 +1709,7 @@
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
     }
-    
+
     .about-img {
         image-rendering: -webkit-optimize-contrast;
         image-rendering: crisp-edges;
@@ -1704,16 +1721,16 @@
     .services-preview {
         background-color: var(--gray-800);
     }
-    
+
     .service-card {
         background-color: var(--gray-700);
         border-color: var(--gray-600);
     }
-    
+
     .testimonials {
         background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
     }
-    
+
     .testimonial-card {
         background-color: var(--gray-700);
         border-color: var(--gray-600);
@@ -1730,15 +1747,15 @@
         opacity: 1;
         transform: none;
     }
-    
+
     .cta-section::before {
         animation: none;
     }
-    
+
     .hero-scroll-indicator {
         animation: none;
     }
-    
+
     .about-img,
     .service-icon {
         transition: none;
@@ -1751,18 +1768,18 @@
         background: none;
         color: var(--text-primary);
     }
-    
+
     .hero-title .title-line.highlight {
         -webkit-text-fill-color: var(--text-primary);
         background: none;
     }
-    
+
     .service-card,
     .testimonial-card {
         box-shadow: none;
         border: 1px solid var(--gray-300);
     }
-    
+
     .cta-section {
         background: none;
         color: var(--text-primary);

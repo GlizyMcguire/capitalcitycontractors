@@ -81,6 +81,55 @@
     }
     </script>
 
+        <!-- Per-service Service JSON-LD blocks -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Service",
+              "@id": "https://capitalcitycontractors.ca/services.html#interior-painting",
+              "name": "Interior Painting",
+              "serviceType": "Interior Painting",
+              "areaServed": [{"@type":"City","name":"Ottawa"},{"@type":"City","name":"Kanata"},{"@type":"City","name":"Nepean"},{"@type":"City","name":"Stittsville"},{"@type":"City","name":"Orleans"},{"@type":"City","name":"Richmond"}],
+              "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
+            },
+            {
+              "@type": "Service",
+              "@id": "https://capitalcitycontractors.ca/services.html#exterior-painting",
+              "name": "Exterior Painting",
+              "serviceType": "Exterior Painting",
+              "areaServed": [{"@type":"City","name":"Ottawa"}],
+              "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
+            },
+            {
+              "@type": "Service",
+              "@id": "https://capitalcitycontractors.ca/services.html#drywall-repair",
+              "name": "Drywall Repair & Installation",
+              "serviceType": "Drywall Repair",
+              "areaServed": [{"@type":"City","name":"Ottawa"}],
+              "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
+            },
+            {
+              "@type": "Service",
+              "@id": "https://capitalcitycontractors.ca/services.html#taping-mudding",
+              "name": "Taping & Mudding",
+              "serviceType": "Taping & Mudding",
+              "areaServed": [{"@type":"City","name":"Ottawa"}],
+              "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
+            },
+            {
+              "@type": "Service",
+              "@id": "https://capitalcitycontractors.ca/services.html#carpet-installation",
+              "name": "Carpet Installation",
+              "serviceType": "Carpet Installation",
+              "areaServed": [{"@type":"City","name":"Ottawa"}],
+              "provider": {"@id": "https://capitalcitycontractors.ca/#business"}
+            }
+          ]
+        }
+        </script>
+
         <!-- BreadcrumbList JSON-LD -->
         <script type="application/ld+json">
         {
