@@ -567,8 +567,20 @@ function initializeSlideshow() {
 
     if (slides.length === 0) return; // Exit if no slides found
 
-    // Start automatic slideshow
-    startSlideshow();
+    // Pre-decode all slideshow images to avoid decode jank during transitions
+    const images = Array.from(document.querySelectorAll('.slideshow-container img'));
+    const decodePromises = images.map(img => {
+        try {
+            // If already complete, no need to decode
+            if (img.complete) return Promise.resolve();
+            return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+        } catch (e) { return Promise.resolve(); }
+    });
+
+    Promise.allSettled(decodePromises).then(() => {
+        // Start automatic slideshow after images are decoded
+        startSlideshow();
+    });
 
     // Pause on hover
     const slideshowContainer = document.querySelector('.slideshow-container');

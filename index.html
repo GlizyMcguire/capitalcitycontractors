@@ -66,6 +66,12 @@
     <link rel="preload" href="assets/images/pic3.jpg" as="image">
     <link rel="preload" href="assets/images/pic4.jpg" as="image">
     <link rel="preload" href="assets/images/pic5.jpg" as="image">
+    <link rel="preload" href="assets/images/pic6.jpg" as="image">
+    <link rel="preload" href="assets/images/pic7.jpg" as="image">
+    <link rel="preload" href="assets/images/pic8.jpg" as="image">
+    <link rel="preload" href="assets/images/pic9.jpg" as="image">
+    <link rel="preload" href="assets/images/pic10.jpg" as="image">
+    <link rel="preload" href="assets/images/pic11.jpg" as="image">
 
     <!-- Fonts - Optimized Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -257,13 +263,13 @@
     <script src="assets/data/reviews.js"></script>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250823-slideshow-fix">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250823-slideshow-fix">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250823-slideshow-fix">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250823-slideshow-fix">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250823-slideshow-fix">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250823-slideshow-fix">
-    <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-slideshow-fix">
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250823-2">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250823-2">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250823-2">
+    <link rel="stylesheet" href="assets/css/components.css?v=20250823-2">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250823-2">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250823-2">
+    <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-2">
 </head>
 <body>
     <div id="top"></div>
@@ -473,13 +479,13 @@
                 <div class="slideshow-container">
                     <!-- Slides -->
                     <div class="slide active">
-                        <img src="assets/images/pic1.jpg" alt="Professional painting project - interior room transformation" class="slide-img" width="600" height="400">
+                        <img src="assets/images/pic1.jpg" alt="Professional painting project - interior room transformation" class="slide-img" width="600" height="400" decoding="sync" fetchpriority="high" loading="eager">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic2.jpg" alt="Drywall installation and finishing work" class="slide-img">
+                        <img src="assets/images/pic2.jpg" alt="Drywall installation and finishing work" class="slide-img" decoding="async" fetchpriority="high" loading="eager">
                     </div>
                     <div class="slide">
-                        <img src="assets/images/pic3.jpg" alt="Carpet installation in residential space" class="slide-img">
+                        <img src="assets/images/pic3.jpg" alt="Carpet installation in residential space" class="slide-img" decoding="async" loading="eager">
                     </div>
                     <div class="slide">
                         <img src="assets/images/pic4.jpg" alt="Taping and mudding drywall project" class="slide-img">
@@ -928,7 +934,7 @@
 
     <!-- Scripts - Deferred for Performance -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-    <script src="assets/js/main.js?v=20250823-slideshow-fix" defer></script>
+    <script src="assets/js/main.js?v=20250823-2" defer></script>
 
     <!-- Review Navigation with Auto-Rotation -->
     <script>
