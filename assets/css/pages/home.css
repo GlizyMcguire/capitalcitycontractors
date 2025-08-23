@@ -1045,6 +1045,27 @@
     flex-shrink: 0;
 }
 
+
+/* Service media block and CTA row */
+.service-media {
+    margin: 0 0 var(--space-4) 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.service-media-img { display: block; width: 100%; height: auto; }
+
+.service-cta-row {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    margin: var(--space-4) 0 var(--space-4);
+}
+.service-cta-row .btn { padding: 0.6rem 1rem; }
+
+@media (max-width: 768px) {
+    .service-cta-row { flex-direction: column; }
+}
+
 /* Portfolio Section - Slideshow */
 .portfolio-section {
     padding: var(--space-20) 0;
