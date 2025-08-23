@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initAnimations();
     initFormHandling();
     initSmoothScrolling();
-    
+
     // Initialize AOS (Animate On Scroll) if available
     if (typeof AOS !== 'undefined') {
         AOS.init({
@@ -72,7 +72,7 @@ function initNavigation() {
             }
         });
     }
-    
+
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
         if (window.scrollY > 50) {
@@ -81,7 +81,7 @@ function initNavigation() {
             navbar.classList.remove('scrolled');
         }
     });
-    
+
     // Active nav link highlighting
     updateActiveNavLink();
     window.addEventListener('scroll', updateActiveNavLink);
@@ -90,7 +90,7 @@ function initNavigation() {
 function updateActiveNavLink() {
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     let current = '';
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
@@ -98,12 +98,30 @@ function updateActiveNavLink() {
             current = section.getAttribute('id');
         }
     });
-    
+
     navLinks.forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
             link.classList.add('active');
         }
+    // Fix footer links on homepage to anchor-scroll instead of navigating away
+    const footerLinks = document.querySelectorAll('.footer .footer-links a');
+    footerLinks.forEach(link => {
+        try {
+            const href = link.getAttribute('href');
+            // Normalize to anchors on the same page
+            const anchorMatch = href && href.match(/#(services|about|portfolio|contact)$/);
+            if (anchorMatch) {
+                link.setAttribute('href', `#${anchorMatch[1]}`);
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.getElementById(anchorMatch[1]);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            }
+        } catch (e) { /* no-op */ }
+    });
+
     });
 }
 
@@ -118,7 +136,7 @@ function initScrollEffects() {
             heroBackground.style.transform = `translateY(${rate}px)`;
         });
     }
-    
+
     // Scroll indicator
     const scrollIndicator = document.querySelector('.hero-scroll-indicator');
     if (scrollIndicator) {
@@ -129,7 +147,7 @@ function initScrollEffects() {
             }
         });
     }
-    
+
     // Hide scroll indicator when scrolling
     window.addEventListener('scroll', function() {
         if (scrollIndicator) {
@@ -306,12 +324,12 @@ function initAnimations() {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
-    
+
     const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate');
-                
+
                 // Special handling for service cards
                 if (entry.target.classList.contains('services-grid')) {
                     const serviceCards = entry.target.querySelectorAll('.service-card');
@@ -322,7 +340,7 @@ function initAnimations() {
                         }, index * 100);
                     });
                 }
-                
+
                 // Special handling for feature items
                 if (entry.target.classList.contains('features-list')) {
                     const featureItems = entry.target.querySelectorAll('.feature-item');
@@ -336,7 +354,7 @@ function initAnimations() {
             }
         });
     }, observerOptions);
-    
+
     // Observe elements for animation
     const animateElements = document.querySelectorAll('.section-header, .services-grid, .features-list, .about-content');
     animateElements.forEach(el => observer.observe(el));
@@ -345,15 +363,15 @@ function initAnimations() {
 // Form Handling
 function initFormHandling() {
     const forms = document.querySelectorAll('form');
-    
+
     forms.forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Basic form validation
             const inputs = form.querySelectorAll('input[required], textarea[required]');
             let isValid = true;
-            
+
             inputs.forEach(input => {
                 if (!input.value.trim()) {
                     isValid = false;
@@ -362,7 +380,7 @@ function initFormHandling() {
                     input.classList.remove('error');
                 }
             });
-            
+
             // Email validation
             const emailInputs = form.querySelectorAll('input[type="email"]');
             emailInputs.forEach(input => {
@@ -371,7 +389,7 @@ function initFormHandling() {
                     input.classList.add('error');
                 }
             });
-            
+
             if (isValid) {
                 // Show success message
                 showNotification('Thank you! Your message has been sent successfully.', 'success');
@@ -393,7 +411,7 @@ function showNotification(message, type) {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
-    
+
     // Style the notification
     notification.style.cssText = `
         position: fixed;
@@ -408,14 +426,14 @@ function showNotification(message, type) {
         transform: translateX(100%);
         transition: transform 0.3s ease;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Animate in
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 100);
-    
+
     // Remove after 5 seconds
     setTimeout(() => {
         notification.style.transform = 'translateX(100%)';
@@ -428,17 +446,17 @@ function showNotification(message, type) {
 // Smooth Scrolling
 function initSmoothScrolling() {
     const links = document.querySelectorAll('a[href^="#"]');
-    
+
     links.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href').substring(1);
             const targetElement = document.getElementById(targetId);
-            
+
             if (targetElement) {
                 const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
-                
+
                 window.scrollTo({
                     top: offsetTop,
                     behavior: 'smooth'
