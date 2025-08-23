@@ -1,0 +1,13 @@
+{
+  "name": "capitalcitycontractors-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static website with image optimization scripts",
+  "scripts": {
+    "optimize-images": "node scripts/optimize-images.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.2"
+  }
+}
+
