@@ -545,12 +545,25 @@ window.addEventListener('error', function(e) {
     console.error('JavaScript error:', e.error);
 });
 
-// Service Worker registration (for future PWA features)
+// Service Worker registration with update flow
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js')
-            .then(() => {
+            .then(reg => {
                 console.log('ServiceWorker registration successful');
+                if (reg.waiting) {
+                    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                }
+                reg.addEventListener('updatefound', () => {
+                    const newWorker = reg.installing;
+                    if (!newWorker) return;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            newWorker.postMessage({ type: 'SKIP_WAITING' });
+                            window.location.reload();
+                        }
+                    });
+                });
             })
             .catch(() => {
                 console.log('ServiceWorker registration failed');
