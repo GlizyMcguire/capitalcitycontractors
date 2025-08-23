@@ -1,27 +1,15 @@
 // Service Worker for Capital City Contractors
 // Provides offline functionality and performance improvements
 
-const CACHE_NAME = 'ccc-v1.0.0';
+const CACHE_NAME = 'ccc-v1.1.0';
+// Keep precache minimal to avoid stale assets; images/CSS/JS will be network-first
 const urlsToCache = [
     '/',
     '/index.html',
     '/services.html',
-    '/portfolio.html',
     '/about.html',
     '/contact.html',
-    '/assets/css/reset.css',
-    '/assets/css/variables.css',
-    '/assets/css/base.css',
-    '/assets/css/components.css',
-    '/assets/css/layout.css',
-    '/assets/css/pages/home.css',
-    '/assets/css/responsive.css',
-    '/assets/js/main.js',
-    '/assets/js/portfolio.js',
-    '/assets/js/reviews.js',
     '/assets/data/reviews.js',
-    '/assets/images/CCC logo.jpg',
-    '/assets/images/hero-bg.jpg',
     '/favicon-simple.svg'
 ];
 
@@ -62,52 +50,40 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - prefer fresh network for assets; fallback to cache
 self.addEventListener('fetch', event => {
-    // Skip non-GET requests
-    if (event.request.method !== 'GET') {
-        return;
-    }
+    if (event.request.method !== 'GET') return;
+    if (!event.request.url.startsWith(self.location.origin)) return;
 
-    // Skip external requests
-    if (!event.request.url.startsWith(self.location.origin)) {
-        return;
-    }
+    const dest = event.request.destination;
+    const isAsset = dest === 'image' || dest === 'script' || dest === 'style';
 
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                // Return cached version or fetch from network
-                if (response) {
-                    console.log('Service Worker: Serving from cache', event.request.url);
-                    return response;
-                }
-
-                console.log('Service Worker: Fetching from network', event.request.url);
-                return fetch(event.request).then(response => {
-                    // Don't cache if not a valid response
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
+    if (isAsset) {
+        // Network-first for assets to avoid stale CSS/JS/images
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    if (response && response.status === 200 && response.type === 'basic') {
+                        const copy = response.clone();
+                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
                     }
-
-                    // Clone the response
-                    const responseToCache = response.clone();
-
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
-                            cache.put(event.request, responseToCache);
-                        });
-
                     return response;
-                });
-            })
-            .catch(() => {
-                // Fallback for offline
-                if (event.request.destination === 'document') {
-                    return caches.match('/index.html');
-                }
-            })
-    );
+                })
+                .catch(() => caches.match(event.request))
+        );
+    } else {
+        // Cache-first for documents (offline friendly)
+        event.respondWith(
+            caches.match(event.request).then(resp => resp || fetch(event.request))
+        );
+    }
+});
+
+// Allow immediate activation
+self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
 
 // Background sync for form submissions (if supported)

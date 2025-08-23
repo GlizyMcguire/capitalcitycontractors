@@ -57,12 +57,13 @@
     <link rel="preload" href="assets/css/variables.css" as="style">
     <link rel="preload" href="assets/css/base.css" as="style">
     <link rel="preload" href="assets/images/CCC logo.jpg" as="image">
+    <link rel="preload" href="assets/images/aboutus.png" as="image">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" as="style">
     <link rel="preload" href="assets/js/main.js" as="script">
 
     <!-- Preload slideshow images for instant performance -->
-    <link rel="preload" href="assets/images/pic1.jpg" as="image">
-    <link rel="preload" href="assets/images/pic2.jpg" as="image">
+    <link rel="preload" href="assets/images/pic1.jpg" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/images/pic2.jpg" as="image" fetchpriority="high">
     <link rel="preload" href="assets/images/pic3.jpg" as="image">
     <link rel="preload" href="assets/images/pic4.jpg" as="image">
     <link rel="preload" href="assets/images/pic5.jpg" as="image">
@@ -118,6 +119,9 @@
         ],
         "openingHours": ["Mo-Fr 08:00-18:00", "Sa 09:00-16:00"],
         "priceRange": "$$",
+        "inLanguage": "en-CA",
+        "hasMap": "https://www.google.com/maps/search/?api=1&query=Capital+City+Contractors+Ottawa",
+        "knowsAbout": ["Painting", "Drywall Repair", "Home Renovations", "Carpet Installation", "Taping & Mudding"],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Professional Contracting Services",
@@ -588,7 +592,7 @@
                     </p>
                 </div>
                 <div class="story-image">
-                    <img src="assets/images/aboutus.png" alt="Capital City Contractors team providing professional contracting services" class="story-img">
+                    <img src="assets/images/aboutus.png" alt="Capital City Contractors team providing professional contracting services" class="story-img" decoding="sync" loading="eager" fetchpriority="high">
                 </div>
             </div>
 
