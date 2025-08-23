@@ -419,15 +419,7 @@ img {
     image-rendering: crisp-edges;
 }
 
-/* Lazy loading images */
-img[loading="lazy"] {
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-}
-
-img[loading="lazy"].loaded {
-    opacity: 1;
-}
+/* Images load immediately for better performance */
 
 /* Responsive images */
 .img-responsive {

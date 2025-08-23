@@ -481,26 +481,8 @@ const optimizedScrollHandler = throttle(function() {
 
 window.addEventListener('scroll', optimizedScrollHandler);
 
-// Lazy loading for images
-function initLazyLoading() {
-    const images = document.querySelectorAll('img[data-src]');
-    
-    const imageObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                img.src = img.dataset.src;
-                img.classList.remove('lazy');
-                imageObserver.unobserve(img);
-            }
-        });
-    });
-    
-    images.forEach(img => imageObserver.observe(img));
-}
-
-// Initialize lazy loading
-initLazyLoading();
+// Lazy loading disabled for better performance
+// Images now load immediately for faster slideshow and gallery performance
 
 // Initialize counter animations
 initCounterAnimations();
