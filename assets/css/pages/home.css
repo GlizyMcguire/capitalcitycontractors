@@ -902,6 +902,30 @@
     }
 
     .service-features li {
+
+/* Cohesive service card layout: image top, content middle, CTA bottom */
+.services-detailed-grid .service-detail-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0; /* let image touch edges */
+}
+.services-detailed-grid .service-detail-card .service-image {
+    height: 220px;
+    overflow: hidden;
+}
+@media (min-width: 768px) {
+    .services-detailed-grid .service-detail-card .service-image { height: 240px; }
+}
+@media (min-width: 1200px) {
+    .services-detailed-grid .service-detail-card .service-image { height: 260px; }
+}
+.services-detailed-grid .service-detail-card .service-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.services-detailed-grid .service-detail-card .service-detail-content { padding: var(--space-6); display: flex; flex-direction: column; flex: 1; }
+.services-detailed-grid .service-detail-card .service-cta-row { margin-top: auto; display: flex; gap: var(--space-3); }
+.services-detailed-grid .service-detail-card .service-cta-row .btn { flex: 1; justify-content: center; }
+/* Remove icon bubbles */
+.services-detailed-grid .service-detail-icon { display: none !important; }
+
         font-size: var(--text-sm);
     }
 }
