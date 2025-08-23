@@ -30,18 +30,18 @@
     <link rel="icon" type="image/svg+xml" href="favicon-simple.svg">
     <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
     <meta name="theme-color" content="#000000">
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- AOS Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/variables.css">
@@ -80,6 +80,53 @@
         ]
     }
     </script>
+
+        <!-- BreadcrumbList JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://capitalcitycontractors.ca/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Services",
+              "item": "https://capitalcitycontractors.ca/services.html"
+            }
+          ]
+        }
+        </script>
+
+        <!-- FAQPage JSON-LD -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Do you offer interior and exterior painting in Ottawa?",
+              "acceptedAnswer": {"@type": "Answer", "text": "Yes, we provide full interior and exterior painting services using premium materials and professional preparation for long-lasting results."}
+            },
+            {
+              "@type": "Question",
+              "name": "Do you handle drywall installation and repair?",
+              "acceptedAnswer": {"@type": "Answer", "text": "We provide complete drywall services including new installation, repairs, taping, mudding, sanding, and finishing."}
+            },
+            {
+              "@type": "Question",
+              "name": "Which areas do you serve?",
+              "acceptedAnswer": {"@type": "Answer", "text": "We serve Ottawa, Richmond, Kanata, Nepean, Stittsville, and Orleans."}
+            }
+          ]
+        }
+        </script>
 </head>
 <body>
     <!-- Navigation -->
@@ -89,7 +136,7 @@
                 <img src="assets/images/logo.svg" alt="Capital City Contractors" class="logo-img">
                 <span class="logo-text">Capital City Contractors</span>
             </div>
-            
+
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
                     <a href="index.html" class="nav-link">Home</a>
@@ -110,7 +157,7 @@
                     <a href="contact.html" class="nav-link cta-button">Get Quote</a>
                 </li>
             </ul>
-            
+
             <div class="hamburger" id="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -190,7 +237,7 @@
                 <h2 class="section-title">What We Do</h2>
                 <p class="section-subtitle">Professional contracting services delivered with expertise and precision</p>
             </div>
-            
+
             <div class="services-grid">
                 <!-- Painting Service -->
                 <div class="service-detail-card" id="painting">
@@ -205,7 +252,7 @@
                     <div class="service-content">
                         <h3 class="service-title">Professional Painting</h3>
                         <p class="service-description">
-                            Transform your space with our expert painting services. We provide both interior and exterior painting 
+                            Transform your space with our expert painting services. We provide both interior and exterior painting
                             using premium materials and proven techniques for long-lasting, beautiful results.
                         </p>
                         <ul class="service-features">
@@ -239,7 +286,7 @@
                     <div class="service-content">
                         <h3 class="service-title">Drywall Installation</h3>
                         <p class="service-description">
-                            Professional drywall installation and repair services for new construction, renovations, and repairs. 
+                            Professional drywall installation and repair services for new construction, renovations, and repairs.
                             We ensure smooth, even surfaces ready for finishing.
                         </p>
                         <ul class="service-features">
@@ -273,7 +320,7 @@
                     <div class="service-content">
                         <h3 class="service-title">Taping & Finishing</h3>
                         <p class="service-description">
-                            Expert taping and finishing services to create seamless joints and perfect surfaces. 
+                            Expert taping and finishing services to create seamless joints and perfect surfaces.
                             Our skilled craftsmen ensure professional results every time.
                         </p>
                         <ul class="service-features">
@@ -307,7 +354,7 @@
                     <div class="service-content">
                         <h3 class="service-title">Carpet Installation</h3>
                         <p class="service-description">
-                            Professional carpet installation services with precision fitting and quality materials. 
+                            Professional carpet installation services with precision fitting and quality materials.
                             We work with all carpet types to provide comfort and durability.
                         </p>
                         <ul class="service-features">
@@ -338,7 +385,7 @@
                 <h2 class="section-title">Our Process</h2>
                 <p class="section-subtitle">How we deliver exceptional results on every project</p>
             </div>
-            
+
             <div class="process-steps">
                 <div class="process-step">
                     <div class="step-number">1</div>
@@ -347,7 +394,7 @@
                         <p class="step-description">We meet with you to understand your needs, assess the project, and provide a detailed estimate.</p>
                     </div>
                 </div>
-                
+
                 <div class="process-step">
                     <div class="step-number">2</div>
                     <div class="step-content">
@@ -355,7 +402,7 @@
                         <p class="step-description">Our team creates a comprehensive project plan with timelines, materials, and specifications.</p>
                     </div>
                 </div>
-                
+
                 <div class="process-step">
                     <div class="step-number">3</div>
                     <div class="step-content">
@@ -363,7 +410,7 @@
                         <p class="step-description">We execute the project with precision, using quality materials and proven techniques.</p>
                     </div>
                 </div>
-                
+
                 <div class="process-step">
                     <div class="step-number">4</div>
                     <div class="step-content">
@@ -404,7 +451,7 @@
                         Professional contracting services with a commitment to quality, reliability, and customer satisfaction.
                     </p>
                 </div>
-                
+
                 <div class="footer-section">
                     <h3 class="footer-title">Services</h3>
                     <ul class="footer-links">
@@ -414,7 +461,7 @@
                         <li><a href="#carpet">Carpet Installation</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h3 class="footer-title">Company</h3>
                     <ul class="footer-links">
@@ -424,7 +471,7 @@
                         <li><a href="contact.html">Get Quote</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h3 class="footer-title">Contact Info</h3>
                     <div class="contact-info">
@@ -443,7 +490,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <div class="footer-bottom-content">
                     <p class="copyright">
