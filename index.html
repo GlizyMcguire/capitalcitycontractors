@@ -358,19 +358,43 @@
             margin-top: 20px !important;
             display: flex !important;
             justify-content: center !important;
-            gap: 12px !important;
-            padding: 0 !important;
+            align-items: center !important;
+            gap: 8px !important;
+            padding: 0 16px !important;
+            max-width: 100% !important;
         }
         #services .services-detailed-grid .service-detail-card .service-cta-row .btn {
             flex: 0 0 auto !important;
-            width: 140px !important;
-            font-size: 0.85rem !important;
-            padding: 10px 16px !important;
+            width: 120px !important;
+            max-width: 120px !important;
+            font-size: 0.8rem !important;
+            padding: 8px 12px !important;
             border-radius: 6px !important;
             text-align: center !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
         }
 
     </style>
+    <script>
+        // Force cache refresh for all users
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.update();
+                }
+            });
+        }
+        // Force reload if cached version detected
+        const lastUpdate = localStorage.getItem('ccc-last-update');
+        const currentUpdate = '2025-08-24-22:30';
+        if (lastUpdate !== currentUpdate) {
+            localStorage.setItem('ccc-last-update', currentUpdate);
+            if (lastUpdate) {
+                window.location.reload(true);
+            }
+        }
+    </script>
     <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-4">
 </head>
 <body>
@@ -506,7 +530,7 @@
                             <li><i class="fas fa-check"></i> Surface Preparation</li>
                         </ul>
                         <div class="service-cta-row">
-                            <a href="#contact" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
+                            <a href="tel:+16133011311" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
                             <a href="#contact" class="btn btn-secondary"><i class="fas fa-calculator"></i> Get Free Estimate</a>
                         </div>
 
@@ -537,7 +561,7 @@
                             <li><i class="fas fa-check"></i> Professional Finishing</li>
                         </ul>
                         <div class="service-cta-row">
-                            <a href="#contact" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
+                            <a href="tel:+16133011311" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
                             <a href="#contact" class="btn btn-secondary"><i class="fas fa-calculator"></i> Get Free Estimate</a>
                         </div>
                     </div>
@@ -561,7 +585,7 @@
                             <li><i class="fas fa-check"></i> Smooth Finish</li>
                         </ul>
                         <div class="service-cta-row">
-                            <a href="#contact" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
+                            <a href="tel:+16133011311" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
                             <a href="#contact" class="btn btn-secondary"><i class="fas fa-calculator"></i> Get Free Estimate</a>
                         </div>
                     </div>
@@ -585,7 +609,7 @@
                             <li><i class="fas fa-check"></i> Professional Installation</li>
                         </ul>
                         <div class="service-cta-row">
-                            <a href="#contact" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
+                            <a href="tel:+16133011311" class="btn btn-primary"><i class="fas fa-phone"></i> Call Now</a>
                             <a href="#contact" class="btn btn-secondary"><i class="fas fa-calculator"></i> Get Free Estimate</a>
                         </div>
                     </div>
@@ -1212,6 +1236,6 @@
 
     <!-- Main JavaScript - Loaded at end for performance -->
     <script src="assets/js/main.js" defer></script>
-    <!-- FORCE REFRESH: 2025-08-24 22:25 - GREEN BORDERS WITH ID SELECTORS -->
+    <!-- FORCE REFRESH: 2025-08-24 22:30 - FIXED CTAS + AUTO REFRESH -->
 </body>
 </html>
