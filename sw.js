@@ -1,7 +1,7 @@
 // Service Worker for Capital City Contractors
 // Provides offline functionality and performance improvements
 
-const CACHE_NAME = 'ccc-v1.2.0';
+const CACHE_NAME = 'ccc-v1.3.0';
 // Keep precache minimal to avoid stale assets; images/CSS/JS will be network-first
 const urlsToCache = [
     '/',
@@ -28,7 +28,7 @@ self.addEventListener('install', event => {
     );
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and take control immediately
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys().then(cacheNames => {
