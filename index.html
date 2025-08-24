@@ -327,128 +327,70 @@
     <link rel="stylesheet" href="assets/css/layout.css?v=20250823-4">
     <link rel="stylesheet" href="assets/css/pages/home.css?v=20250824-FORCE">
 
-    <script>
-        // MOBILE EMERGENCY - FORCE COMPLETE REFRESH
-        (function() {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-            const version = '2025-08-24-23:10-MOBILE-EMERGENCY';
-
-            // AGGRESSIVE MOBILE CACHE CLEARING
-            if ('caches' in window) {
-                caches.keys().then(names => names.forEach(name => caches.delete(name)));
-            }
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
-            }
-
-            // Clear everything possible
-            try {
-                localStorage.clear();
-                sessionStorage.clear();
-                if (window.indexedDB) {
-                    indexedDB.databases().then(dbs => dbs.forEach(db => indexedDB.deleteDatabase(db.name)));
-                }
-            } catch(e) {}
-
-            // FORCE MOBILE REFRESH WITH MULTIPLE METHODS
-            const stored = localStorage.getItem('mobile-version') || sessionStorage.getItem('mobile-version');
-            if (isMobile && stored !== version) {
-                localStorage.setItem('mobile-version', version);
-                sessionStorage.setItem('mobile-version', version);
-
-                if (stored) {
-                    // Try multiple refresh methods for mobile
-                    setTimeout(() => {
-                        window.location.href = window.location.protocol + '//' + window.location.host + window.location.pathname + '?mobile=' + Date.now() + '#services';
-                    }, 50);
-                }
-            }
-        })();
-
-        // MOBILE-PRIORITY STYLING WITH MAXIMUM FORCE
-        function applyMobilePriorityStyling() {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-            const cards = document.querySelectorAll('#services .service-detail-card, .service-detail-card, .services-detailed-grid .service-detail-card, [class*="service-detail-card"]');
-
-            console.log('MOBILE PRIORITY STYLING: Found', cards.length, 'service cards on', isMobile ? 'MOBILE' : 'DESKTOP');
-
-            // Add a visible indicator for mobile users
-            if (isMobile && cards.length > 0) {
-                document.body.style.backgroundColor = '#f0f9ff';
-                setTimeout(() => document.body.style.backgroundColor = '', 1000);
-            }
-
-            cards.forEach((card, index) => {
-                console.log('FORCE STYLING card', index + 1);
-
-                const image = card.querySelector('.service-image');
-                const title = card.querySelector('.service-detail-title');
-                const ctaRow = card.querySelector('.service-cta-row');
-                const buttons = card.querySelectorAll('.service-cta-row .btn');
-
-                // MAXIMUM PRIORITY STYLING
-                if (image) {
-                    const borderColor = isMobile ? '#dc2626' : '#374151'; // Red on mobile for visibility
-                    image.style.setProperty('height', '200px', 'important');
-                    image.style.setProperty('overflow', 'hidden', 'important');
-                    image.style.setProperty('border', `4px solid ${borderColor}`, 'important');
-                    image.style.setProperty('border-radius', '8px', 'important');
-                    image.style.setProperty('margin-bottom', '20px', 'important');
-                    image.style.setProperty('box-shadow', '0 2px 8px rgba(0,0,0,0.15)', 'important');
-                    image.style.setProperty('display', 'block', 'important');
-                    console.log('FORCE applied image styles to card', index + 1, 'with', borderColor, 'border');
-                }
-
-                if (title) {
-                    title.style.setProperty('margin-top', '0', 'important');
-                    title.style.setProperty('margin-bottom', '16px', 'important');
-                    title.style.setProperty('color', '#374151', 'important');
-                    title.style.setProperty('font-size', '1.3rem', 'important');
-                    title.style.setProperty('font-weight', '700', 'important');
-                    title.style.setProperty('text-align', 'left', 'important');
-                    console.log('FORCE applied title styles to card', index + 1);
-                }
-
-                if (ctaRow) {
-                    ctaRow.style.setProperty('margin-top', '16px', 'important');
-                    ctaRow.style.setProperty('display', 'flex', 'important');
-                    ctaRow.style.setProperty('justify-content', 'center', 'important');
-                    ctaRow.style.setProperty('gap', '10px', 'important');
-                    ctaRow.style.setProperty('padding', '0 10px', 'important');
-                    ctaRow.style.setProperty('flex-wrap', 'nowrap', 'important');
-                    console.log('FORCE applied CTA row styles to card', index + 1);
-                }
-
-                buttons.forEach((btn, btnIndex) => {
-                    btn.style.setProperty('width', '135px', 'important');
-                    btn.style.setProperty('font-size', '0.85rem', 'important');
-                    btn.style.setProperty('padding', '10px 8px', 'important');
-                    btn.style.setProperty('border-radius', '5px', 'important');
-                    btn.style.setProperty('text-align', 'center', 'important');
-                    btn.style.setProperty('white-space', 'nowrap', 'important');
-                    btn.style.setProperty('overflow', 'hidden', 'important');
-                    btn.style.setProperty('text-overflow', 'ellipsis', 'important');
-                    btn.style.setProperty('flex-shrink', '0', 'important');
-                    console.log('FORCE applied button styles to card', index + 1, 'button', btnIndex + 1);
-                });
-            });
-
-            console.log('MOBILE PRIORITY STYLING COMPLETE');
+    <style>
+        /* UNIFIED STYLING - DIRECT CSS APPROACH */
+        #services .services-detailed-grid .service-detail-card .service-image {
+            height: 200px !important;
+            overflow: hidden !important;
+            border: 3px solid #6b7280 !important;
+            border-radius: 8px !important;
+            margin-bottom: 20px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+            display: block !important;
         }
 
-        // MAXIMUM FORCE APPLICATION
-        console.log('Starting MOBILE PRIORITY styling application...');
-        applyMobilePriorityStyling();
+        #services .services-detailed-grid .service-detail-card .service-detail-title {
+            margin-top: 0 !important;
+            margin-bottom: 16px !important;
+            color: #374151 !important;
+            font-size: 1.3rem !important;
+            font-weight: 700 !important;
+            text-align: left !important;
+        }
 
-        document.addEventListener('DOMContentLoaded', applyMobilePriorityStyling);
-        window.addEventListener('load', applyMobilePriorityStyling);
-        window.addEventListener('resize', applyMobilePriorityStyling);
-        setTimeout(applyMobilePriorityStyling, 10);
-        setTimeout(applyMobilePriorityStyling, 100);
-        setTimeout(applyMobilePriorityStyling, 300);
-        setTimeout(applyMobilePriorityStyling, 800);
-        setTimeout(applyMobilePriorityStyling, 1500);
-        setTimeout(applyMobilePriorityStyling, 3000);
+        #services .services-detailed-grid .service-detail-card .service-cta-row {
+            margin-top: 16px !important;
+            display: flex !important;
+            justify-content: center !important;
+            gap: 10px !important;
+            padding: 0 10px !important;
+            flex-wrap: nowrap !important;
+        }
+
+        #services .services-detailed-grid .service-detail-card .service-cta-row .btn {
+            width: 135px !important;
+            font-size: 0.85rem !important;
+            padding: 10px 8px !important;
+            border-radius: 5px !important;
+            text-align: center !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            flex-shrink: 0 !important;
+        }
+    </style>
+
+    <script>
+        // SIMPLE CACHE BUSTING
+        const timestamp = Date.now();
+        console.log('Page loaded at:', timestamp);
+
+        // Clear caches
+        if ('caches' in window) {
+            caches.keys().then(names => names.forEach(name => caches.delete(name)));
+        }
+
+        // Add timestamp to page for verification
+        document.addEventListener('DOMContentLoaded', function() {
+            const footer = document.querySelector('footer');
+            if (footer) {
+                const indicator = document.createElement('div');
+                indicator.style.cssText = 'position: fixed; bottom: 10px; right: 10px; background: #000; color: #fff; padding: 5px 10px; font-size: 12px; border-radius: 3px; z-index: 9999;';
+                indicator.textContent = 'Updated: ' + new Date().toLocaleTimeString();
+                document.body.appendChild(indicator);
+                setTimeout(() => indicator.remove(), 5000);
+            }
+        });
     </script>
     <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-4">
 </head>
@@ -1291,6 +1233,6 @@
 
     <!-- Main JavaScript - Loaded at end for performance -->
     <script src="assets/js/main.js" defer></script>
-    <!-- MOBILE EMERGENCY: 2025-08-24 23:10 - RED BORDERS ON MOBILE, FORCE REFRESH -->
+    <!-- UNIFIED: 2025-08-24 23:20 - DIRECT CSS + TIMESTAMP INDICATOR -->
 </body>
 </html>
