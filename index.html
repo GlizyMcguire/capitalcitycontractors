@@ -377,64 +377,88 @@
 
     </style>
     <script>
-        // FORCE IMMEDIATE REFRESH FOR ALL USERS
+        // AGGRESSIVE MOBILE CACHE BUSTING
         (function() {
-            // Clear all caches
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const version = '2025-08-24-22:45-MOBILE';
+
+            // Clear everything possible
             if ('caches' in window) {
-                caches.keys().then(names => {
-                    names.forEach(name => caches.delete(name));
-                });
+                caches.keys().then(names => names.forEach(name => caches.delete(name)));
             }
-
-            // Disable service worker
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.getRegistrations().then(registrations => {
-                    registrations.forEach(reg => reg.unregister());
-                });
+                navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
             }
 
-            // Force reload for mobile and desktop
-            const version = '2025-08-24-22:40';
-            const stored = sessionStorage.getItem('ccc-version');
-            if (stored !== version) {
-                sessionStorage.setItem('ccc-version', version);
-                if (stored) location.reload(true);
+            // Multiple storage checks for mobile
+            const checks = ['ccc-version', 'ccc-mobile-version', 'last-update'];
+            let needsRefresh = false;
+
+            checks.forEach(key => {
+                const stored = localStorage.getItem(key) || sessionStorage.getItem(key);
+                if (stored && stored !== version) needsRefresh = true;
+                localStorage.setItem(key, version);
+                sessionStorage.setItem(key, version);
+            });
+
+            // Force refresh on mobile with multiple methods
+            if (isMobile && needsRefresh) {
+                setTimeout(() => {
+                    window.location.href = window.location.href + '?v=' + Date.now();
+                }, 100);
             }
         })();
 
-        // Apply perfect styling immediately
+        // MOBILE-OPTIMIZED STYLING APPLICATION
         function applyServiceCardStyling() {
-            const cards = document.querySelectorAll('#services .service-detail-card');
-            cards.forEach(card => {
+            const isMobile = window.innerWidth <= 768;
+            const cards = document.querySelectorAll('#services .service-detail-card, .service-detail-card');
+
+            console.log('Applying styles to', cards.length, 'cards on', isMobile ? 'mobile' : 'desktop');
+
+            cards.forEach((card, index) => {
                 const image = card.querySelector('.service-image');
                 const title = card.querySelector('.service-detail-title');
                 const ctaRow = card.querySelector('.service-cta-row');
                 const buttons = card.querySelectorAll('.service-cta-row .btn');
 
                 if (image) {
-                    image.style.cssText = 'height: 200px !important; overflow: hidden !important; border: 3px solid #6b7280 !important; border-radius: 8px !important; margin-bottom: 20px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;';
+                    const imageStyles = isMobile
+                        ? 'height: 180px !important; overflow: hidden !important; border: 3px solid #059669 !important; border-radius: 8px !important; margin-bottom: 16px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; background: #f0fdf4 !important;'
+                        : 'height: 200px !important; overflow: hidden !important; border: 3px solid #6b7280 !important; border-radius: 8px !important; margin-bottom: 20px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;';
+                    image.style.cssText = imageStyles;
                 }
+
                 if (title) {
-                    title.style.cssText = 'margin-top: 0 !important; margin-bottom: 16px !important; color: #374151 !important; font-size: 1.3rem !important; font-weight: 700 !important;';
+                    const titleStyles = isMobile
+                        ? 'margin-top: 0 !important; margin-bottom: 12px !important; color: #059669 !important; font-size: 1.2rem !important; font-weight: 700 !important; text-align: center !important;'
+                        : 'margin-top: 0 !important; margin-bottom: 16px !important; color: #374151 !important; font-size: 1.3rem !important; font-weight: 700 !important;';
+                    title.style.cssText = titleStyles;
                 }
+
                 if (ctaRow) {
-                    ctaRow.style.cssText = 'margin-top: 16px !important; display: flex !important; justify-content: center !important; gap: 10px !important; padding: 0 !important;';
+                    const ctaStyles = isMobile
+                        ? 'margin-top: 12px !important; display: flex !important; justify-content: center !important; gap: 8px !important; padding: 0 8px !important;'
+                        : 'margin-top: 16px !important; display: flex !important; justify-content: center !important; gap: 10px !important; padding: 0 !important;';
+                    ctaRow.style.cssText = ctaStyles;
                 }
+
                 buttons.forEach(btn => {
-                    btn.style.cssText = 'width: 130px !important; font-size: 0.85rem !important; padding: 10px 8px !important; border-radius: 5px !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;';
+                    const btnStyles = isMobile
+                        ? 'width: 120px !important; font-size: 0.8rem !important; padding: 8px 6px !important; border-radius: 5px !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;'
+                        : 'width: 130px !important; font-size: 0.85rem !important; padding: 10px 8px !important; border-radius: 5px !important; text-align: center !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;';
+                    btn.style.cssText = btnStyles;
                 });
             });
         }
 
-        // Apply immediately and on load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', applyServiceCardStyling);
-        } else {
-            applyServiceCardStyling();
-        }
-
-        // Re-apply after 100ms to ensure it sticks
+        // Apply multiple times with different triggers
+        applyServiceCardStyling();
+        document.addEventListener('DOMContentLoaded', applyServiceCardStyling);
+        window.addEventListener('load', applyServiceCardStyling);
         setTimeout(applyServiceCardStyling, 100);
+        setTimeout(applyServiceCardStyling, 500);
+        setTimeout(applyServiceCardStyling, 1000);
     </script>
     <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-4">
 </head>
@@ -1277,6 +1301,6 @@
 
     <!-- Main JavaScript - Loaded at end for performance -->
     <script src="assets/js/main.js" defer></script>
-    <!-- FINAL FIX: 2025-08-24 22:40 - FORCE REFRESH + PROPER STYLING -->
+    <!-- MOBILE FIX: 2025-08-24 22:45 - AGGRESSIVE MOBILE CACHE BUST + GREEN BORDERS -->
 </body>
 </html>
