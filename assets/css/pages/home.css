@@ -919,14 +919,15 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Image with prominent border and generous spacing */
+/* Image with VERY prominent border and generous spacing */
 .services-detailed-grid .service-detail-card .service-image {
     height: 200px;
     overflow: hidden;
-    border: 3px solid #9ca3af;
-    border-radius: 8px;
-    margin-bottom: var(--space-6);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 4px solid #374151 !important;
+    border-radius: 10px;
+    margin-bottom: 32px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background: #f3f4f6;
 }
 @media (min-width: 768px) {
     .services-detailed-grid .service-detail-card .service-image { height: 220px; }
@@ -948,8 +949,8 @@
     flex: 1;
 }
 .services-detailed-grid .service-detail-card .service-detail-title {
-    margin-top: var(--space-2);
-    margin-bottom: var(--space-4);
+    margin-top: 24px !important;
+    margin-bottom: 20px !important;
     color: var(--primary-color);
     font-size: 1.4rem;
     font-weight: 700;
@@ -969,19 +970,22 @@
     margin-bottom: var(--space-1);
 }
 
-/* Compact, proportional CTA buttons */
+/* Centered, compact CTA buttons */
 .services-detailed-grid .service-detail-card .service-cta-row {
     margin-top: auto;
     display: flex;
-    gap: var(--space-2);
+    justify-content: center;
+    gap: 12px;
+    padding: 0 20px;
 }
 .services-detailed-grid .service-detail-card .service-cta-row .btn {
-    flex: 1;
+    flex: 0 0 auto;
+    width: 140px;
     justify-content: center;
     font-weight: 500;
     font-size: 0.85rem;
-    padding: 8px 12px;
-    border-radius: 5px;
+    padding: 10px 16px;
+    border-radius: 6px;
     transition: all 0.2s ease;
     min-height: auto;
 }

@@ -1,7 +1,7 @@
 // Service Worker for Capital City Contractors
 // Provides offline functionality and performance improvements
 
-const CACHE_NAME = 'ccc-v1.3.0';
+const CACHE_NAME = 'ccc-v1.4.0-FORCE';
 // Keep precache minimal to avoid stale assets; images/CSS/JS will be network-first
 const urlsToCache = [
     '/',
