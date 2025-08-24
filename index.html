@@ -327,6 +327,26 @@
     <link rel="stylesheet" href="assets/css/layout.css?v=20250823-4">
     <link rel="stylesheet" href="assets/css/pages/home.css?v=20250824-FORCE">
 
+    <!-- Facebook SDK for Messenger -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'your-app-id', // You'll need to create a Facebook app
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
     <style>
         /* UNIFIED STYLING - DIRECT CSS APPROACH */
         #services .services-detailed-grid .service-detail-card .service-image {
@@ -368,27 +388,134 @@
             text-overflow: ellipsis !important;
             flex-shrink: 0 !important;
         }
+
+        /* Sticky Chat Button Styling */
+        .sticky-chat-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .sticky-chat-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sticky-chat-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .chat-options-popup {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            padding: 8px;
+            min-width: 180px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .chat-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .chat-option:hover {
+            background-color: #f3f4f6;
+        }
+
+        .chat-option i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .chat-option:first-child i {
+            color: #1877f2;
+        }
+
+        .chat-option:nth-child(2) i {
+            color: #059669;
+        }
+
+        .chat-option:last-child i {
+            color: #dc2626;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 
     <script>
         // SIMPLE CACHE BUSTING
-        const timestamp = Date.now();
-        console.log('Page loaded at:', timestamp);
-
-        // Clear caches
         if ('caches' in window) {
             caches.keys().then(names => names.forEach(name => caches.delete(name)));
         }
 
-        // Add timestamp to page for verification
-        document.addEventListener('DOMContentLoaded', function() {
-            const footer = document.querySelector('footer');
-            if (footer) {
-                const indicator = document.createElement('div');
-                indicator.style.cssText = 'position: fixed; bottom: 10px; right: 10px; background: #000; color: #fff; padding: 5px 10px; font-size: 12px; border-radius: 3px; z-index: 9999;';
-                indicator.textContent = 'Updated: ' + new Date().toLocaleTimeString();
-                document.body.appendChild(indicator);
-                setTimeout(() => indicator.remove(), 5000);
+        // Chat Button Functionality
+        function toggleChatOptions() {
+            const popup = document.getElementById('chatOptions');
+            if (popup.style.display === 'none' || popup.style.display === '') {
+                popup.style.display = 'block';
+            } else {
+                popup.style.display = 'none';
+            }
+        }
+
+        function openFacebookMessenger() {
+            // Replace with your Facebook Page ID
+            const facebookPageId = '61553561804552'; // Your Facebook page ID
+            const messengerUrl = `https://m.me/${facebookPageId}`;
+            window.open(messengerUrl, '_blank');
+            document.getElementById('chatOptions').style.display = 'none';
+        }
+
+        function scrollToQuote() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('chatOptions').style.display = 'none';
+        }
+
+        function callNow() {
+            window.location.href = 'tel:+16133011311';
+            document.getElementById('chatOptions').style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function(event) {
+            const chatBtn = document.querySelector('.sticky-chat-btn');
+            const popup = document.getElementById('chatOptions');
+
+            if (chatBtn && !chatBtn.contains(event.target)) {
+                popup.style.display = 'none';
             }
         });
     </script>
@@ -1011,12 +1138,28 @@
         </div>
     </div>
 
-    <!-- Sticky Mobile Call Button -->
-    <div class="sticky-call-btn">
-        <a href="tel:+16133011311" class="sticky-call-link">
-            <i class="fas fa-phone"></i>
-            <span>Call Now</span>
-        </a>
+    <!-- Sticky Chat Button -->
+    <div class="sticky-chat-btn">
+        <button class="sticky-chat-link" onclick="toggleChatOptions()">
+            <i class="fas fa-comments"></i>
+            <span>Chat</span>
+        </button>
+
+        <!-- Chat Options Popup -->
+        <div id="chatOptions" class="chat-options-popup" style="display: none;">
+            <div class="chat-option" onclick="openFacebookMessenger()">
+                <i class="fab fa-facebook-messenger"></i>
+                <span>Message Us</span>
+            </div>
+            <div class="chat-option" onclick="scrollToQuote()">
+                <i class="fas fa-calculator"></i>
+                <span>Get Estimate</span>
+            </div>
+            <div class="chat-option" onclick="callNow()">
+                <i class="fas fa-phone"></i>
+                <span>Call Now</span>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -1209,6 +1352,6 @@
 
     <!-- Main JavaScript - Loaded at end for performance -->
     <script src="assets/js/main.js" defer></script>
-    <!-- CLEAN: 2025-08-24 23:25 - REMOVED INTRO FEATURES -->
+    <!-- CHAT: 2025-08-24 23:30 - STICKY CHAT BUTTON WITH FACEBOOK MESSENGER -->
 </body>
 </html>
