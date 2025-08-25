@@ -1475,7 +1475,7 @@
         function loadVerifiedGoogleReviews() {
             console.log('� Loading verified Google Reviews from your business page...');
 
-            // These are your ACTUAL Google Reviews manually extracted
+            // These are your ONLY ACTUAL Google Reviews from your business page
             reviews = [
                 {
                     name: "Moe Chamma",
@@ -1508,42 +1508,10 @@
                     date: "1 year ago • Google Review",
                     service: "Multiple Services",
                     rating: 5
-                },
-                {
-                    name: "Sarah Johnson",
-                    avatar: "SJ",
-                    text: "Excellent work on our bathroom renovation. Professional, clean, and finished on time. Would definitely hire again!",
-                    date: "5 months ago • Google Review",
-                    service: "Bathroom Renovation",
-                    rating: 5
-                },
-                {
-                    name: "Mike Thompson",
-                    avatar: "MT",
-                    text: "Great drywall and taping work. Very neat and professional. Highly recommend Capital City Contractors.",
-                    date: "4 months ago • Google Review",
-                    service: "Drywall Repair",
-                    rating: 5
-                },
-                {
-                    name: "Lisa Chen",
-                    avatar: "LC",
-                    text: "Amazing carpet installation service. They were punctual, professional, and the quality is outstanding.",
-                    date: "3 months ago • Google Review",
-                    service: "Carpet Installation",
-                    rating: 5
-                },
-                {
-                    name: "Robert Wilson",
-                    avatar: "RW",
-                    text: "Capital City Contractors transformed our basement. Excellent workmanship and great communication throughout the project.",
-                    date: "2 months ago • Google Review",
-                    service: "Basement Renovation",
-                    rating: 5
                 }
             ];
 
-            console.log('✅ Loaded', reviews.length, 'verified Google Reviews from your business');
+            console.log('✅ Loaded', reviews.length, 'ACTUAL Google Reviews from your business page');
             updateDisplay();
             return true;
         }
