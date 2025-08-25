@@ -998,7 +998,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">What Our Customers Say</h2>
-                <p class="section-subtitle">Don't just take our word for it - hear from our satisfied customers</p>
+                <p class="section-subtitle">Live reviews from our satisfied Google customers</p>
                 <div class="google-rating">
                     <div class="rating-stars">
                         <i class="fas fa-star"></i>
@@ -1072,9 +1072,13 @@
 
 
             <div class="testimonials-cta">
-                <a href="https://share.google/45SwI5TaNxxHkS6wu" target="_blank" class="btn btn-outline">
+                <a href="https://search.google.com/local/writereview?placeid=ChIJYxL_7sMFzkwRCQoLzgvGzlk" target="_blank" class="btn btn-primary">
                     <i class="fab fa-google"></i>
-                    Read More Reviews
+                    Leave a Google Review
+                </a>
+                <a href="https://share.google/Ca8R2w8eeMLQBzxKd" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-google"></i>
+                    View All Reviews
                 </a>
             </div>
         </div>
@@ -1423,6 +1427,104 @@
             updateReview(0);
 
             console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
+        });
+    </script>
+
+    <!-- Google Reviews API Integration -->
+    <script>
+        // Google Reviews Configuration
+        const GOOGLE_API_KEY = 'AIzaSyDaB0HU7E0ZVtl83H6AlmujLlYgFs2ajYA';
+        const PLACE_ID = '3886356099819080585';
+
+        // Enhanced Google Reviews fetcher
+        async function fetchLiveGoogleReviews() {
+            try {
+                console.log('🔄 Fetching live Google reviews...');
+
+                // Use Google Places API
+                const corsProxy = 'https://api.allorigins.win/raw?url=';
+                const placesUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews,rating,user_ratings_total&key=${GOOGLE_API_KEY}`;
+
+                const response = await fetch(corsProxy + encodeURIComponent(placesUrl));
+                const data = await response.json();
+
+                if (data.result && data.result.reviews) {
+                    console.log('✅ Live Google reviews loaded successfully!');
+
+                    // Update overall rating display
+                    const overallRating = data.result.rating || 5.0;
+                    const totalReviews = data.result.user_ratings_total || 4;
+
+                    // Update rating display
+                    const ratingText = document.querySelector('.rating-text');
+                    if (ratingText) {
+                        ratingText.textContent = `${overallRating.toFixed(1)} on Google Reviews (${totalReviews} reviews)`;
+                    }
+
+                    // Process and display reviews
+                    const liveReviews = data.result.reviews.slice(0, 4).map((review, index) => ({
+                        name: review.author_name,
+                        avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
+                        text: review.text,
+                        date: getRelativeTime(review.time) + ' • Google Review',
+                        service: getServiceFromReview(review.text, index)
+                    }));
+
+                    // Replace the existing reviews array
+                    if (window.reviews) {
+                        window.reviews = liveReviews;
+                        console.log('📝 Updated reviews with live data');
+
+                        // Refresh the current display
+                        if (window.updateReview && window.currentReview !== undefined) {
+                            window.updateReview(window.currentReview);
+                        }
+                    }
+
+                    return liveReviews;
+                } else {
+                    throw new Error('No reviews found in API response');
+                }
+
+            } catch (error) {
+                console.log('⚠️ Using fallback reviews:', error.message);
+                return null;
+            }
+        }
+
+        function getRelativeTime(timestamp) {
+            const now = Date.now() / 1000;
+            const diff = now - timestamp;
+            const months = Math.floor(diff / (30 * 24 * 60 * 60));
+            const days = Math.floor(diff / (24 * 60 * 60));
+
+            if (months > 0) return `${months} month${months > 1 ? 's' : ''} ago`;
+            if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+            return 'Recently';
+        }
+
+        function getServiceFromReview(text, index) {
+            const services = ['Interior Painting', 'Drywall Repair', 'Basement Renovation', 'Carpet Installation'];
+            const lowerText = text.toLowerCase();
+
+            if (lowerText.includes('paint')) return 'Interior Painting';
+            if (lowerText.includes('drywall')) return 'Drywall Repair';
+            if (lowerText.includes('basement')) return 'Basement Renovation';
+            if (lowerText.includes('carpet') || lowerText.includes('floor')) return 'Carpet Installation';
+            if (lowerText.includes('renovation')) return 'Home Renovation';
+
+            return services[index % services.length];
+        }
+
+        // Initialize Google Reviews when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for the main review system to initialize
+            setTimeout(() => {
+                fetchLiveGoogleReviews();
+            }, 2000);
+
+            // Refresh reviews every 10 minutes
+            setInterval(fetchLiveGoogleReviews, 10 * 60 * 1000);
         });
     </script>
 
