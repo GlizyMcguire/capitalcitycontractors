@@ -1179,7 +1179,7 @@
 .slideshow-container {
     position: relative;
     width: 100%;
-    height: 600px; /* Increased height for better image display */
+    height: 500px; /* Optimal height for full image display */
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
@@ -1187,6 +1187,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px; /* Add padding to prevent edge cropping */
 }
 
 .slide {
@@ -1207,8 +1208,8 @@
 }
 
 .slide-img {
-    max-width: 95%; /* Slight padding from edges */
-    max-height: 95%; /* Slight padding from edges */
+    max-width: 85%; /* More zoom out - show more of the image */
+    max-height: 85%; /* More zoom out - show more of the image */
     width: auto;
     height: auto;
     object-fit: contain; /* Show full images without cropping */
@@ -1216,6 +1217,7 @@
     image-rendering: -webkit-optimize-contrast; /* HD quality rendering */
     image-rendering: crisp-edges;
     border-radius: 8px; /* Slight rounding for better appearance */
+    margin: auto; /* Center the image */
 }
 
 /* Navigation arrows */
