@@ -1458,7 +1458,7 @@
         });
     </script>
 
-    <!-- Google Reviews API Integration - DOMAIN RESTRICTED -->
+    <!-- Google Reviews API Integration - ALL 8 REVIEWS - v2.0 -->
     <script>
         // SECURE: API key restricted to capitalcitycontractors.ca domain only
         const GOOGLE_API_KEY = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
@@ -1490,6 +1490,7 @@
                     }
 
                     // Process and display ALL reviews (not just 4)
+                    console.log(`📊 Found ${data.result.reviews.length} total Google reviews`);
                     const liveReviews = data.result.reviews.map((review, index) => ({
                         name: review.author_name,
                         avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
@@ -1497,6 +1498,8 @@
                         date: getRelativeTime(review.time) + ' • Google Review',
                         service: getServiceFromReview(review.text, index)
                     }));
+
+                    console.log(`🔄 Processed ${liveReviews.length} reviews for display`);
 
                     // Replace the existing reviews array
                     if (window.reviews) {
