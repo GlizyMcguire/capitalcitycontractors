@@ -1052,10 +1052,7 @@
                 <!-- Navigation Dots Below Card -->
                 <div style="text-align: center; margin-top: 20px;">
                     <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 10px; justify-content: center;">
-                        <span class="dot active" style="width: 10px; height: 10px; border-radius: 50%; background: #667eea; cursor: pointer; transition: all 0.3s ease;"></span>
-                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
-                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
-                        <span class="dot" style="width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;"></span>
+                        <!-- Dots will be generated dynamically based on number of reviews -->
                     </div>
                     <div style="color: #666; font-size: 14px;">
                         <span id="currentReviewNumber">1</span> of 4 reviews
@@ -1388,6 +1385,39 @@
 
             let currentReviewIndex = 0;
 
+            // Make functions globally accessible
+            window.reviews = reviews;
+            window.currentReview = currentReviewIndex;
+
+            // Generate dots dynamically based on number of reviews
+            function generateDots() {
+                const dotsContainer = document.getElementById('reviewDots');
+                if (!dotsContainer) return;
+
+                dotsContainer.innerHTML = '';
+
+                for (let i = 0; i < reviews.length; i++) {
+                    const dot = document.createElement('span');
+                    dot.className = 'dot';
+                    dot.style.cssText = 'width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;';
+
+                    if (i === 0) {
+                        dot.style.background = '#667eea';
+                        dot.classList.add('active');
+                    }
+
+                    dot.addEventListener('click', () => goToReview(i));
+                    dotsContainer.appendChild(dot);
+                }
+
+                console.log(`🔵 Generated ${reviews.length} navigation dots`);
+            }
+
+            // Make generateDots globally accessible
+            window.generateDots = generateDots;
+            window.updateReview = updateReview;
+            }
+
             // Update review display
             function updateReview(index) {
                 const review = reviews[index];
@@ -1445,13 +1475,8 @@
             document.getElementById('nextReview')?.addEventListener('click', nextReview);
             document.getElementById('prevReview')?.addEventListener('click', prevReview);
 
-            // Add click events to dots
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => goToReview(index));
-            });
-
-            // Start with first review
+            // Generate dots and start with first review
+            generateDots();
             updateReview(0);
 
             console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
@@ -1505,6 +1530,11 @@
                     if (window.reviews) {
                         window.reviews = liveReviews;
                         console.log('📝 Updated reviews with live data');
+
+                        // Regenerate dots for new number of reviews
+                        if (window.generateDots) {
+                            window.generateDots();
+                        }
 
                         // Refresh the current display
                         if (window.updateReview && window.currentReview !== undefined) {
