@@ -958,28 +958,23 @@
                         </picture>
                     </div>
 
-                    <!-- Navigation arrows - Updated to match review style -->
-                    <button class="slide-nav prev" onclick="changeSlide(-1)" style="background: #667eea !important; color: white !important; border: none !important; border-radius: 50% !important; width: 50px !important; height: 50px !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important; transition: all 0.3s ease !important; font-weight: bold !important; position: absolute !important; left: 20px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 10 !important;">
-                        ‹
-                    </button>
-                    <button class="slide-nav next" onclick="changeSlide(1)" style="background: #667eea !important; color: white !important; border: none !important; border-radius: 50% !important; width: 50px !important; height: 50px !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important; transition: all 0.3s ease !important; font-weight: bold !important; position: absolute !important; right: 20px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 10 !important;">
-                        ›
-                    </button>
                 </div>
 
-                <!-- Slide indicators -->
-                <div class="slide-indicators">
-                    <button class="indicator active" onclick="currentSlide(1)"></button>
-                    <button class="indicator" onclick="currentSlide(2)"></button>
-                    <button class="indicator" onclick="currentSlide(3)"></button>
-                    <button class="indicator" onclick="currentSlide(4)"></button>
-                    <button class="indicator" onclick="currentSlide(5)"></button>
-                    <button class="indicator" onclick="currentSlide(6)"></button>
-                    <button class="indicator" onclick="currentSlide(7)"></button>
-                    <button class="indicator" onclick="currentSlide(8)"></button>
-                    <button class="indicator" onclick="currentSlide(9)"></button>
-                    <button class="indicator" onclick="currentSlide(10)"></button>
-                    <button class="indicator" onclick="currentSlide(11)"></button>
+                <!-- Navigation controls below slideshow -->
+                <div style="text-align: center; margin-top: 30px; padding: 20px;">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 15px;">
+                        <button class="slide-nav prev" onclick="changeSlide(-1)" style="background: #667eea !important; color: white !important; border: none !important; border-radius: 50% !important; width: 50px !important; height: 50px !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important; transition: all 0.3s ease !important; font-weight: bold !important; z-index: 10 !important;">
+                            ‹
+                        </button>
+
+                        <span style="color: #666; font-size: 14px; min-width: 100px; text-align: center;">
+                            <span id="currentSlideNum">1</span> of <span id="totalSlideNum">11</span>
+                        </span>
+
+                        <button class="slide-nav next" onclick="changeSlide(1)" style="background: #667eea !important; color: white !important; border: none !important; border-radius: 50% !important; width: 50px !important; height: 50px !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important; transition: all 0.3s ease !important; font-weight: bold !important; z-index: 10 !important;">
+                            ›
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1163,7 +1158,7 @@
 
                     <!-- DEPLOYMENT TIMESTAMP -->
                     <div style="color: #999; font-size: 10px; margin-top: 10px;">
-                        Updated: 2025-08-25 17:55 - SIMPLE WORKING SYSTEM v10
+                        Updated: 2025-08-25 18:00 - REMOVED CONFLICTS + FIXED PORTFOLIO v11
                     </div>
                 </div>
 
@@ -1515,191 +1510,7 @@
         });
     </script>
 
-    <!-- Google Reviews API Integration - ALL 8 REVIEWS - v2.0 -->
-    <script>
-        // SECURE: API key restricted to capitalcitycontractors.ca domain only
-        const GOOGLE_API_KEY = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
-        const PLACE_ID = '3886356099819080585';
-
-        // Live Google Reviews fetcher with domain-restricted API key
-        async function fetchLiveGoogleReviews() {
-            try {
-                console.log('🔄 Fetching live Google reviews...');
-                console.log('🔑 Using API key:', GOOGLE_API_KEY.substring(0, 10) + '...');
-                console.log('🏢 Using Place ID:', PLACE_ID);
-
-                // TEMPORARY: Skip Google API and use manual reviews that match your actual Google reviews
-                console.log('⚠️ Google API temporarily disabled - using curated reviews that match your Google Business page');
-
-                // These are your actual Google reviews (manually curated)
-                const actualGoogleReviews = [
-                    {
-                        author_name: "Moe Chamma",
-                        text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (7 * 30 * 24 * 60 * 60) // 7 months ago
-                    },
-                    {
-                        author_name: "Tamer Salem",
-                        text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (8 * 30 * 24 * 60 * 60) // 8 months ago
-                    },
-                    {
-                        author_name: "Adam Zein",
-                        text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (12 * 30 * 24 * 60 * 60) // 1 year ago
-                    },
-                    {
-                        author_name: "Al Cham",
-                        text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (12 * 30 * 24 * 60 * 60) // 1 year ago
-                    },
-                    {
-                        author_name: "Sarah Mitchell",
-                        text: "Capital City Contractors did an amazing job with our basement renovation. They were clean, efficient, and the final result looks fantastic. Highly recommend!",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (6 * 30 * 24 * 60 * 60) // 6 months ago
-                    },
-                    {
-                        author_name: "David Thompson",
-                        text: "Excellent carpet installation service. They arrived on time, worked efficiently, and cleaned up perfectly. Very professional team and great attention to detail.",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (5 * 30 * 24 * 60 * 60) // 5 months ago
-                    },
-                    {
-                        author_name: "Jennifer Lee",
-                        text: "Outstanding drywall repair work! They fixed water damage in our home and you can't even tell there was ever an issue. Professional and reasonably priced.",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (4 * 30 * 24 * 60 * 60) // 4 months ago
-                    },
-                    {
-                        author_name: "Michael Brown",
-                        text: "Great experience with Capital City Contractors. They painted our entire main floor and did excellent work. Clean, professional, and on budget.",
-                        rating: 5,
-                        time: Math.floor(Date.now() / 1000) - (3 * 30 * 24 * 60 * 60) // 3 months ago
-                    }
-                ];
-
-                // Simulate API response
-                const data = {
-                    result: {
-                        reviews: actualGoogleReviews,
-                        rating: 5.0,
-                        user_ratings_total: 8
-                    }
-                };
-                // Data is already set above
-
-                if (data.result && data.result.reviews) {
-                    console.log('✅ Live Google reviews loaded successfully!');
-
-                    // Update overall rating display
-                    const overallRating = data.result.rating || 5.0;
-                    const totalReviews = data.result.user_ratings_total || 4;
-
-                    // Update rating display
-                    const ratingText = document.querySelector('.rating-text');
-                    if (ratingText) {
-                        ratingText.textContent = `${overallRating.toFixed(1)} on Google Reviews (${totalReviews} reviews)`;
-                    }
-
-                    // Process and display ALL reviews (not just 4)
-                    console.log(`📊 Found ${data.result.reviews.length} total Google reviews`);
-                    const liveReviews = data.result.reviews.map((review, index) => ({
-                        name: review.author_name,
-                        avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
-                        text: review.text,
-                        date: getRelativeTime(review.time) + ' • Google Review',
-                        service: getServiceFromReview(review.text, index)
-                    }));
-
-                    console.log(`🔄 Processed ${liveReviews.length} reviews for display`);
-
-                    // Update the new review system with live Google Reviews data
-                    if (window.liveGoogleReviews !== undefined) {
-                        window.liveGoogleReviews.length = 0; // Clear existing array
-                        window.liveGoogleReviews.push(...liveReviews); // Add new reviews
-                        console.log('📝 Updated review system with', liveReviews.length, 'Google Reviews');
-                        console.log('📋 Reviews loaded:', liveReviews.map(r => r.name));
-
-                        // Reset to first review and update display
-                        window.currentReviewIndex = 0;
-                        if (window.updateReviewDisplay) {
-                            window.updateReviewDisplay();
-                            console.log('🔄 Refreshed review display with Google Reviews');
-                        }
-
-                        // Ensure navigation is initialized
-                        if (window.initializeReviewNavigation) {
-                            window.initializeReviewNavigation();
-                        }
-                    }
-
-                    // Legacy support for old system (if still present)
-                    if (window.reviews) {
-                        window.reviews = liveReviews;
-                        console.log('📝 Updated legacy reviews array');
-
-                        // Regenerate dots for new number of reviews
-                        if (window.generateDots) {
-                            window.generateDots();
-                        }
-
-                        // Refresh the current display
-                        if (window.updateReview && window.currentReview !== undefined) {
-                            window.updateReview(window.currentReview);
-                        }
-                    }
-
-                    return liveReviews;
-                } else {
-                    throw new Error('No reviews found in API response');
-                }
-
-            } catch (error) {
-                console.log('⚠️ Using fallback reviews:', error.message);
-                return null;
-            }
-        }
-
-        function getRelativeTime(timestamp) {
-            const now = Date.now() / 1000;
-            const diff = now - timestamp;
-            const months = Math.floor(diff / (30 * 24 * 60 * 60));
-            const days = Math.floor(diff / (24 * 60 * 60));
-
-            if (months > 0) return `${months} month${months > 1 ? 's' : ''} ago`;
-            if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
-            return 'Recently';
-        }
-
-        function getServiceFromReview(text, index) {
-            const services = ['Interior Painting', 'Drywall Repair', 'Basement Renovation', 'Carpet Installation'];
-            const lowerText = text.toLowerCase();
-
-            if (lowerText.includes('paint')) return 'Interior Painting';
-            if (lowerText.includes('drywall')) return 'Drywall Repair';
-            if (lowerText.includes('basement')) return 'Basement Renovation';
-            if (lowerText.includes('carpet') || lowerText.includes('floor')) return 'Carpet Installation';
-            if (lowerText.includes('renovation')) return 'Home Renovation';
-
-            return services[index % services.length];
-        }
-
-        // Initialize Google Reviews when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            // Wait a bit for the main review system to initialize
-            setTimeout(() => {
-                fetchLiveGoogleReviews();
-            }, 2000);
-
-            // Refresh reviews every 10 minutes
-            setInterval(fetchLiveGoogleReviews, 10 * 60 * 1000);
-        });
-    </script>
+    <!-- Conflicting Google Reviews API system removed -->
 
     <!-- Main JavaScript - Already loaded above with version parameter -->
 

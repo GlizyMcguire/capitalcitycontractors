@@ -1179,7 +1179,8 @@
 .slideshow-container {
     position: relative;
     width: 100%;
-    height: 600px; /* Increased for HD quality */
+    height: auto; /* Auto height to accommodate full images */
+    min-height: 400px; /* Minimum height for consistency */
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
@@ -1191,7 +1192,8 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: auto; /* Auto height for full image display */
+    min-height: 400px; /* Minimum height for consistency */
     opacity: 0;
     /* Removed transition for instant slideshow performance */
     display: flex;
@@ -1205,8 +1207,9 @@
 
 .slide-img {
     width: 100%;
-    height: 100%;
-    object-fit: contain; /* Changed to contain to fit images completely */
+    height: auto; /* Auto height to maintain aspect ratio */
+    max-height: 600px; /* Maximum height to prevent oversized images */
+    object-fit: contain; /* Show full images without cropping */
     display: block;
     image-rendering: -webkit-optimize-contrast; /* HD quality rendering */
     image-rendering: crisp-edges;

@@ -641,6 +641,16 @@ function showSlide(index) {
     if (indicators[currentSlideIndex]) {
         indicators[currentSlideIndex].classList.add('active');
     }
+
+    // Update slide counter
+    const currentSlideNum = document.getElementById('currentSlideNum');
+    const totalSlideNum = document.getElementById('totalSlideNum');
+    if (currentSlideNum) {
+        currentSlideNum.textContent = currentSlideIndex + 1;
+    }
+    if (totalSlideNum) {
+        totalSlideNum.textContent = slides.length;
+    }
 }
 
 function changeSlide(direction) {
