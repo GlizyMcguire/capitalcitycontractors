@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- FORCE DEPLOYMENT: 2025-08-25 17:40 - FINAL WORKING VERSION -->
+<!-- FORCE DEPLOYMENT: 2025-08-25 17:50 - CRITICAL FIXES DEPLOYED -->
 <html lang="en-CA">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <!-- Force light color scheme in in-app browsers -->
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
-    <meta name="cache-bust" content="20250825-1735-FORCE-REFRESH">
+    <meta name="cache-bust" content="20250825-1750-CRITICAL-FIXES">
 
 
     <!-- SEO Meta Tags - Optimized for Local Search -->
@@ -353,12 +353,12 @@
     <script src="assets/data/reviews.js"></script>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250825-FIXED">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250825-FIXED">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250825-FIXED">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250825-FIXED">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250825-FIXED">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250825-FIXED">
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250825-CRITICAL">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250825-CRITICAL">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250825-CRITICAL">
+    <link rel="stylesheet" href="assets/css/components.css?v=20250825-CRITICAL">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250825-CRITICAL">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250825-CRITICAL">
 
     <!-- Facebook SDK for Messenger -->
     <script>
@@ -608,9 +608,20 @@
     </style>
 
     <script>
-        // SIMPLE CACHE BUSTING
+        // AGGRESSIVE CACHE BUSTING - FORCE REFRESH
         if ('caches' in window) {
             caches.keys().then(names => names.forEach(name => caches.delete(name)));
+        }
+
+        // Force reload if cached version detected
+        const lastUpdate = localStorage.getItem('lastUpdate');
+        const currentUpdate = '20250825-1750-CRITICAL';
+        if (lastUpdate !== currentUpdate) {
+            localStorage.setItem('lastUpdate', currentUpdate);
+            console.log('🔄 Forcing cache refresh for critical fixes');
+            if (lastUpdate) {
+                window.location.reload(true);
+            }
         }
 
         // Chat Button Functionality
@@ -1408,7 +1419,7 @@
 
     <!-- Scripts - Deferred for Performance -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-    <script src="assets/js/main.js?v=20250825-FIXED" defer></script>
+    <script src="assets/js/main.js?v=20250825-CRITICAL" defer></script>
 
     <!-- REAL GOOGLE REVIEWS INTEGRATION -->
     <script>
