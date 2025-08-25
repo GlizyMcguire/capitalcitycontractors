@@ -1055,7 +1055,7 @@
                         <!-- Dots will be generated dynamically based on number of reviews -->
                     </div>
                     <div style="color: #666; font-size: 14px;">
-                        <span id="currentReviewNumber">1</span> of 4 reviews
+                        <span id="currentReviewNumber">1</span> of <span id="totalReviewsCount">8</span> reviews
                     </div>
 
                     <!-- DEPLOYMENT TIMESTAMP -->
@@ -1410,6 +1410,12 @@
                     dotsContainer.appendChild(dot);
                 }
 
+                // Update total count display
+                const totalCountElement = document.getElementById('totalReviewsCount');
+                if (totalCountElement) {
+                    totalCountElement.textContent = reviews.length;
+                }
+
                 console.log(`🔵 Generated ${reviews.length} navigation dots`);
             }
 
@@ -1493,12 +1499,41 @@
         async function fetchLiveGoogleReviews() {
             try {
                 console.log('🔄 Fetching live Google reviews...');
+                console.log('🔑 Using API key:', GOOGLE_API_KEY.substring(0, 10) + '...');
+                console.log('🏢 Using Place ID:', PLACE_ID);
 
-                // Use Google Places API with CORS proxy
-                const corsProxy = 'https://api.allorigins.win/raw?url=';
+                // Try multiple CORS proxies for better reliability
+                const corsProxies = [
+                    'https://api.allorigins.win/raw?url=',
+                    'https://cors-anywhere.herokuapp.com/',
+                    'https://api.codetabs.com/v1/proxy?quest='
+                ];
+
                 const placesUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews,rating,user_ratings_total&key=${GOOGLE_API_KEY}`;
+                console.log('🌐 API URL:', placesUrl);
 
-                const response = await fetch(corsProxy + encodeURIComponent(placesUrl));
+                let response = null;
+                let lastError = null;
+
+                // Try each CORS proxy
+                for (const proxy of corsProxies) {
+                    try {
+                        console.log('🔄 Trying proxy:', proxy);
+                        response = await fetch(proxy + encodeURIComponent(placesUrl));
+                        if (response.ok) {
+                            console.log('✅ Proxy successful:', proxy);
+                            break;
+                        }
+                    } catch (error) {
+                        console.log('❌ Proxy failed:', proxy, error.message);
+                        lastError = error;
+                        continue;
+                    }
+                }
+
+                if (!response || !response.ok) {
+                    throw lastError || new Error('All CORS proxies failed');
+                }
                 const data = await response.json();
 
                 if (data.result && data.result.reviews) {
