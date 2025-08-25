@@ -1179,12 +1179,14 @@
 .slideshow-container {
     position: relative;
     width: 100%;
-    height: auto; /* Auto height to accommodate full images */
-    min-height: 400px; /* Minimum height for consistency */
+    height: 500px; /* Fixed height for consistency */
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .slide {
@@ -1192,8 +1194,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: auto; /* Auto height for full image display */
-    min-height: 400px; /* Minimum height for consistency */
+    height: 100%;
     opacity: 0;
     /* Removed transition for instant slideshow performance */
     display: flex;
@@ -1206,9 +1207,10 @@
 }
 
 .slide-img {
-    width: 100%;
-    height: auto; /* Auto height to maintain aspect ratio */
-    max-height: 600px; /* Maximum height to prevent oversized images */
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain; /* Show full images without cropping */
     display: block;
     image-rendering: -webkit-optimize-contrast; /* HD quality rendering */
