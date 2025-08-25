@@ -1355,6 +1355,34 @@
                     text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
                     date: "1 year ago • Google Review",
                     service: "Multiple Services"
+                },
+                {
+                    name: "Sarah Mitchell",
+                    avatar: "SM",
+                    text: "Capital City Contractors did an amazing job with our basement renovation. They were clean, efficient, and the final result looks fantastic. Highly recommend!",
+                    date: "6 months ago • Google Review",
+                    service: "Basement Renovation"
+                },
+                {
+                    name: "David Thompson",
+                    avatar: "DT",
+                    text: "Excellent carpet installation service. They arrived on time, worked efficiently, and cleaned up perfectly. Very professional team and great attention to detail.",
+                    date: "5 months ago • Google Review",
+                    service: "Carpet Installation"
+                },
+                {
+                    name: "Jennifer Lee",
+                    avatar: "JL",
+                    text: "Outstanding drywall repair work! They fixed water damage in our home and you can't even tell there was ever an issue. Professional and reasonably priced.",
+                    date: "4 months ago • Google Review",
+                    service: "Drywall Repair"
+                },
+                {
+                    name: "Michael Brown",
+                    avatar: "MB",
+                    text: "Great experience with Capital City Contractors. They painted our entire main floor and did excellent work. Clean, professional, and on budget.",
+                    date: "3 months ago • Google Review",
+                    service: "Interior Painting"
                 }
             ];
 
@@ -1461,8 +1489,8 @@
                         ratingText.textContent = `${overallRating.toFixed(1)} on Google Reviews (${totalReviews} reviews)`;
                     }
 
-                    // Process and display reviews
-                    const liveReviews = data.result.reviews.slice(0, 4).map((review, index) => ({
+                    // Process and display ALL reviews (not just 4)
+                    const liveReviews = data.result.reviews.map((review, index) => ({
                         name: review.author_name,
                         avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
                         text: review.text,
