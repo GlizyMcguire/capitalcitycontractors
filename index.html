@@ -140,7 +140,7 @@
         "currenciesAccepted": "CAD",
         "inLanguage": ["en-CA", "fr-CA"],
         "hasMap": "https://www.google.com/maps/search/?api=1&query=Capital+City+Contractors+Ottawa",
-        "knowsAbout": ["Interior Painting Ottawa", "Exterior Painting Ottawa", "Drywall Repair Ottawa", "Home Renovations Ottawa", "Carpet Installation Ottawa", "Taping & Mudding Ottawa"],
+        "knowsAbout": ["Interior Painting Ottawa", "Exterior Painting Ottawa", "Drywall Repair Ottawa", "Home Renovations Ottawa", "Kitchen Renovations Ottawa", "Basement Renovations Ottawa", "Bathroom Renovations Ottawa", "Carpet Installation Ottawa", "Taping & Mudding Ottawa"],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Ottawa Painting & Contracting Services",
@@ -399,13 +399,28 @@
             text-align: left !important;
         }
 
+        /* Align CTA buttons at bottom of cards */
+        #services .services-detailed-grid .service-detail-card {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+        }
+
+        #services .services-detailed-grid .service-detail-card .service-detail-content {
+            display: flex !important;
+            flex-direction: column !important;
+            flex-grow: 1 !important;
+        }
+
         #services .services-detailed-grid .service-detail-card .service-cta-row {
-            margin-top: 16px !important;
+            margin-top: auto !important;
+            margin-bottom: 0 !important;
+            padding-top: 16px !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
             gap: 8px !important;
-            padding: 0 10px !important;
+            padding: 16px 10px 0 10px !important;
         }
 
         #services .services-detailed-grid .service-detail-card .service-cta-row .btn {
@@ -744,6 +759,23 @@
                             <a href="#contact" class="btn btn-secondary"><i class="fas fa-calculator"></i> Get Free Estimate</a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Additional Services - Subtle SEO Section -->
+            <div class="additional-services" style="margin-top: 3rem; text-align: center; padding: 2rem 0; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-radius: 12px;">
+                <h3 style="color: #374151; font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem;">Additional Services</h3>
+                <p style="color: #6b7280; font-size: 1rem; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+                    We also specialize in <strong>basement renovations</strong>, <strong>bathroom renovations</strong>, and comprehensive <strong>home renovations</strong> throughout Ottawa.
+                    Contact us to discuss your specific project needs and get a free consultation.
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="tel:+16133011311" class="btn btn-primary" style="margin-right: 1rem;">
+                        <i class="fas fa-phone"></i> Call for Consultation
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">
+                        <i class="fas fa-calculator"></i> Get Free Estimate
+                    </a>
                 </div>
             </div>
         </div>
