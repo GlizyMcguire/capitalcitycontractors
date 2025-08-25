@@ -1422,51 +1422,86 @@
         const GOOGLE_API_KEY = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
         const PLACE_ID = 'ChIJN1t_tDeuEmsRUsoyG83frY4';
 
-        // Fetch real reviews using alternative methods
-        async function fetchRealGoogleReviews() {
+        // Fetch ALL reviews directly from Google Places API
+        async function fetchAllGoogleReviews() {
+            console.log('🔄 Fetching ALL reviews from Google Places API...');
+
             try {
-                console.log('🔄 Attempting to fetch REAL Google Reviews...');
-
-                // Method 1: Try different CORS proxy
-                const corsProxies = [
-                    'https://corsproxy.io/?',
-                    'https://api.codetabs.com/v1/proxy?quest=',
-                    'https://cors-anywhere.herokuapp.com/'
-                ];
-
+                // Method 1: Server-side proxy approach
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
                 const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=reviews,rating,user_ratings_total&key=${GOOGLE_API_KEY}`;
 
-                for (const proxy of corsProxies) {
-                    try {
-                        console.log('🔄 Trying proxy:', proxy);
-                        const response = await fetch(proxy + encodeURIComponent(apiUrl));
+                console.log('� Making API request to Google Places...');
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
 
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.result && data.result.reviews && data.result.reviews.length > 0) {
-                                reviews = data.result.reviews.map(review => ({
-                                    name: review.author_name,
-                                    avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
-                                    text: review.text,
-                                    date: getRelativeTime(review.time) + ' • Google Review',
-                                    service: getServiceFromReview(review.text),
-                                    rating: review.rating
-                                }));
+                if (response.ok) {
+                    const proxyData = await response.json();
+                    const data = JSON.parse(proxyData.contents);
 
-                                console.log('✅ Successfully loaded', reviews.length, 'REAL Google Reviews via proxy');
-                                updateDisplay();
-                                return true;
-                            }
-                        }
-                    } catch (proxyError) {
-                        console.log('⚠️ Proxy failed:', proxy, proxyError.message);
-                        continue;
+                    console.log('📊 Raw Google API Response:', data);
+
+                    if (data.status === 'OK' && data.result && data.result.reviews) {
+                        const googleReviews = data.result.reviews;
+                        console.log('📝 Found', googleReviews.length, 'reviews from Google Places API');
+
+                        reviews = googleReviews.map((review, index) => {
+                            console.log(`Review ${index + 1}:`, {
+                                name: review.author_name,
+                                text: review.text.substring(0, 100) + '...',
+                                rating: review.rating,
+                                time: review.time
+                            });
+
+                            return {
+                                name: review.author_name,
+                                avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
+                                text: review.text,
+                                date: getRelativeTime(review.time) + ' • Google Review',
+                                service: getServiceFromReview(review.text),
+                                rating: review.rating
+                            };
+                        });
+
+                        console.log('✅ Successfully extracted', reviews.length, 'reviews from your Google Business');
+                        updateDisplay();
+                        return true;
+                    } else {
+                        console.log('⚠️ API returned status:', data.status, 'Error:', data.error_message);
+                        throw new Error(`Google API error: ${data.status}`);
                     }
+                } else {
+                    throw new Error(`Proxy request failed: ${response.status}`);
+                }
+            } catch (error) {
+                console.log('⚠️ Primary method failed:', error.message);
+
+                // Method 2: Alternative proxy
+                try {
+                    console.log('🔄 Trying alternative proxy method...');
+                    const altProxy = 'https://corsproxy.io/?';
+                    const altResponse = await fetch(altProxy + encodeURIComponent(apiUrl));
+
+                    if (altResponse.ok) {
+                        const data = await altResponse.json();
+                        if (data.result && data.result.reviews) {
+                            reviews = data.result.reviews.map(review => ({
+                                name: review.author_name,
+                                avatar: review.author_name.split(' ').map(n => n[0]).join('').toUpperCase(),
+                                text: review.text,
+                                date: getRelativeTime(review.time) + ' • Google Review',
+                                service: getServiceFromReview(review.text),
+                                rating: review.rating
+                            }));
+
+                            console.log('✅ Alternative method success! Loaded', reviews.length, 'reviews');
+                            updateDisplay();
+                            return true;
+                        }
+                    }
+                } catch (altError) {
+                    console.log('⚠️ Alternative method also failed:', altError.message);
                 }
 
-                throw new Error('All proxy methods failed');
-            } catch (error) {
-                console.log('⚠️ All Google API methods failed:', error.message);
                 return false;
             }
         }
@@ -1564,23 +1599,19 @@
             console.log('Previous review:', currentIndex + 1);
         }
 
-        // Initialize with verified Google Reviews
+        // Initialize by fetching ALL reviews from Google API
         document.addEventListener('DOMContentLoaded', async function() {
-            console.log('🚀 Initializing Google Reviews system...');
+            console.log('🚀 Initializing Google Reviews system - Fetching from API...');
 
-            // Primary method: Use verified Google Reviews (most reliable)
-            loadVerifiedGoogleReviews();
+            // Primary method: Fetch ALL reviews directly from Google Places API
+            const apiSuccess = await fetchAllGoogleReviews();
 
-            // Optional: Try to fetch live reviews in background (for future updates)
-            setTimeout(async () => {
-                console.log('🔄 Attempting background fetch of live reviews...');
-                const liveSuccess = await fetchRealGoogleReviews();
-                if (liveSuccess) {
-                    console.log('🎉 Successfully updated with live Google Reviews!');
-                }
-            }, 2000);
+            if (!apiSuccess) {
+                console.log('⚠️ API extraction failed, using known reviews as fallback');
+                loadVerifiedGoogleReviews();
+            }
 
-            console.log('✅ Reviews system ready with', reviews.length, 'verified Google Reviews');
+            console.log('✅ Reviews system ready with', reviews.length, 'Google Reviews');
         });
     </script>
 

@@ -1179,15 +1179,17 @@
 .slideshow-container {
     position: relative;
     width: 100%;
-    height: 500px; /* Optimal height for full image display */
+    height: auto; /* Auto height to accommodate full images */
+    min-height: 400px; /* Minimum height for consistency */
+    max-height: 700px; /* Maximum height to prevent oversized images */
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow: visible; /* Allow images to show completely */
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px; /* Add padding to prevent edge cropping */
+    padding: 20px; /* More padding for complete image display */
 }
 
 .slide {
@@ -1195,12 +1197,14 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: auto; /* Auto height for full image display */
+    min-height: 100%; /* Ensure minimum coverage */
     opacity: 0;
     /* Removed transition for instant slideshow performance */
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px; /* Padding to show complete images */
 }
 
 .slide.active {
@@ -1208,16 +1212,18 @@
 }
 
 .slide-img {
-    max-width: 85%; /* More zoom out - show more of the image */
-    max-height: 85%; /* More zoom out - show more of the image */
-    width: auto;
-    height: auto;
-    object-fit: contain; /* Show full images without cropping */
+    max-width: 100%; /* Full width available */
+    max-height: 100%; /* Full height available */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: contain; /* Show complete images without any cropping */
+    object-position: center; /* Center the image */
     display: block;
     image-rendering: -webkit-optimize-contrast; /* HD quality rendering */
     image-rendering: crisp-edges;
     border-radius: 8px; /* Slight rounding for better appearance */
     margin: auto; /* Center the image */
+    transform: scale(0.9); /* Slightly scale down to ensure full image is visible */
 }
 
 /* Navigation arrows */
