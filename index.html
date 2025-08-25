@@ -1462,12 +1462,16 @@
 
             // Navigation functions
             function nextReview() {
+                console.log('➡️ Next review clicked, current:', currentReviewIndex);
                 currentReviewIndex = (currentReviewIndex + 1) % reviews.length;
+                console.log('➡️ Moving to review:', currentReviewIndex);
                 updateReview(currentReviewIndex);
             }
 
             function prevReview() {
+                console.log('⬅️ Previous review clicked, current:', currentReviewIndex);
                 currentReviewIndex = (currentReviewIndex - 1 + reviews.length) % reviews.length;
+                console.log('⬅️ Moving to review:', currentReviewIndex);
                 updateReview(currentReviewIndex);
             }
 
@@ -1478,8 +1482,21 @@
 
             // Initialize
             // Add click events to navigation buttons
-            document.getElementById('nextReview')?.addEventListener('click', nextReview);
-            document.getElementById('prevReview')?.addEventListener('click', prevReview);
+            const nextBtn = document.getElementById('nextReview');
+            const prevBtn = document.getElementById('prevReview');
+
+            console.log('🔘 Next button found:', !!nextBtn);
+            console.log('🔘 Prev button found:', !!prevBtn);
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', nextReview);
+                console.log('✅ Next button click handler added');
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', prevReview);
+                console.log('✅ Prev button click handler added');
+            }
 
             // Generate dots and start with first review
             generateDots();
