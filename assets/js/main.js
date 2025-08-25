@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components
     initNavigation();
     initScrollEffects();
-    initTestimonialSlider();
+    // initTestimonialSlider(); // DISABLED - Using index.html review system instead
     initAnimations();
     initFormHandling();
     initSmoothScrolling();
@@ -160,9 +160,10 @@ function initScrollEffects() {
     });
 }
 
-// Load and Display Real Reviews from reviews.js
+// Load and Display Real Reviews from reviews.js - COMPLETELY REMOVED
 function initTestimonialSlider() {
-    const container = document.getElementById('testimonials-container');
+    // FUNCTION COMPLETELY DISABLED - DO NOT USE
+    return;
 
     if (!container || typeof reviewsData === 'undefined') {
         console.log('Reviews container or data not found');

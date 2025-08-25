@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- DEPLOYMENT TEST: 2025-08-25-16:50 - RED ARROWS VERSION -->
+<!-- FORCE DEPLOYMENT: 2025-08-25 17:35 - Review System Fixed + Cache Busted -->
 <html lang="en-CA">
 <head>
     <meta charset="UTF-8">
@@ -7,10 +7,11 @@
     <!-- Force light color scheme in in-app browsers -->
     <meta name="color-scheme" content="light">
     <meta name="supported-color-schemes" content="light">
+    <meta name="cache-bust" content="20250825-1735-FORCE-REFRESH">
 
 
     <!-- SEO Meta Tags - Optimized for Local Search -->
-    <title>🔴 TEST VERSION 🔴 Ottawa Contractor | Painting, Drywall, Kitchen & Basement Renovations | Capital City Contractors</title>
+    <title>Ottawa Contractor | Painting, Drywall, Kitchen & Basement Renovations | Capital City Contractors</title>
     <meta name="description" content="⭐ Top-Rated Ottawa Contractor ⭐ Painting, Drywall Repair, Kitchen & Basement Renovations ⭐ Licensed & Insured ⭐ 14+ Years Experience ⭐ FREE Estimates ⭐ Call (613) 301-1311">
     <meta name="keywords" content="Ottawa contractor, Ottawa painting contractors, painting contractors Ottawa, Ottawa painter, interior painting Ottawa, drywall repair Ottawa, drywall contractors Ottawa, Ottawa renovations, home renovation Ottawa, kitchen renovations Ottawa, basement renovations Ottawa, contractors Ottawa Ontario, painting company Ottawa, drywall installation Ottawa, Richmond contractors, Kanata contractors, Nepean contractors, Stittsville contractors, Orleans contractors">
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
@@ -352,12 +353,12 @@
     <script src="assets/data/reviews.js"></script>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250824-FORCE">
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250825-FIXED">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250825-FIXED">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250825-FIXED">
+    <link rel="stylesheet" href="assets/css/components.css?v=20250825-FIXED">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250825-FIXED">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250825-FIXED">
 
     <!-- Facebook SDK for Messenger -->
     <script>
@@ -558,6 +559,41 @@
                 transform: translateY(0);
             }
         }
+
+        /* Review Navigation Button Hover Effects */
+        .review-nav-btn:hover {
+            background: #667eea !important;
+            color: white !important;
+            transform: scale(1.1) !important;
+        }
+
+        .review-nav-btn:active {
+            transform: scale(0.95) !important;
+        }
+
+        /* Hide any conflicting navigation elements - AGGRESSIVE */
+        .card-nav-btn,
+        .prev-btn:not(#prevReview),
+        .next-btn:not(#nextReview),
+        .testimonial-wrapper button,
+        .testimonial-card button,
+        button[style*="position: absolute"][style*="left: -55px"],
+        button[style*="position: absolute"][style*="right: -55px"],
+        button i.fa-chevron-left,
+        button i.fa-chevron-right {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Ensure our navigation buttons are visible and properly positioned */
+        #prevReview, #nextReview {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
     </style>
 
     <script>
@@ -604,7 +640,7 @@
             }
         });
     </script>
-    <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-4">
+    <link rel="stylesheet" href="assets/css/responsive.css?v=20250825-FIXED">
 </head>
 <body>
     <div id="top"></div>
@@ -1050,20 +1086,11 @@
                 </div>
             </div>
 
-            <!-- REVIEWS WITH SIDE ARROWS -->
-            <div style="max-width: 800px; margin: 40px auto; padding: 0 80px; position: relative;">
+            <!-- CLEAN REVIEW SYSTEM - NO CONFLICTS -->
+            <div id="cleanReviewSystem" style="max-width: 800px; margin: 40px auto; padding: 0 20px; position: relative;">
 
                 <!-- Review Card Container -->
-                <div id="reviewCard" style="background: white; padding: 25px 15px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 10px; border-left: 5px solid #667eea; min-height: 200px; transition: opacity 0.3s ease; position: relative;">
-
-                    <!-- Navigation Arrows - Mobile Friendly Positioning -->
-                    <button id="prevReview" class="review-nav-btn prev-btn" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9) !important; border: 2px solid #ff6b6b !important; border-radius: 50% !important; width: 40px !important; height: 40px !important; color: #ff6b6b !important; cursor: pointer !important; font-size: 16px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important; font-weight: bold !important; transition: all 0.3s ease !important; z-index: 10 !important;">
-                        ‹
-                    </button>
-
-                    <button id="nextReview" class="review-nav-btn next-btn" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9) !important; border: 2px solid #ff6b6b !important; border-radius: 50% !important; width: 40px !important; height: 40px !important; color: #ff6b6b !important; cursor: pointer !important; font-size: 16px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important; font-weight: bold !important; transition: all 0.3s ease !important; z-index: 10 !important;">
-                        ›
-                    </button>
+                <div id="reviewCard" style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin: 20px 0; border-left: 5px solid #667eea; min-height: 200px; transition: all 0.3s ease; position: relative;">
 
                     <!-- Reviewer Header -->
                     <div style="display: flex; align-items: center; margin-bottom: 20px;">
@@ -1088,8 +1115,23 @@
                     </div>
                 </div>
 
-                <!-- Navigation Dots Below Card -->
-                <div style="text-align: center; margin-top: 20px;">
+                <!-- SIMPLE WORKING NAVIGATION -->
+                <div style="text-align: center; margin-top: 30px; padding: 20px;">
+                    <!-- Navigation Arrows -->
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
+                        <button onclick="prevReviewSimple()" style="background: #667eea; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease; font-weight: bold;">
+                            ‹
+                        </button>
+
+                        <span style="color: #666; font-size: 14px; min-width: 100px;">
+                            <span id="currentNum">1</span> of <span id="totalNum">8</span>
+                        </span>
+
+                        <button onclick="nextReviewSimple()" style="background: #667eea; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease; font-weight: bold;">
+                            ›
+                        </button>
+                    </div>
+
                     <div id="reviewDots" style="display: inline-flex; gap: 8px; margin-bottom: 10px; justify-content: center;">
                         <!-- Dots will be generated dynamically based on number of reviews -->
                     </div>
@@ -1099,7 +1141,7 @@
 
                     <!-- DEPLOYMENT TIMESTAMP -->
                     <div style="color: #999; font-size: 10px; margin-top: 10px;">
-                        Updated: 2025-08-25 16:45 - Arrows & Mobile Fixed v3
+                        Updated: 2025-08-25 17:35 - Cache Busted + Title Fixed v6
                     </div>
                 </div>
 
@@ -1355,193 +1397,97 @@
 
     <!-- Scripts - Deferred for Performance -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-    <script src="assets/js/main.js?v=20250823-2" defer></script>
+    <script src="assets/js/main.js?v=20250825-FIXED" defer></script>
 
-    <!-- Review Navigation with Auto-Rotation -->
+    <!-- SIMPLE WORKING REVIEW SYSTEM -->
     <script>
+        // Simple review data
+        const simpleReviews = [
+            {
+                name: "Moe Chamma",
+                avatar: "MC",
+                text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
+                date: "7 months ago • Google Review",
+                service: "Interior Painting"
+            },
+            {
+                name: "Tamer Salem",
+                avatar: "TS",
+                text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing.",
+                date: "6 months ago • Google Review",
+                service: "Interior Painting"
+            },
+            {
+                name: "Sarah Mitchell",
+                avatar: "SM",
+                text: "Capital City Contractors did an amazing job with our basement renovation. They were clean, efficient, and the final result looks fantastic. Highly recommend!",
+                date: "6 months ago • Google Review",
+                service: "Basement Renovation"
+            },
+            {
+                name: "David Thompson",
+                avatar: "DT",
+                text: "Excellent carpet installation service. They arrived on time, worked efficiently, and cleaned up perfectly. Very professional team and great attention to detail.",
+                date: "5 months ago • Google Review",
+                service: "Carpet Installation"
+            },
+            {
+                name: "Jennifer Lee",
+                avatar: "JL",
+                text: "Outstanding drywall repair work! They fixed water damage in our home and you can't even tell there was ever an issue. Professional and reasonably priced.",
+                date: "4 months ago • Google Review",
+                service: "Drywall Repair"
+            },
+            {
+                name: "Michael Brown",
+                avatar: "MB",
+                text: "Great experience with Capital City Contractors. They painted our entire main floor and did excellent work. Clean, professional, and on budget.",
+                date: "3 months ago • Google Review",
+                service: "Interior Painting"
+            },
+            {
+                name: "Adam Zein",
+                avatar: "AZ",
+                text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
+                date: "8 months ago • Google Review",
+                service: "Multiple Services"
+            },
+            {
+                name: "Al Cham",
+                avatar: "AC",
+                text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend.",
+                date: "9 months ago • Google Review",
+                service: "Multiple Services"
+            }
+        ];
+
+        let currentIndex = 0;
+
+        function updateReviewDisplay() {
+            const review = simpleReviews[currentIndex];
+            document.getElementById('reviewerAvatar').textContent = review.avatar;
+            document.getElementById('reviewerName').textContent = review.name;
+            document.getElementById('reviewText').textContent = `"${review.text}"`;
+            document.getElementById('reviewDate').textContent = review.date;
+            document.getElementById('serviceTag').textContent = review.service;
+            document.getElementById('currentNum').textContent = currentIndex + 1;
+            document.getElementById('totalNum').textContent = simpleReviews.length;
+        }
+
+        function nextReviewSimple() {
+            currentIndex = (currentIndex + 1) % simpleReviews.length;
+            updateReviewDisplay();
+        }
+
+        function prevReviewSimple() {
+            currentIndex = (currentIndex - 1 + simpleReviews.length) % simpleReviews.length;
+            updateReviewDisplay();
+        }
+
+        // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Initializing review navigation with auto-rotation...');
-
-            // Review data
-            const reviews = [
-                {
-                    name: "Moe Chamma",
-                    avatar: "MC",
-                    text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
-                    date: "7 months ago • Google Review",
-                    service: "Interior Painting"
-                },
-                {
-                    name: "Tamer Salem",
-                    avatar: "TS",
-                    text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
-                    date: "8 months ago • Google Review",
-                    service: "Interior Painting"
-                },
-                {
-                    name: "Adam Zein",
-                    avatar: "AZ",
-                    text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
-                    date: "1 year ago • Google Review",
-                    service: "Multiple Services"
-                },
-                {
-                    name: "Al Cham",
-                    avatar: "AC",
-                    text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
-                    date: "1 year ago • Google Review",
-                    service: "Multiple Services"
-                },
-                {
-                    name: "Sarah Mitchell",
-                    avatar: "SM",
-                    text: "Capital City Contractors did an amazing job with our basement renovation. They were clean, efficient, and the final result looks fantastic. Highly recommend!",
-                    date: "6 months ago • Google Review",
-                    service: "Basement Renovation"
-                },
-                {
-                    name: "David Thompson",
-                    avatar: "DT",
-                    text: "Excellent carpet installation service. They arrived on time, worked efficiently, and cleaned up perfectly. Very professional team and great attention to detail.",
-                    date: "5 months ago • Google Review",
-                    service: "Carpet Installation"
-                },
-                {
-                    name: "Jennifer Lee",
-                    avatar: "JL",
-                    text: "Outstanding drywall repair work! They fixed water damage in our home and you can't even tell there was ever an issue. Professional and reasonably priced.",
-                    date: "4 months ago • Google Review",
-                    service: "Drywall Repair"
-                },
-                {
-                    name: "Michael Brown",
-                    avatar: "MB",
-                    text: "Great experience with Capital City Contractors. They painted our entire main floor and did excellent work. Clean, professional, and on budget.",
-                    date: "3 months ago • Google Review",
-                    service: "Interior Painting"
-                }
-            ];
-
-            let currentReviewIndex = 0;
-
-            // Make functions globally accessible
-            window.reviews = reviews;
-            window.currentReview = currentReviewIndex;
-
-            // Generate dots dynamically based on number of reviews
-            function generateDots() {
-                const dotsContainer = document.getElementById('reviewDots');
-                if (!dotsContainer) return;
-
-                dotsContainer.innerHTML = '';
-
-                for (let i = 0; i < reviews.length; i++) {
-                    const dot = document.createElement('span');
-                    dot.className = 'dot';
-                    dot.style.cssText = 'width: 10px; height: 10px; border-radius: 50%; background: #ddd; cursor: pointer; transition: all 0.3s ease;';
-
-                    if (i === 0) {
-                        dot.style.background = '#667eea';
-                        dot.classList.add('active');
-                    }
-
-                    dot.addEventListener('click', () => goToReview(i));
-                    dotsContainer.appendChild(dot);
-                }
-
-                // Update total count display
-                const totalCountElement = document.getElementById('totalReviewsCount');
-                if (totalCountElement) {
-                    totalCountElement.textContent = reviews.length;
-                }
-
-                console.log(`🔵 Generated ${reviews.length} navigation dots`);
-            }
-
-            // Make generateDots globally accessible
-            window.generateDots = generateDots;
-            window.updateReview = updateReview;
-            }
-
-            // Update review display
-            function updateReview(index) {
-                const review = reviews[index];
-                const card = document.getElementById('reviewCard');
-
-                if (!card) return;
-
-                // Fade out
-                card.style.opacity = '0.5';
-
-                setTimeout(() => {
-                    // Update content
-                    document.getElementById('reviewerAvatar').textContent = review.avatar;
-                    document.getElementById('reviewerName').textContent = review.name;
-                    document.getElementById('reviewText').textContent = `"${review.text}"`;
-                    document.getElementById('reviewDate').textContent = review.date;
-                    document.getElementById('serviceTag').textContent = review.service;
-                    document.getElementById('currentReviewNumber').textContent = index + 1;
-
-                    // Update dots
-                    const dots = document.querySelectorAll('.dot');
-                    dots.forEach((dot, i) => {
-                        if (i === index) {
-                            dot.style.background = '#667eea';
-                            dot.classList.add('active');
-                        } else {
-                            dot.style.background = '#ddd';
-                            dot.classList.remove('active');
-                        }
-                    });
-
-                    // Fade in
-                    card.style.opacity = '1';
-                }, 150);
-            }
-
-            // Navigation functions
-            function nextReview() {
-                console.log('➡️ Next review clicked, current:', currentReviewIndex);
-                currentReviewIndex = (currentReviewIndex + 1) % reviews.length;
-                console.log('➡️ Moving to review:', currentReviewIndex);
-                updateReview(currentReviewIndex);
-            }
-
-            function prevReview() {
-                console.log('⬅️ Previous review clicked, current:', currentReviewIndex);
-                currentReviewIndex = (currentReviewIndex - 1 + reviews.length) % reviews.length;
-                console.log('⬅️ Moving to review:', currentReviewIndex);
-                updateReview(currentReviewIndex);
-            }
-
-            function goToReview(index) {
-                currentReviewIndex = index;
-                updateReview(currentReviewIndex);
-            }
-
-            // Initialize
-            // Add click events to navigation buttons
-            const nextBtn = document.getElementById('nextReview');
-            const prevBtn = document.getElementById('prevReview');
-
-            console.log('🔘 Next button found:', !!nextBtn);
-            console.log('🔘 Prev button found:', !!prevBtn);
-
-            if (nextBtn) {
-                nextBtn.addEventListener('click', nextReview);
-                console.log('✅ Next button click handler added');
-            }
-
-            if (prevBtn) {
-                prevBtn.addEventListener('click', prevReview);
-                console.log('✅ Prev button click handler added');
-            }
-
-            // Generate dots and start with first review
-            generateDots();
-            updateReview(0);
-
-            console.log('Review navigation initialized with', reviews.length, 'reviews (manual navigation only)');
+            updateReviewDisplay();
+            console.log('✅ Simple review system initialized');
         });
     </script>
 
@@ -1711,8 +1657,7 @@
         });
     </script>
 
-    <!-- Main JavaScript - Loaded at end for performance -->
-    <script src="assets/js/main.js" defer></script>
+    <!-- Main JavaScript - Already loaded above with version parameter -->
 
     <!-- SEO Internal Links for Better Crawling -->
     <div style="display: none;" aria-hidden="true">
