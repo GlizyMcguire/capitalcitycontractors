@@ -1117,17 +1117,17 @@
 
                 <!-- SIMPLE WORKING NAVIGATION -->
                 <div style="text-align: center; margin-top: 30px; padding: 20px;">
-                    <!-- Navigation Arrows -->
+                    <!-- WORKING NAVIGATION ARROWS -->
                     <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
-                        <button onclick="prevReviewSimple()" style="background: #667eea; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease; font-weight: bold;">
+                        <button id="prevBtn" onclick="window.prevReviewSimple && window.prevReviewSimple()" style="background: #667eea !important; color: white !important; border: none !important; border-radius: 50% !important; width: 50px !important; height: 50px !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important; transition: all 0.3s ease !important; font-weight: bold !important; z-index: 9999 !important;">
                             ‹
                         </button>
 
-                        <span style="color: #666; font-size: 14px; min-width: 100px;">
+                        <span style="color: #666; font-size: 14px; min-width: 100px; text-align: center;">
                             <span id="currentNum">1</span> of <span id="totalNum">8</span>
                         </span>
 
-                        <button onclick="nextReviewSimple()" style="background: #667eea; color: white; border: none; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3); transition: all 0.3s ease; font-weight: bold;">
+                        <button id="nextBtn" onclick="window.nextReviewSimple && window.nextReviewSimple()" style="background: #667eea !important; color: white !important; border: none !important; border-radius: 50% !important; width: 50px !important; height: 50px !important; cursor: pointer !important; font-size: 20px !important; display: flex !important; align-items: center !important; justify-content: center !important; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important; transition: all 0.3s ease !important; font-weight: bold !important; z-index: 9999 !important;">
                             ›
                         </button>
                     </div>
@@ -1141,7 +1141,7 @@
 
                     <!-- DEPLOYMENT TIMESTAMP -->
                     <div style="color: #999; font-size: 10px; margin-top: 10px;">
-                        Updated: 2025-08-25 17:35 - Cache Busted + Title Fixed v6
+                        Updated: 2025-08-25 17:40 - FINAL FIX - Triple Backup Navigation v7
                     </div>
                 </div>
 
@@ -1477,17 +1477,40 @@
         function nextReviewSimple() {
             currentIndex = (currentIndex + 1) % simpleReviews.length;
             updateReviewDisplay();
+            console.log('➡️ Next review:', currentIndex + 1);
         }
 
         function prevReviewSimple() {
             currentIndex = (currentIndex - 1 + simpleReviews.length) % simpleReviews.length;
             updateReviewDisplay();
+            console.log('⬅️ Previous review:', currentIndex + 1);
         }
+
+        // Make functions globally accessible
+        window.nextReviewSimple = nextReviewSimple;
+        window.prevReviewSimple = prevReviewSimple;
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             updateReviewDisplay();
-            console.log('✅ Simple review system initialized');
+
+            // Add click event listeners as backup
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', nextReviewSimple);
+                nextBtn.onclick = nextReviewSimple;
+                console.log('✅ Next button listeners added');
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', prevReviewSimple);
+                prevBtn.onclick = prevReviewSimple;
+                console.log('✅ Prev button listeners added');
+            }
+
+            console.log('✅ Simple review system initialized with', simpleReviews.length, 'reviews');
         });
     </script>
 
