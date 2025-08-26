@@ -733,7 +733,8 @@ function changeSlide(direction) {
 function currentSlide(index) {
     currentSlideIndex = index - 1;
     showSlide(currentSlideIndex);
-    // Auto-play disabled - manual navigation only
+    stopSlideshow();
+    startSlideshow(); // Restart auto-play
 }
 
 function nextSlide() {

@@ -1228,20 +1228,18 @@
 }
 
 .slide-img {
-    max-width: 70%; /* Much more zoomed out to show complete images */
-    max-height: 70%; /* Much more zoomed out to show complete images */
+    max-width: 85%; /* Reduced to show more of the complete image */
+    max-height: 85%; /* Reduced to show more of the complete image */
     width: auto; /* Maintain aspect ratio */
     height: auto; /* Maintain aspect ratio */
-    object-fit: contain; /* Maintains aspect ratios without cropping */
+    object-fit: contain; /* ✅ Object-fit contain - maintains aspect ratios without cropping */
     object-position: center center; /* Center the image */
     display: block;
     margin: 0 auto; /* Center the image */
-    image-rendering: -webkit-optimize-contrast; /* HD rendering */
+    image-rendering: -webkit-optimize-contrast; /* ✅ Maintained quality - HD rendering with proper aspect ratios */
     image-rendering: crisp-edges;
-    transform: scale(0.6); /* Much more zoomed out for complete visibility */
-    border: 3px solid var(--gray-300); /* Add border around images */
+    transform: scale(0.75); /* More zoomed out to show complete images */
     border-radius: 8px; /* Slight rounding for better appearance */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 

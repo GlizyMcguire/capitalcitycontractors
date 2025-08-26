@@ -679,10 +679,11 @@ function initializeSlideshow() {
         console.log('Portfolio slideshow initialized - manual navigation only');
     });
 
-    // Auto-rotation disabled - manual navigation only
+    // Pause on hover
     const slideshowContainer = document.querySelector('.slideshow-container');
     if (slideshowContainer) {
-        console.log('Portfolio slideshow container found - manual navigation enabled');
+        slideshowContainer.addEventListener('mouseenter', stopSlideshow);
+        slideshowContainer.addEventListener('mouseleave', startSlideshow);
     }
 }
 
@@ -727,13 +728,15 @@ function updateSlideCounter() {
 function changeSlide(direction) {
     currentSlideIndex += direction;
     showSlide(currentSlideIndex);
-    // Auto-play disabled - manual navigation only
+    stopSlideshow();
+    startSlideshow(); // Restart auto-play
 }
 
 function currentSlide(index) {
     currentSlideIndex = index - 1;
     showSlide(currentSlideIndex);
-    // Auto-play disabled - manual navigation only
+    stopSlideshow();
+    startSlideshow(); // Restart auto-play
 }
 
 function nextSlide() {

@@ -608,25 +608,18 @@
 .portfolio-slideshow .slide picture,
 .portfolio-slideshow .slide img {
     display: block;
+    width: 100%;
+    height: auto;
 }
 
-/* Ensure only images (not picture) use object-fit for contain behavior */
-.portfolio-slideshow .slide img {
-    object-fit: contain !important;
-    object-position: center center !important;
+/* Full image display without cropping */
+.portfolio-slideshow .slide .slide-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 500px;
+    border-radius: var(--radius-md);
 }
-
-/* Slideshow: show full image, never crop */
-.portfolio-slideshow .slideshow-container .slide img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-    object-position: center center !important;
-    display: block;
-}
-
-/* remove any previous size rules */
-.slide-img { all: unset; }
 
 .contact-cta .cta-title {
     font-size: var(--text-4xl);
@@ -756,9 +749,8 @@
 
     .story-img {
         width: 100%;
-        height: auto;
-        max-height: 60vh;
-        object-fit: contain;
+        height: 250px;
+        object-fit: cover;
         border-radius: var(--radius-lg);
     }
 
@@ -807,8 +799,7 @@
     }
 
     .story-img {
-        height: auto;
-        max-height: 50vh;
+        height: 250px;
     }
 
     /* Mobile services layout - handled above */
@@ -1193,17 +1184,11 @@
 .slideshow-container {
     position: relative;
     width: 100%;
-    height: auto; /* ✅ Auto height containers with min/max constraints */
-    min-height: 400px; /* Minimum height for consistency */
-    max-height: 700px; /* Maximum height to prevent oversized images */
+    height: 600px; /* Increased for HD quality */
     border-radius: var(--radius-lg);
-    overflow: visible; /* ✅ Overflow visible - allows complete images to show */
+    overflow: hidden;
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px; /* ✅ More padding - 20px padding to prevent any edge cropping */
     will-change: transform;
 }
 
@@ -1212,14 +1197,12 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: auto; /* Auto height for full image display */
-    min-height: 100%; /* Ensure minimum coverage */
+    height: 100%;
     opacity: 0;
     /* Removed transition for instant slideshow performance */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px; /* ✅ More padding to show complete images */
     will-change: opacity;
 }
 
@@ -1228,22 +1211,13 @@
 }
 
 .slide-img {
-    max-width: 70%; /* Much more zoomed out to show complete images */
-    max-height: 70%; /* Much more zoomed out to show complete images */
-    width: auto; /* Maintain aspect ratio */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: contain; /* Maintains aspect ratios without cropping */
-    object-position: center center; /* Center the image */
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed to contain to fit images completely */
     display: block;
-    margin: 0 auto; /* Center the image */
-    image-rendering: -webkit-optimize-contrast; /* HD rendering */
+    image-rendering: -webkit-optimize-contrast; /* HD quality rendering */
     image-rendering: crisp-edges;
-    transform: scale(0.6); /* Much more zoomed out for complete visibility */
-    border: 3px solid var(--gray-300); /* Add border around images */
-    border-radius: 8px; /* Slight rounding for better appearance */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
-
 
 /* Navigation arrows */
 .slide-nav {
@@ -1390,20 +1364,13 @@
 
 .story-img {
     width: 100%;
-    height: auto;
-    max-height: 60vh;
-    object-fit: contain;
-    object-position: center;
+    height: 400px;
+    object-fit: cover;
     transition: transform var(--transition-slow);
 }
 
-/* Ensure mobile override doesn’t re-impose fixed height */
-@media (max-width: 768px) {
-    .story-img { height: auto; max-height: 50vh; }
-}
-
 .story-image:hover .story-img {
-    transform: none;
+    transform: scale(1.05);
 }
 
 .story-title {
@@ -1862,10 +1829,7 @@
     }
 
     .about-img {
-        width: 100%;
-        height: auto;
-        max-height: 50vh;
-        object-fit: contain;
+        height: 300px;
     }
 }
 
@@ -1880,12 +1844,13 @@
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .hero-bg-img {
         image-rendering: -webkit-optimize-contrast;
-
+        image-rendering: crisp-edges;
     }
 
     .about-img {
         image-rendering: -webkit-optimize-contrast;
-
+        image-rendering: -webkit-optimize-contrast; /* Edge support */
+        image-rendering: crisp-edges;
     }
 }
 
