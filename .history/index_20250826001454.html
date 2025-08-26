@@ -68,6 +68,7 @@
     <link rel="alternate icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="apple-touch-icon" href="favicon-simple.svg">
     <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
@@ -508,7 +509,16 @@
             color: #dc2626;
         }
 
-
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 
     <script>
@@ -621,7 +631,7 @@
     <section class="homepage-video-section">
         <div class="container">
             <div class="video-container">
-                <video class="homepage-video" autoplay muted loop disablepictureinpicture>
+                <video class="homepage-video" autoplay muted loop playsinline disablepictureinpicture>
                     <source src="assets/images/homepage-logo.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -793,7 +803,7 @@
                     <div class="slide">
                         <picture>
                             <source type="image/webp" srcset="assets/images/optimized/pic2-768.webp 768w, assets/images/optimized/pic2-1280.webp 1280w, assets/images/optimized/pic2-1920.webp 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px">
-                            <img src="assets/images/optimized/pic2-1280.jpg" srcset="assets/images/optimized/pic2-768.jpg 768w, assets/images/optimized/pic2-1280.jpg 1280w, assets/images/optimized/pic2-1920.jpg 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px" alt="Drywall installation and finishing work" class="slide-img" decoding="async" loading="eager" width="600" height="400">
+                            <img src="assets/images/optimized/pic2-1280.jpg" srcset="assets/images/optimized/pic2-768.jpg 768w, assets/images/optimized/pic2-1280.jpg 1280w, assets/images/optimized/pic2-1920.jpg 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px" alt="Drywall installation and finishing work" class="slide-img" decoding="async" fetchpriority="high" loading="eager" width="600" height="400">
                         </picture>
                     </div>
                     <div class="slide">
@@ -934,7 +944,7 @@
                 <div class="story-image">
                     <picture>
                         <source type="image/webp" srcset="assets/images/optimized/aboutus-768.webp 768w, assets/images/optimized/aboutus-1280.webp 1280w, assets/images/optimized/aboutus-1920.webp 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px">
-                        <img src="assets/images/optimized/aboutus-1280.jpg" srcset="assets/images/optimized/aboutus-768.jpg 768w, assets/images/optimized/aboutus-1280.jpg 1280w, assets/images/optimized/aboutus-1920.jpg 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px" alt="Capital City Contractors team providing professional contracting services" class="story-img" decoding="sync" loading="eager" width="1000" height="667">
+                        <img src="assets/images/optimized/aboutus-1280.jpg" srcset="assets/images/optimized/aboutus-768.jpg 768w, assets/images/optimized/aboutus-1280.jpg 1280w, assets/images/optimized/aboutus-1920.jpg 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px" alt="Capital City Contractors team providing professional contracting services" class="story-img" decoding="sync" loading="eager" fetchpriority="high" width="1000" height="667">
                     </picture>
                 </div>
             </div>
