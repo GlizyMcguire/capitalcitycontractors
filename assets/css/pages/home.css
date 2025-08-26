@@ -1216,8 +1216,8 @@
 }
 
 .slide-img {
-    max-width: 92%;
-    max-height: 92%;
+    max-width: 80%;
+    max-height: 80%;
     width: auto;
     height: auto;
     object-fit: contain; /* Show full image without cropping */
