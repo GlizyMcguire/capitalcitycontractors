@@ -3215,6 +3215,23 @@
     display: none;
 }
 
+/* Optimized Animations - Performance Focused */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 10px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Elements using slideUp animation should have will-change */
+.chat-option {
+    will-change: transform, opacity;
+}
+
 /* Accessibility - Visually Hidden Labels */
 .visually-hidden {
     position: absolute;
