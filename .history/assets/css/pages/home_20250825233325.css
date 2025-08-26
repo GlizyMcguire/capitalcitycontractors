@@ -1245,21 +1245,12 @@
     right: 20px;
 }
 
-/* Slide counter */
-.slide-counter {
-    text-align: center;
-    margin-top: var(--space-4);
-    font-size: var(--text-base);
-    color: var(--gray-600);
-    font-weight: var(--font-medium);
-}
-
 /* Slide indicators */
 .slide-indicators {
     display: flex;
     justify-content: center;
     gap: var(--space-2);
-    margin-top: var(--space-4);
+    margin-top: var(--space-6);
     flex-wrap: wrap;
 }
 

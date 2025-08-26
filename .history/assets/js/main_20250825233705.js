@@ -640,23 +640,6 @@ function showSlide(index) {
     if (indicators[currentSlideIndex]) {
         indicators[currentSlideIndex].classList.add('active');
     }
-
-    // Update counter display
-    updateSlideCounter();
-}
-
-function updateSlideCounter() {
-    const currentSlideNumber = document.getElementById('current-slide-number');
-    const totalSlides = document.getElementById('total-slides');
-
-    if (currentSlideNumber) {
-        currentSlideNumber.textContent = currentSlideIndex + 1;
-    }
-
-    if (totalSlides) {
-        const slides = document.querySelectorAll('.slide');
-        totalSlides.textContent = slides.length;
-    }
 }
 
 function changeSlide(direction) {
