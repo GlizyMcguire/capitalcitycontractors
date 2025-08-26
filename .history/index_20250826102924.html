@@ -68,7 +68,7 @@
     <link rel="alternate icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="apple-touch-icon" href="favicon-simple.svg">
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
 
@@ -494,11 +494,9 @@
     </style>
 
     <script>
-        // CACHE BUSTING - Development only
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            if ('caches' in window) {
-                caches.keys().then(names => names.forEach(name => caches.delete(name)));
-            }
+        // SIMPLE CACHE BUSTING
+        if ('caches' in window) {
+            caches.keys().then(names => names.forEach(name => caches.delete(name)));
         }
 
         // Chat Button Functionality

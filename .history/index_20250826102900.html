@@ -68,7 +68,7 @@
     <link rel="alternate icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="apple-touch-icon" href="favicon-simple.svg">
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
 
@@ -357,7 +357,25 @@
     <link rel="stylesheet" href="assets/css/layout.css?v=20250823-4">
     <link rel="stylesheet" href="assets/css/pages/home.css?v=20250824-FORCE">
 
+    <!-- Facebook SDK for Messenger -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId: 'your-app-id', // You'll need to create a Facebook app
+                cookie: true,
+                xfbml: true,
+                version: 'v18.0'
+            });
+        };
 
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <style>
         /* UNIFIED STYLING - DIRECT CSS APPROACH */
@@ -494,11 +512,9 @@
     </style>
 
     <script>
-        // CACHE BUSTING - Development only
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            if ('caches' in window) {
-                caches.keys().then(names => names.forEach(name => caches.delete(name)));
-            }
+        // SIMPLE CACHE BUSTING
+        if ('caches' in window) {
+            caches.keys().then(names => names.forEach(name => caches.delete(name)));
         }
 
         // Chat Button Functionality
