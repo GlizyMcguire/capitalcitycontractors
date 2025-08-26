@@ -608,22 +608,25 @@
 .portfolio-slideshow .slide picture,
 .portfolio-slideshow .slide img {
     display: block;
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
 }
 
-/* Full image display without cropping */
-.portfolio-slideshow .slide .slide-img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    object-position: center center;
-    border-radius: var(--radius-md);
+/* Ensure only images (not picture) use object-fit for contain behavior */
+.portfolio-slideshow .slide img {
+    object-fit: contain !important;
+    object-position: center center !important;
 }
+
+/* Slideshow: show full image, never crop */
+.portfolio-slideshow .slideshow-container .slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    display: block;
+}
+
+/* remove any previous size rules */
+.slide-img { all: unset; }
 
 .contact-cta .cta-title {
     font-size: var(--text-4xl);
@@ -804,7 +807,8 @@
     }
 
     .story-img {
-        height: 250px;
+        height: auto;
+        max-height: 50vh;
     }
 
     /* Mobile services layout - handled above */
@@ -1386,7 +1390,7 @@
 }
 
 .story-image:hover .story-img {
-    transform: scale(1.05);
+    transform: none;
 }
 
 .story-title {
