@@ -1228,8 +1228,8 @@
 }
 
 .slide-img {
-    max-width: 100%; /* ✅ 100% max dimensions - uses full available space */
-    max-height: 100%; /* ✅ 100% max dimensions - uses full available space */
+    max-width: 85%; /* Reduced to show more of the complete image */
+    max-height: 85%; /* Reduced to show more of the complete image */
     width: auto; /* Maintain aspect ratio */
     height: auto; /* Maintain aspect ratio */
     object-fit: contain; /* ✅ Object-fit contain - maintains aspect ratios without cropping */
@@ -1238,7 +1238,7 @@
     margin: 0 auto; /* Center the image */
     image-rendering: -webkit-optimize-contrast; /* ✅ Maintained quality - HD rendering with proper aspect ratios */
     image-rendering: crisp-edges;
-    transform: scale(0.9); /* ✅ Scale transform - transform: scale(0.9) ensures full image visibility */
+    transform: scale(0.75); /* More zoomed out to show complete images */
     border-radius: 8px; /* Slight rounding for better appearance */
 }
 
