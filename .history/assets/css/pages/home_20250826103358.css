@@ -1009,6 +1009,10 @@
     display: none;
 }
 
+        font-size: var(--text-sm);
+    }
+}
+
 /* Services Section */
 .services-section {
     padding: var(--space-20) 0;

@@ -1009,6 +1009,10 @@
     display: none;
 }
 
+        font-size: var(--text-sm);
+    }
+}
+
 /* Services Section */
 .services-section {
     padding: var(--space-20) 0;
@@ -1846,13 +1850,11 @@
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .hero-bg-img {
         image-rendering: -webkit-optimize-contrast;
-        image-rendering: -webkit-optimize-contrast; /* Edge support */
         image-rendering: crisp-edges;
     }
 
     .about-img {
         image-rendering: -webkit-optimize-contrast;
-        image-rendering: -webkit-optimize-contrast; /* Edge support */
         image-rendering: crisp-edges;
     }
 }

@@ -906,9 +906,6 @@
     }
 
     .service-features li {
-        font-size: var(--text-sm);
-    }
-}
 
 /* Clean service card layout: bordered image, proper spacing, compact CTAs */
 .services-detailed-grid .service-detail-card {
@@ -994,7 +991,7 @@
     padding: 10px 16px;
     border-radius: 6px;
     transition: all 0.2s ease;
-    min-height: 36px;
+    min-height: auto;
 }
 .services-detailed-grid .service-detail-card .service-cta-row .btn:hover {
     transform: translateY(-1px);
@@ -1007,6 +1004,10 @@
 /* Remove icon bubbles */
 .services-detailed-grid .service-detail-icon {
     display: none;
+}
+
+        font-size: var(--text-sm);
+    }
 }
 
 /* Services Section */
@@ -1216,7 +1217,6 @@
     object-fit: contain; /* Changed to contain to fit images completely */
     display: block;
     image-rendering: -webkit-optimize-contrast; /* HD quality rendering */
-    image-rendering: -webkit-optimize-contrast; /* Edge support */
     image-rendering: crisp-edges;
 }
 
@@ -1846,13 +1846,11 @@
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .hero-bg-img {
         image-rendering: -webkit-optimize-contrast;
-        image-rendering: -webkit-optimize-contrast; /* Edge support */
         image-rendering: crisp-edges;
     }
 
     .about-img {
         image-rendering: -webkit-optimize-contrast;
-        image-rendering: -webkit-optimize-contrast; /* Edge support */
         image-rendering: crisp-edges;
     }
 }
