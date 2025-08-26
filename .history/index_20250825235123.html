@@ -67,7 +67,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-simple.svg">
     <link rel="alternate icon" type="image/x-icon" href="assets/images/favicon.ico">
     <link rel="apple-touch-icon" href="favicon-simple.svg">
-    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -606,7 +606,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section" id="home" role="banner">
+    <section class="hero-section">
         <div class="hero-logo-container">
             <h1 class="visually-hidden">Ottawa Contractor - Painting, Drywall & Home Renovations</h1>
             <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors - Professional Painting & Renovation Services in Ottawa" class="hero-full-logo" width="800" height="400">
@@ -644,7 +644,7 @@
 
 
     <!-- Services Section -->
-    <section class="services-section" id="services" role="main">
+    <section class="services-section" id="services">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Our Services</h2>
@@ -862,10 +862,10 @@
                     </div>
 
                     <!-- Navigation arrows -->
-                    <button class="slide-nav prev" type="button" onclick="changeSlide(-1)" aria-label="Previous portfolio image">
+                    <button class="slide-nav prev" onclick="changeSlide(-1)">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <button class="slide-nav next" type="button" onclick="changeSlide(1)" aria-label="Next portfolio image">
+                    <button class="slide-nav next" onclick="changeSlide(1)">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
@@ -877,17 +877,17 @@
 
                 <!-- Slide indicators -->
                 <div class="slide-indicators">
-                    <button class="indicator active" type="button" onclick="currentSlide(1)" aria-label="Go to portfolio image 1"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(2)" aria-label="Go to portfolio image 2"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(3)" aria-label="Go to portfolio image 3"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(4)" aria-label="Go to portfolio image 4"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(5)" aria-label="Go to portfolio image 5"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(6)" aria-label="Go to portfolio image 6"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(7)" aria-label="Go to portfolio image 7"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(8)" aria-label="Go to portfolio image 8"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(9)" aria-label="Go to portfolio image 9"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(10)" aria-label="Go to portfolio image 10"></button>
-                    <button class="indicator" type="button" onclick="currentSlide(11)" aria-label="Go to portfolio image 11"></button>
+                    <button class="indicator active" onclick="currentSlide(1)"></button>
+                    <button class="indicator" onclick="currentSlide(2)"></button>
+                    <button class="indicator" onclick="currentSlide(3)"></button>
+                    <button class="indicator" onclick="currentSlide(4)"></button>
+                    <button class="indicator" onclick="currentSlide(5)"></button>
+                    <button class="indicator" onclick="currentSlide(6)"></button>
+                    <button class="indicator" onclick="currentSlide(7)"></button>
+                    <button class="indicator" onclick="currentSlide(8)"></button>
+                    <button class="indicator" onclick="currentSlide(9)"></button>
+                    <button class="indicator" onclick="currentSlide(10)"></button>
+                    <button class="indicator" onclick="currentSlide(11)"></button>
                 </div>
             </div>
         </div>
@@ -1077,7 +1077,7 @@
 
 
             <div class="testimonials-cta">
-                <a href="https://share.google/45SwI5TaNxxHkS6wu" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
+                <a href="https://share.google/45SwI5TaNxxHkS6wu" target="_blank" class="btn btn-outline">
                     <i class="fab fa-google"></i>
                     Read More Reviews
                 </a>
@@ -1125,7 +1125,7 @@
     </section>
 
     <!-- Contact CTA Section -->
-    <section class="contact-cta" id="contact" role="complementary">
+    <section class="contact-cta" id="contact">
         <div class="container">
             <div class="cta-content">
                 <h2 class="cta-title">Get Your Free Quote</h2>
@@ -1140,23 +1140,19 @@
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="contact-name" class="visually-hidden">Full Name</label>
-                                <input type="text" id="contact-name" name="name" placeholder="Your Name *" required aria-required="true">
+                                <input type="text" name="name" placeholder="Your Name *">
                             </div>
                             <div class="form-group">
-                                <label for="contact-phone" class="visually-hidden">Phone Number</label>
-                                <input type="tel" id="contact-phone" name="phone" placeholder="Phone Number *" required aria-required="true">
+                                <input type="tel" name="phone" placeholder="Phone Number *">
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="contact-email" class="visually-hidden">Email Address</label>
-                                <input type="email" id="contact-email" name="email" placeholder="Email Address *" required aria-required="true">
+                                <input type="email" name="email" placeholder="Email Address *">
                             </div>
                             <div class="form-group">
-                                <label for="contact-service" class="visually-hidden">Service Type</label>
-                                <select id="contact-service" name="service" aria-label="Select service type" required aria-required="true">
+                                <select name="service">
                                     <option value="">Select Service *</option>
                                     <option value="painting">Painting</option>
                                     <option value="drywall">Drywall Installation</option>
@@ -1168,8 +1164,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="contact-message" class="visually-hidden">Project Description</label>
-                            <textarea id="contact-message" name="message" placeholder="Description of your project *" rows="3" required aria-required="true"></textarea>
+                            <textarea name="message" placeholder="Description of your project *" rows="3"></textarea>
                         </div>
 
                         <div class="form-group">
@@ -1206,14 +1201,14 @@
                 <p class="modal-contact">For urgent matters, call us at <strong>(613) 301-1311</strong></p>
             </div>
             <div class="modal-footer">
-                <button id="closeModal" class="btn btn-primary" type="button">Close</button>
+                <button id="closeModal" class="btn btn-primary">Close</button>
             </div>
         </div>
     </div>
 
     <!-- Sticky Chat Button -->
     <div class="sticky-chat-btn">
-        <button class="sticky-chat-link" type="button" onclick="toggleChatOptions()" aria-label="Open chat options">
+        <button class="sticky-chat-link" onclick="toggleChatOptions()">
             <i class="fas fa-comments"></i>
             <span>Chat</span>
         </button>
@@ -1271,13 +1266,13 @@
                     <h3 class="footer-title">Contact Info</h3>
                     <div class="contact-info" itemscope itemtype="https://schema.org/LocalBusiness">
                         <div class="contact-item">
-                            <span itemprop="name" class="footer-business-name">Capital City Contractors</span>
+                            <span itemprop="name" style="display: none;">Capital City Contractors</span>
                             <i class="fas fa-phone"></i>
-                            <a href="tel:+16133011311" itemprop="telephone" class="footer-contact-phone">(613) 301-1311</a>
+                            <a href="tel:+16133011311" itemprop="telephone" style="color: #ffffff; text-decoration: none;">(613) 301-1311</a>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
-                            <a href="mailto:info@capitalcitycontractors.ca" itemprop="email" class="footer-contact-email">info@capitalcitycontractors.ca</a>
+                            <a href="mailto:info@capitalcitycontractors.ca" itemprop="email" style="color: #ffffff; text-decoration: none;">info@capitalcitycontractors.ca</a>
                         </div>
                         <div class="contact-item" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
                             <i class="fas fa-map-marker-alt"></i>
@@ -1440,7 +1435,7 @@
     <script src="assets/js/main.js" defer></script>
 
     <!-- SEO Internal Links for Better Crawling -->
-    <div class="seo-navigation" aria-hidden="true">
+    <div style="display: none;" aria-hidden="true">
         <nav>
             <h2>Site Navigation</h2>
             <ul>

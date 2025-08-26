@@ -1,70 +1,5 @@
 // Main JavaScript File for Capital City Contractors Website
 
-// User Message Display Function - Better than alert()
-function showUserMessage(message, type = 'info') {
-    // Create message element
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `user-message user-message-${type}`;
-    messageDiv.textContent = message;
-
-    // Style the message
-    messageDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 10000;
-        font-size: 14px;
-        max-width: 300px;
-        word-wrap: break-word;
-        animation: slideInRight 0.3s ease-out;
-    `;
-
-    // Add animation styles
-    if (!document.getElementById('message-styles')) {
-        const style = document.createElement('style');
-        style.id = 'message-styles';
-        style.textContent = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-
-    // Add to page
-    document.body.appendChild(messageDiv);
-
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        messageDiv.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.parentNode.removeChild(messageDiv);
-            }
-        }, 300);
-    }, 5000);
-
-    // Click to dismiss
-    messageDiv.addEventListener('click', () => {
-        messageDiv.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.parentNode.removeChild(messageDiv);
-            }
-        }, 300);
-    });
-}
-
 // Cache Busting - Force reload of cached resources when needed
 function forceCacheRefresh() {
     const timestamp = new Date().getTime();
@@ -910,36 +845,40 @@ function initializeQuoteForm() {
             e.preventDefault();
             e.stopPropagation();
 
+            console.log('Submit button clicked');
+
             // Update form data one more time
             updateFormData();
 
+            console.log('Final form data:', formData);
+
             // Validation using stored form data
             if (!formData.name) {
-                showUserMessage('Please enter your name.', 'error');
+                alert('Please enter your name.');
                 form.querySelector('input[name="name"]').focus();
                 return false;
             }
 
             if (!formData.phone) {
-                showUserMessage('Please enter your phone number.', 'error');
+                alert('Please enter your phone number.');
                 form.querySelector('input[name="phone"]').focus();
                 return false;
             }
 
             if (!formData.email) {
-                showUserMessage('Please enter your email address.', 'error');
+                alert('Please enter your email address.');
                 form.querySelector('input[name="email"]').focus();
                 return false;
             }
 
             if (!formData.service) {
-                showUserMessage('Please select a service.', 'error');
+                alert('Please select a service.');
                 form.querySelector('select[name="service"]').focus();
                 return false;
             }
 
             if (!formData.message) {
-                showUserMessage('Please describe your project.', 'error');
+                alert('Please describe your project.');
                 form.querySelector('textarea[name="message"]').focus();
                 return false;
             }
@@ -947,7 +886,7 @@ function initializeQuoteForm() {
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
-                showUserMessage('Please enter a valid email address.', 'error');
+                alert('Please enter a valid email address.');
                 form.querySelector('input[name="email"]').focus();
                 return false;
             }
@@ -955,12 +894,12 @@ function initializeQuoteForm() {
             // Phone validation (basic)
             const phoneRegex = /^[\d\s\-\+\(\)]+$/;
             if (!phoneRegex.test(formData.phone)) {
-                showUserMessage('Please enter a valid phone number.', 'error');
+                alert('Please enter a valid phone number.');
                 form.querySelector('input[name="phone"]').focus();
                 return false;
             }
 
-            // Validation passed, sending email
+            console.log('Validation passed, sending email');
 
             // Show loading state
             submitBtn.textContent = 'Sending...';
@@ -969,6 +908,7 @@ function initializeQuoteForm() {
             // Send email using EmailJS
             sendQuoteEmail(formData)
                 .then((response) => {
+                    console.log('Email sent successfully:', response);
 
                     // Reset form
                     form.reset();
@@ -986,17 +926,18 @@ function initializeQuoteForm() {
 
                     // Show different message if fallback was used
                     if (response && response.fallback) {
-                        // Used mailto fallback
+                        console.log('Used mailto fallback');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
 
                     // Reset button
                     submitBtn.textContent = 'Send Quote Request';
                     submitBtn.disabled = false;
 
                     // Show error message with more details
-                    showUserMessage('Sorry, there was an error sending your quote request. Please call us directly at (613) 301-1311 or email info@capitalcitycontractors.ca with your request.', 'error');
+                    alert('Sorry, there was an error sending your quote request. Please call us directly at (613) 301-1311 or email info@capitalcitycontractors.ca with your request.');
                 });
 
             return false;
@@ -1020,13 +961,13 @@ function initializeFileUpload() {
         const validFiles = files.filter(file => {
             // Check file type
             if (!file.type.startsWith('image/')) {
-                showUserMessage(`${file.name} is not an image file.`, 'error');
+                alert(`${file.name} is not an image file.`);
                 return false;
             }
 
             // Check file size (5MB limit)
             if (file.size > 5 * 1024 * 1024) {
-                showUserMessage(`${file.name} is too large. Maximum size is 5MB.`, 'error');
+                alert(`${file.name} is too large. Maximum size is 5MB.`);
                 return false;
             }
 

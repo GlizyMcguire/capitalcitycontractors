@@ -1186,7 +1186,6 @@
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
-    will-change: transform;
 }
 
 .slide {
@@ -1200,7 +1199,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    will-change: opacity;
 }
 
 .slide.active {
@@ -3062,7 +3060,6 @@
     min-height: 200px;
     transition: opacity 0.3s ease;
     position: relative;
-    will-change: opacity;
 }
 
 .review-nav-btn {
@@ -3084,7 +3081,6 @@
     font-weight: bold;
     transition: all 0.3s ease;
     z-index: 10;
-    will-change: transform, background-color;
 }
 
 .review-nav-btn.prev-btn {

@@ -3084,7 +3084,6 @@
     font-weight: bold;
     transition: all 0.3s ease;
     z-index: 10;
-    will-change: transform, background-color;
 }
 
 .review-nav-btn.prev-btn {

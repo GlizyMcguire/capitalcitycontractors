@@ -960,7 +960,7 @@ function initializeQuoteForm() {
                 return false;
             }
 
-            // Validation passed, sending email
+            console.log('Validation passed, sending email');
 
             // Show loading state
             submitBtn.textContent = 'Sending...';
@@ -969,6 +969,7 @@ function initializeQuoteForm() {
             // Send email using EmailJS
             sendQuoteEmail(formData)
                 .then((response) => {
+                    console.log('Email sent successfully:', response);
 
                     // Reset form
                     form.reset();
@@ -986,10 +987,11 @@ function initializeQuoteForm() {
 
                     // Show different message if fallback was used
                     if (response && response.fallback) {
-                        // Used mailto fallback
+                        console.log('Used mailto fallback');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
 
                     // Reset button
                     submitBtn.textContent = 'Send Quote Request';
@@ -1020,13 +1022,13 @@ function initializeFileUpload() {
         const validFiles = files.filter(file => {
             // Check file type
             if (!file.type.startsWith('image/')) {
-                showUserMessage(`${file.name} is not an image file.`, 'error');
+                alert(`${file.name} is not an image file.`);
                 return false;
             }
 
             // Check file size (5MB limit)
             if (file.size > 5 * 1024 * 1024) {
-                showUserMessage(`${file.name} is too large. Maximum size is 5MB.`, 'error');
+                alert(`${file.name} is too large. Maximum size is 5MB.`);
                 return false;
             }
 

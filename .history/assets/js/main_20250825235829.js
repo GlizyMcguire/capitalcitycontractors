@@ -960,7 +960,7 @@ function initializeQuoteForm() {
                 return false;
             }
 
-            // Validation passed, sending email
+            console.log('Validation passed, sending email');
 
             // Show loading state
             submitBtn.textContent = 'Sending...';
@@ -969,6 +969,7 @@ function initializeQuoteForm() {
             // Send email using EmailJS
             sendQuoteEmail(formData)
                 .then((response) => {
+                    console.log('Email sent successfully:', response);
 
                     // Reset form
                     form.reset();
@@ -986,10 +987,11 @@ function initializeQuoteForm() {
 
                     // Show different message if fallback was used
                     if (response && response.fallback) {
-                        // Used mailto fallback
+                        console.log('Used mailto fallback');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
 
                     // Reset button
                     submitBtn.textContent = 'Send Quote Request';

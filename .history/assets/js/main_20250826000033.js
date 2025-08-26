@@ -986,10 +986,11 @@ function initializeQuoteForm() {
 
                     // Show different message if fallback was used
                     if (response && response.fallback) {
-                        // Used mailto fallback
+                        console.log('Used mailto fallback');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
 
                     // Reset button
                     submitBtn.textContent = 'Send Quote Request';

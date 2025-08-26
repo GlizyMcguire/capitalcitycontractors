@@ -1186,7 +1186,6 @@
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
-    will-change: transform;
 }
 
 .slide {
@@ -1200,7 +1199,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    will-change: opacity;
 }
 
 .slide.active {
@@ -1770,7 +1768,6 @@
     background-color: rgba(255, 255, 255, 0.15);
     color: var(--white);
     border-color: rgba(255, 255, 255, 0.4);
-    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -1929,7 +1926,6 @@
     background: rgba(255, 255, 255, 0.1);
     padding: var(--space-8);
     border-radius: var(--radius-lg);
-    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -2164,7 +2160,6 @@
     padding: var(--space-6);
     background: rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
-    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 }
 
@@ -2222,7 +2217,6 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
-    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease-out;
 }
@@ -3062,7 +3056,6 @@
     min-height: 200px;
     transition: opacity 0.3s ease;
     position: relative;
-    will-change: opacity;
 }
 
 .review-nav-btn {
@@ -3084,7 +3077,6 @@
     font-weight: bold;
     transition: all 0.3s ease;
     z-index: 10;
-    will-change: transform, background-color;
 }
 
 .review-nav-btn.prev-btn {

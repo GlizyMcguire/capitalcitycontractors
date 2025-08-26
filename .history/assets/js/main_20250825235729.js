@@ -915,31 +915,31 @@ function initializeQuoteForm() {
 
             // Validation using stored form data
             if (!formData.name) {
-                showUserMessage('Please enter your name.', 'error');
+                alert('Please enter your name.');
                 form.querySelector('input[name="name"]').focus();
                 return false;
             }
 
             if (!formData.phone) {
-                showUserMessage('Please enter your phone number.', 'error');
+                alert('Please enter your phone number.');
                 form.querySelector('input[name="phone"]').focus();
                 return false;
             }
 
             if (!formData.email) {
-                showUserMessage('Please enter your email address.', 'error');
+                alert('Please enter your email address.');
                 form.querySelector('input[name="email"]').focus();
                 return false;
             }
 
             if (!formData.service) {
-                showUserMessage('Please select a service.', 'error');
+                alert('Please select a service.');
                 form.querySelector('select[name="service"]').focus();
                 return false;
             }
 
             if (!formData.message) {
-                showUserMessage('Please describe your project.', 'error');
+                alert('Please describe your project.');
                 form.querySelector('textarea[name="message"]').focus();
                 return false;
             }
@@ -947,7 +947,7 @@ function initializeQuoteForm() {
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
-                showUserMessage('Please enter a valid email address.', 'error');
+                alert('Please enter a valid email address.');
                 form.querySelector('input[name="email"]').focus();
                 return false;
             }
@@ -955,12 +955,12 @@ function initializeQuoteForm() {
             // Phone validation (basic)
             const phoneRegex = /^[\d\s\-\+\(\)]+$/;
             if (!phoneRegex.test(formData.phone)) {
-                showUserMessage('Please enter a valid phone number.', 'error');
+                alert('Please enter a valid phone number.');
                 form.querySelector('input[name="phone"]').focus();
                 return false;
             }
 
-            // Validation passed, sending email
+            console.log('Validation passed, sending email');
 
             // Show loading state
             submitBtn.textContent = 'Sending...';
@@ -969,6 +969,7 @@ function initializeQuoteForm() {
             // Send email using EmailJS
             sendQuoteEmail(formData)
                 .then((response) => {
+                    console.log('Email sent successfully:', response);
 
                     // Reset form
                     form.reset();
@@ -986,17 +987,18 @@ function initializeQuoteForm() {
 
                     // Show different message if fallback was used
                     if (response && response.fallback) {
-                        // Used mailto fallback
+                        console.log('Used mailto fallback');
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
 
                     // Reset button
                     submitBtn.textContent = 'Send Quote Request';
                     submitBtn.disabled = false;
 
                     // Show error message with more details
-                    showUserMessage('Sorry, there was an error sending your quote request. Please call us directly at (613) 301-1311 or email info@capitalcitycontractors.ca with your request.', 'error');
+                    alert('Sorry, there was an error sending your quote request. Please call us directly at (613) 301-1311 or email info@capitalcitycontractors.ca with your request.');
                 });
 
             return false;
@@ -1020,13 +1022,13 @@ function initializeFileUpload() {
         const validFiles = files.filter(file => {
             // Check file type
             if (!file.type.startsWith('image/')) {
-                showUserMessage(`${file.name} is not an image file.`, 'error');
+                alert(`${file.name} is not an image file.`);
                 return false;
             }
 
             // Check file size (5MB limit)
             if (file.size > 5 * 1024 * 1024) {
-                showUserMessage(`${file.name} is too large. Maximum size is 5MB.`, 'error');
+                alert(`${file.name} is too large. Maximum size is 5MB.`);
                 return false;
             }
 

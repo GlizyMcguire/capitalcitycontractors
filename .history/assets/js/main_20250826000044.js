@@ -989,7 +989,8 @@ function initializeQuoteForm() {
                         // Used mailto fallback
                     }
                 })
-                .catch(() => {
+                .catch((error) => {
+                    console.error('Email sending failed completely:', error);
 
                     // Reset button
                     submitBtn.textContent = 'Send Quote Request';
