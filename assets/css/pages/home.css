@@ -75,6 +75,14 @@
     display: none !important;
 }
 
+.homepage-video::-webkit-media-controls-play-button {
+    display: none !important;
+}
+
+.homepage-video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+}
+
 /* What We Offer Section */
 .what-we-offer {
     padding: var(--space-20) 0;
@@ -232,9 +240,9 @@
 
     /* Hero section mobile optimization */
     .hero-section {
-        padding: var(--space-12) 0 var(--space-8) 0;
-        margin-top: 70px;
-        min-height: 200px;
+        padding: var(--space-8) 0 var(--space-6) 0;
+        margin-top: 60px;
+        min-height: 0;
         text-align: center;
     }
 
@@ -253,9 +261,9 @@
     }
 
     .hero-full-logo {
-        max-width: 85%;
+        max-width: 90%;
         height: auto;
-        margin: 0 auto var(--space-6) auto;
+        margin: 0 auto var(--space-4) auto;
         display: block;
     }
 
@@ -294,8 +302,10 @@
     .services-detailed-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--space-4);
+        gap: var(--space-6); /* Increased gap for better mobile spacing */
         margin-top: var(--space-8);
+        max-width: 100%; /* Full width on mobile */
+        padding: 0 var(--space-2); /* Small padding for mobile */
     }
 
     /* Service cards mobile */
@@ -388,14 +398,15 @@
 
     /* Button optimizations mobile */
     .btn {
-        padding: var(--space-3) var(--space-5);
+        padding: var(--space-3) var(--space-4);
         font-size: var(--text-base);
-        min-height: 48px; /* Touch-friendly */
+        min-height: 44px; /* Touch-friendly */
         width: 100%;
-        max-width: 280px;
-        margin: 0 auto;
+        max-width: 300px;
+        margin: 0 auto var(--space-2);
         display: block;
         text-align: center;
+        border-radius: var(--radius-md);
     }
 
     .btn-large {
@@ -444,29 +455,36 @@
         padding: 0 var(--space-2);
     }
 
-    /* Testimonials mobile */
+    /* Testimonials mobile optimization */
     .testimonials-section {
-        padding: var(--space-12) 0;
+        padding: var(--space-10) 0;
     }
 
     .testimonials-simple {
-        padding: 0 var(--space-2);
+        padding: 0 var(--space-4);
         margin: var(--space-6) auto;
     }
 
     .review-slideshow {
-        gap: var(--space-2);
+        gap: var(--space-3);
+        flex-direction: column;
     }
 
     .review-nav-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
+        width: 44px;
+        height: 44px;
+        font-size: 18px;
+        order: 2;
+    }
+
+    .review-card-wrapper {
+        order: 1;
     }
 
     .review-card {
-        padding: var(--space-4);
-        min-height: 200px;
+        padding: var(--space-5);
+        min-height: 180px;
+        margin: 0 var(--space-2);
     }
 
     .reviewer-avatar {
@@ -600,33 +618,7 @@
     text-align: center;
 }
 
-/* Portfolio Slideshow - Full Image Display (No Cropping) */
-.portfolio-slideshow .slideshow-container {
-    position: relative;
-}
-
-.portfolio-slideshow .slide picture,
-.portfolio-slideshow .slide img {
-    display: block;
-}
-
-/* Ensure only images (not picture) use object-fit for contain behavior */
-.portfolio-slideshow .slide img {
-    object-fit: contain !important;
-    object-position: center center !important;
-}
-
-/* Slideshow: show full image, never crop */
-.portfolio-slideshow .slideshow-container .slide img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-    object-position: center center !important;
-    display: block;
-}
-
-/* remove any previous size rules */
-.slide-img { all: unset; }
+/* Portfolio Slideshow - Clean Implementation */
 
 .contact-cta .cta-title {
     font-size: var(--text-4xl);
@@ -860,10 +852,11 @@
         gap: var(--space-6);
     }
 
-    /* Tablet services layout - 2x2 grid */
+    /* Tablet services layout - 2 columns for better use of space */
     .services-detailed-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-6);
+        max-width: 900px;
     }
 
     .service-detail-card {
@@ -887,8 +880,9 @@
 /* Large Desktop Optimization */
 @media (min-width: 1200px) {
     .services-detailed-grid {
+        grid-template-columns: repeat(2, 1fr); /* Keep 2 columns max for readability */
         gap: var(--space-8);
-        max-width: 1200px;
+        max-width: 1000px; /* Slightly narrower for better readability */
         margin-left: auto;
         margin-right: auto;
     }
@@ -1066,9 +1060,12 @@
 
 .services-detailed-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-6);
+    grid-template-columns: 1fr; /* Mobile-first: single column */
+    gap: var(--space-8); /* Increased gap for better spacing */
     margin-top: var(--space-16);
+    max-width: 800px; /* Limit width for better readability */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .service-detail-card {
@@ -1178,7 +1175,7 @@
     .service-cta-row { flex-direction: column; }
 }
 
-/* Portfolio Section - Slideshow */
+/* Portfolio Section - Clean Slideshow Implementation */
 .portfolio-section {
     padding: var(--space-20) 0;
     background-color: var(--white);
@@ -1190,36 +1187,46 @@
     position: relative;
 }
 
+/* Slideshow Container - Fixed Height with Proper Containment */
 .slideshow-container {
     position: relative;
     width: 100%;
-    height: auto; /* ✅ Auto height containers with min/max constraints */
-    min-height: 400px; /* Minimum height for consistency */
-    max-height: 700px; /* Maximum height to prevent oversized images */
+    height: 500px; /* Fixed height for consistent layout */
     border-radius: var(--radius-lg);
-    overflow: visible; /* ✅ Overflow visible - allows complete images to show */
+    overflow: hidden; /* Critical: prevents any overflow */
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px; /* ✅ More padding - 20px padding to prevent any edge cropping */
-    will-change: transform;
 }
 
+/* Desktop-specific slideshow optimization */
+@media (min-width: 768px) {
+    .slideshow-container {
+        height: 450px; /* Slightly reduced height for better image containment */
+    }
+
+    .slide {
+        padding: 15px; /* Reduced padding to give more space for images */
+    }
+
+    .slide-img {
+        max-width: calc(100% - 30px); /* Account for padding */
+        max-height: calc(100% - 30px); /* Account for padding */
+    }
+}
+
+/* Slides - Fill Container Exactly */
 .slide {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: auto; /* Auto height for full image display */
-    min-height: 100%; /* Ensure minimum coverage */
+    height: 100%;
     opacity: 0;
-    /* Removed transition for instant slideshow performance */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px; /* ✅ More padding to show complete images */
+    padding: 30px; /* Safe padding inside slides */
+    box-sizing: border-box;
     will-change: opacity;
 }
 
@@ -1227,21 +1234,20 @@
     opacity: 1;
 }
 
+/* Images - Properly Constrained */
 .slide-img {
-    max-width: 70%; /* Much more zoomed out to show complete images */
-    max-height: 70%; /* Much more zoomed out to show complete images */
-    width: auto; /* Maintain aspect ratio */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: contain; /* Maintains aspect ratios without cropping */
-    object-position: center center; /* Center the image */
+    max-width: 100%; /* Fill available space after padding */
+    max-height: 100%; /* Fill available space after padding */
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Never crop, always fit */
+    object-position: center center;
     display: block;
-    margin: 0 auto; /* Center the image */
-    image-rendering: -webkit-optimize-contrast; /* HD rendering */
-    image-rendering: crisp-edges;
-    transform: scale(0.6); /* Much more zoomed out for complete visibility */
-    border: 3px solid var(--gray-300); /* Add border around images */
-    border-radius: 8px; /* Slight rounding for better appearance */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border: 3px solid var(--gray-300);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    image-rendering: -webkit-optimize-contrast; /* Edge support */
+    image-rendering: crisp-edges; /* Modern browsers */
 }
 
 
@@ -1312,18 +1318,22 @@
     transform: scale(1.2);
 }
 
-/* Mobile/Tablet Optimization */
+/* Mobile Portfolio Slideshow Optimization */
 @media (max-width: 768px) {
     .portfolio-slideshow {
         margin: var(--space-8) auto 0;
-        padding: 0 var(--space-2);
+        padding: 0 var(--space-4);
     }
 
     .slideshow-container {
-        height: 300px; /* Better mobile height */
+        height: 300px; /* Optimized mobile height */
         margin: 0;
         border-radius: var(--radius-md);
         width: 100%;
+    }
+
+    .slide {
+        padding: 20px; /* Reduced padding for mobile */
     }
 
     .slide-nav {
@@ -1351,9 +1361,14 @@
     }
 }
 
+/* Tablet Portfolio Slideshow Optimization */
 @media (min-width: 769px) and (max-width: 1024px) {
     .slideshow-container {
-        height: 500px; /* Increased for better HD display on tablet */
+        height: 450px; /* Optimized tablet height */
+    }
+
+    .slide {
+        padding: 25px; /* Balanced padding for tablet */
     }
 
     .slide-nav {
@@ -1514,6 +1529,7 @@
     opacity: 0;
     transform: translateY(50px);
     animation: slideInUp 0.8s ease-out forwards;
+    will-change: opacity, transform;
 }
 
 .hero-title .title-line:nth-child(1) {
@@ -1528,12 +1544,7 @@
     animation-delay: 0.6s;
 }
 
-@keyframes slideInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+
 
 /* Hero Badge */
 .hero-badge {
@@ -1551,6 +1562,7 @@
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     animation: fadeInUp 0.8s ease-out 0.8s both;
+    will-change: opacity, transform;
 }
 
 .hero-badge i {
@@ -1564,6 +1576,7 @@
     gap: var(--space-6);
     margin: var(--space-6) 0;
     animation: fadeInUp 0.8s ease-out 1.2s both;
+    will-change: opacity, transform;
 }
 
 .hero-feature {
@@ -1594,6 +1607,7 @@
 /* Trust Section Animations */
 .trust-stat {
     animation: fadeInUp 0.6s ease-out both;
+    will-change: opacity, transform;
 }
 
 .trust-stat:nth-child(1) { animation-delay: 0.1s; }
@@ -1604,6 +1618,7 @@
 /* Services Intro Animations */
 .intro-feature {
     animation: fadeInUp 0.6s ease-out both;
+    will-change: opacity, transform;
 }
 
 .intro-feature:nth-child(1) { animation-delay: 0.2s; }
@@ -1613,10 +1628,12 @@
 /* CTA Section Animations */
 .cta-badge {
     animation: fadeInUp 0.6s ease-out 0.2s both;
+    will-change: opacity, transform;
 }
 
 .cta-features .cta-feature {
     animation: fadeInUp 0.6s ease-out both;
+    will-change: opacity, transform;
 }
 
 .cta-features .cta-feature:nth-child(1) { animation-delay: 0.8s; }
@@ -1625,6 +1642,7 @@
 
 .cta-guarantee {
     animation: fadeInUp 0.6s ease-out 1.2s both;
+    will-change: opacity, transform;
 }
 
 /* Services Grid Animations */
@@ -1632,6 +1650,7 @@
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.6s ease-out forwards;
+    will-change: opacity, transform;
 }
 
 .service-card:nth-child(1) {
@@ -1705,6 +1724,7 @@
     opacity: 0;
     transform: translateX(-20px);
     animation: slideInLeft 0.6s ease-out forwards;
+    will-change: opacity, transform;
 }
 
 .feature-item:nth-child(1) {
@@ -1763,6 +1783,7 @@
     background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
     pointer-events: none;
+    will-change: transform;
 }
 
 @keyframes rotate {
@@ -1837,6 +1858,7 @@
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s ease-out forwards;
+    will-change: opacity, transform;
 }
 
 .section-header.animate {
@@ -2263,6 +2285,7 @@
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease-out;
+    will-change: opacity;
 }
 
 .modal.show {
@@ -2281,6 +2304,7 @@
     width: 100%;
     animation: slideIn 0.3s ease-out;
     overflow: hidden;
+    will-change: opacity, transform;
 }
 
 .modal-header {
@@ -2438,11 +2462,20 @@
         overflow-x: hidden;
     }
 
-    /* Touch-friendly spacing */
+    /* Touch-friendly spacing and interactions */
     .btn, button {
-        min-height: 48px;
+        min-height: 44px;
         padding: var(--space-3) var(--space-4);
         margin: var(--space-2) 0;
+        border-radius: var(--radius-md);
+        font-weight: 500;
+    }
+
+    /* Touch targets for navigation */
+    .slide-nav, .review-nav-btn {
+        min-width: 44px;
+        min-height: 44px;
+        touch-action: manipulation;
     }
 
     /* Improved readability */
@@ -2492,6 +2525,7 @@
 .rating-stars i {
     color: #fbbf24;
     font-size: var(--text-base);
+    -webkit-filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.2));
     filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.2));
 }
 
@@ -2633,6 +2667,7 @@
     background-size: 300% 100%;
     animation: gradientShift 3s ease infinite;
     border-radius: 12px 12px 0 0;
+    will-change: transform;
 }
 
 .review-header {
@@ -2739,21 +2774,12 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* Duplicate slideInUp removed - using fadeInUp instead */
 
 @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% { transform: translateX(0%); }
+    50% { transform: translateX(-50%); }
+    100% { transform: translateX(0%); }
 }
 
 .testimonial-header {
@@ -2809,6 +2835,7 @@
 .customer-rating i {
     color: #fbbf24;
     font-size: var(--text-xs);
+    -webkit-filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
     filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
 }
 
@@ -2816,6 +2843,7 @@
     color: #fbbf24;
     font-size: var(--text-sm);
     margin-right: var(--space-2);
+    -webkit-filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
     filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
 }
 
@@ -3019,6 +3047,7 @@
     box-shadow: var(--shadow-lg);
     transition: all var(--transition-normal);
     animation: pulse 2s infinite;
+    will-change: transform, opacity;
 }
 
 .sticky-call-link:hover {
@@ -3033,13 +3062,16 @@
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+        transform: scale(1);
+        opacity: 1;
     }
     70% {
-        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+        transform: scale(1.1);
+        opacity: 0.7;
     }
     100% {
-        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
