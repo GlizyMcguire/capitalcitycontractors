@@ -1201,16 +1201,17 @@
 /* Desktop-specific slideshow optimization */
 @media (min-width: 768px) {
     .slideshow-container {
-        height: 450px; /* Slightly reduced height for better image containment */
+        height: 400px; /* Further reduced height for better image containment */
     }
 
     .slide {
-        padding: 15px; /* Reduced padding to give more space for images */
+        padding: 10px; /* Minimal padding to give maximum space for images */
     }
 
     .slide-img {
-        max-width: calc(100% - 30px); /* Account for padding */
-        max-height: calc(100% - 30px); /* Account for padding */
+        max-width: calc(100% - 20px); /* Account for reduced padding */
+        max-height: calc(100% - 20px); /* Account for reduced padding */
+        object-fit: contain; /* Ensure images fit within bounds */
     }
 }
 
