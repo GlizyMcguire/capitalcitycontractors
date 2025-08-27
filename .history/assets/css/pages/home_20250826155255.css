@@ -75,14 +75,6 @@
     display: none !important;
 }
 
-.homepage-video::-webkit-media-controls-play-button {
-    display: none !important;
-}
-
-.homepage-video::-webkit-media-controls-start-playback-button {
-    display: none !important;
-}
-
 /* What We Offer Section */
 .what-we-offer {
     padding: var(--space-20) 0;
@@ -302,10 +294,8 @@
     .services-detailed-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--space-6); /* Increased gap for better mobile spacing */
+        gap: var(--space-4);
         margin-top: var(--space-8);
-        max-width: 100%; /* Full width on mobile */
-        padding: 0 var(--space-2); /* Small padding for mobile */
     }
 
     /* Service cards mobile */
@@ -852,11 +842,10 @@
         gap: var(--space-6);
     }
 
-    /* Tablet services layout - 2 columns for better use of space */
+    /* Tablet services layout - 2x2 grid */
     .services-detailed-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-6);
-        max-width: 900px;
     }
 
     .service-detail-card {
@@ -880,9 +869,8 @@
 /* Large Desktop Optimization */
 @media (min-width: 1200px) {
     .services-detailed-grid {
-        grid-template-columns: repeat(2, 1fr); /* Keep 2 columns max for readability */
         gap: var(--space-8);
-        max-width: 1000px; /* Slightly narrower for better readability */
+        max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -1060,12 +1048,9 @@
 
 .services-detailed-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile-first: single column */
-    gap: var(--space-8); /* Increased gap for better spacing */
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
     margin-top: var(--space-16);
-    max-width: 800px; /* Limit width for better readability */
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .service-detail-card {
@@ -1196,22 +1181,6 @@
     overflow: hidden; /* Critical: prevents any overflow */
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
-}
-
-/* Desktop-specific slideshow optimization */
-@media (min-width: 768px) {
-    .slideshow-container {
-        height: 450px; /* Slightly reduced height for better image containment */
-    }
-
-    .slide {
-        padding: 15px; /* Reduced padding to give more space for images */
-    }
-
-    .slide-img {
-        max-width: calc(100% - 30px); /* Account for padding */
-        max-height: calc(100% - 30px); /* Account for padding */
-    }
 }
 
 /* Slides - Fill Container Exactly */
@@ -1628,12 +1597,10 @@
 /* CTA Section Animations */
 .cta-badge {
     animation: fadeInUp 0.6s ease-out 0.2s both;
-    will-change: opacity, transform;
 }
 
 .cta-features .cta-feature {
     animation: fadeInUp 0.6s ease-out both;
-    will-change: opacity, transform;
 }
 
 .cta-features .cta-feature:nth-child(1) { animation-delay: 0.8s; }
@@ -1642,7 +1609,6 @@
 
 .cta-guarantee {
     animation: fadeInUp 0.6s ease-out 1.2s both;
-    will-change: opacity, transform;
 }
 
 /* Services Grid Animations */
@@ -1783,7 +1749,6 @@
     background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
     pointer-events: none;
-    will-change: transform;
 }
 
 @keyframes rotate {
@@ -2285,7 +2250,6 @@
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease-out;
-    will-change: opacity;
 }
 
 .modal.show {
@@ -2304,7 +2268,6 @@
     width: 100%;
     animation: slideIn 0.3s ease-out;
     overflow: hidden;
-    will-change: opacity, transform;
 }
 
 .modal-header {
@@ -2843,7 +2806,6 @@
     color: #fbbf24;
     font-size: var(--text-sm);
     margin-right: var(--space-2);
-    -webkit-filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
     filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
 }
 

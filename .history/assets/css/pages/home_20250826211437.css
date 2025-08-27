@@ -302,10 +302,8 @@
     .services-detailed-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--space-6); /* Increased gap for better mobile spacing */
+        gap: var(--space-4);
         margin-top: var(--space-8);
-        max-width: 100%; /* Full width on mobile */
-        padding: 0 var(--space-2); /* Small padding for mobile */
     }
 
     /* Service cards mobile */

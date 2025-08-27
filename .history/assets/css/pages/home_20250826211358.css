@@ -302,10 +302,8 @@
     .services-detailed-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--space-6); /* Increased gap for better mobile spacing */
+        gap: var(--space-4);
         margin-top: var(--space-8);
-        max-width: 100%; /* Full width on mobile */
-        padding: 0 var(--space-2); /* Small padding for mobile */
     }
 
     /* Service cards mobile */
@@ -852,11 +850,10 @@
         gap: var(--space-6);
     }
 
-    /* Tablet services layout - 2 columns for better use of space */
+    /* Tablet services layout - 2x2 grid */
     .services-detailed-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-6);
-        max-width: 900px;
     }
 
     .service-detail-card {
@@ -880,9 +877,8 @@
 /* Large Desktop Optimization */
 @media (min-width: 1200px) {
     .services-detailed-grid {
-        grid-template-columns: repeat(2, 1fr); /* Keep 2 columns max for readability */
         gap: var(--space-8);
-        max-width: 1000px; /* Slightly narrower for better readability */
+        max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -1060,12 +1056,9 @@
 
 .services-detailed-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile-first: single column */
-    gap: var(--space-8); /* Increased gap for better spacing */
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
     margin-top: var(--space-16);
-    max-width: 800px; /* Limit width for better readability */
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .service-detail-card {

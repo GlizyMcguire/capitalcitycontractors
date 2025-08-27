@@ -75,14 +75,6 @@
     display: none !important;
 }
 
-.homepage-video::-webkit-media-controls-play-button {
-    display: none !important;
-}
-
-.homepage-video::-webkit-media-controls-start-playback-button {
-    display: none !important;
-}
-
 /* What We Offer Section */
 .what-we-offer {
     padding: var(--space-20) 0;
@@ -240,9 +232,9 @@
 
     /* Hero section mobile optimization */
     .hero-section {
-        padding: var(--space-8) 0 var(--space-6) 0;
-        margin-top: 60px;
-        min-height: 0;
+        padding: var(--space-12) 0 var(--space-8) 0;
+        margin-top: 70px;
+        min-height: 200px;
         text-align: center;
     }
 
@@ -261,9 +253,9 @@
     }
 
     .hero-full-logo {
-        max-width: 90%;
+        max-width: 85%;
         height: auto;
-        margin: 0 auto var(--space-4) auto;
+        margin: 0 auto var(--space-6) auto;
         display: block;
     }
 
@@ -302,10 +294,8 @@
     .services-detailed-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: var(--space-6); /* Increased gap for better mobile spacing */
+        gap: var(--space-4);
         margin-top: var(--space-8);
-        max-width: 100%; /* Full width on mobile */
-        padding: 0 var(--space-2); /* Small padding for mobile */
     }
 
     /* Service cards mobile */
@@ -398,15 +388,14 @@
 
     /* Button optimizations mobile */
     .btn {
-        padding: var(--space-3) var(--space-4);
+        padding: var(--space-3) var(--space-5);
         font-size: var(--text-base);
-        min-height: 44px; /* Touch-friendly */
+        min-height: 48px; /* Touch-friendly */
         width: 100%;
-        max-width: 300px;
-        margin: 0 auto var(--space-2);
+        max-width: 280px;
+        margin: 0 auto;
         display: block;
         text-align: center;
-        border-radius: var(--radius-md);
     }
 
     .btn-large {
@@ -455,36 +444,29 @@
         padding: 0 var(--space-2);
     }
 
-    /* Testimonials mobile optimization */
+    /* Testimonials mobile */
     .testimonials-section {
-        padding: var(--space-10) 0;
+        padding: var(--space-12) 0;
     }
 
     .testimonials-simple {
-        padding: 0 var(--space-4);
+        padding: 0 var(--space-2);
         margin: var(--space-6) auto;
     }
 
     .review-slideshow {
-        gap: var(--space-3);
-        flex-direction: column;
+        gap: var(--space-2);
     }
 
     .review-nav-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 18px;
-        order: 2;
-    }
-
-    .review-card-wrapper {
-        order: 1;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
 
     .review-card {
-        padding: var(--space-5);
-        min-height: 180px;
-        margin: 0 var(--space-2);
+        padding: var(--space-4);
+        min-height: 200px;
     }
 
     .reviewer-avatar {
@@ -852,11 +834,10 @@
         gap: var(--space-6);
     }
 
-    /* Tablet services layout - 2 columns for better use of space */
+    /* Tablet services layout - 2x2 grid */
     .services-detailed-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-6);
-        max-width: 900px;
     }
 
     .service-detail-card {
@@ -880,9 +861,8 @@
 /* Large Desktop Optimization */
 @media (min-width: 1200px) {
     .services-detailed-grid {
-        grid-template-columns: repeat(2, 1fr); /* Keep 2 columns max for readability */
         gap: var(--space-8);
-        max-width: 1000px; /* Slightly narrower for better readability */
+        max-width: 1200px;
         margin-left: auto;
         margin-right: auto;
     }
@@ -1060,12 +1040,9 @@
 
 .services-detailed-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile-first: single column */
-    gap: var(--space-8); /* Increased gap for better spacing */
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
     margin-top: var(--space-16);
-    max-width: 800px; /* Limit width for better readability */
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .service-detail-card {
@@ -1196,22 +1173,6 @@
     overflow: hidden; /* Critical: prevents any overflow */
     box-shadow: var(--shadow-lg);
     background: var(--gray-100);
-}
-
-/* Desktop-specific slideshow optimization */
-@media (min-width: 768px) {
-    .slideshow-container {
-        height: 450px; /* Slightly reduced height for better image containment */
-    }
-
-    .slide {
-        padding: 15px; /* Reduced padding to give more space for images */
-    }
-
-    .slide-img {
-        max-width: calc(100% - 30px); /* Account for padding */
-        max-height: calc(100% - 30px); /* Account for padding */
-    }
 }
 
 /* Slides - Fill Container Exactly */
@@ -1628,12 +1589,10 @@
 /* CTA Section Animations */
 .cta-badge {
     animation: fadeInUp 0.6s ease-out 0.2s both;
-    will-change: opacity, transform;
 }
 
 .cta-features .cta-feature {
     animation: fadeInUp 0.6s ease-out both;
-    will-change: opacity, transform;
 }
 
 .cta-features .cta-feature:nth-child(1) { animation-delay: 0.8s; }
@@ -1642,7 +1601,6 @@
 
 .cta-guarantee {
     animation: fadeInUp 0.6s ease-out 1.2s both;
-    will-change: opacity, transform;
 }
 
 /* Services Grid Animations */
@@ -1783,7 +1741,6 @@
     background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
     pointer-events: none;
-    will-change: transform;
 }
 
 @keyframes rotate {
@@ -2285,7 +2242,6 @@
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease-out;
-    will-change: opacity;
 }
 
 .modal.show {
@@ -2304,7 +2260,6 @@
     width: 100%;
     animation: slideIn 0.3s ease-out;
     overflow: hidden;
-    will-change: opacity, transform;
 }
 
 .modal-header {
@@ -2462,20 +2417,11 @@
         overflow-x: hidden;
     }
 
-    /* Touch-friendly spacing and interactions */
+    /* Touch-friendly spacing */
     .btn, button {
-        min-height: 44px;
+        min-height: 48px;
         padding: var(--space-3) var(--space-4);
         margin: var(--space-2) 0;
-        border-radius: var(--radius-md);
-        font-weight: 500;
-    }
-
-    /* Touch targets for navigation */
-    .slide-nav, .review-nav-btn {
-        min-width: 44px;
-        min-height: 44px;
-        touch-action: manipulation;
     }
 
     /* Improved readability */
@@ -2525,7 +2471,6 @@
 .rating-stars i {
     color: #fbbf24;
     font-size: var(--text-base);
-    -webkit-filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.2));
     filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.2));
 }
 
@@ -2667,7 +2612,6 @@
     background-size: 300% 100%;
     animation: gradientShift 3s ease infinite;
     border-radius: 12px 12px 0 0;
-    will-change: transform;
 }
 
 .review-header {
@@ -2774,12 +2718,21 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Duplicate slideInUp removed - using fadeInUp instead */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 @keyframes gradientShift {
-    0% { transform: translateX(0%); }
-    50% { transform: translateX(-50%); }
-    100% { transform: translateX(0%); }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .testimonial-header {
@@ -2835,7 +2788,6 @@
 .customer-rating i {
     color: #fbbf24;
     font-size: var(--text-xs);
-    -webkit-filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
     filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
 }
 
@@ -2843,7 +2795,6 @@
     color: #fbbf24;
     font-size: var(--text-sm);
     margin-right: var(--space-2);
-    -webkit-filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
     filter: drop-shadow(0 1px 1px rgba(251, 191, 36, 0.3));
 }
 
@@ -3047,7 +2998,6 @@
     box-shadow: var(--shadow-lg);
     transition: all var(--transition-normal);
     animation: pulse 2s infinite;
-    will-change: transform, opacity;
 }
 
 .sticky-call-link:hover {
@@ -3062,16 +3012,13 @@
 
 @keyframes pulse {
     0% {
-        transform: scale(1);
-        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
     }
     70% {
-        transform: scale(1.1);
-        opacity: 0.7;
+        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
     }
     100% {
-        transform: scale(1);
-        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
     }
 }
 
