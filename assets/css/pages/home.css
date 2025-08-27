@@ -1198,20 +1198,20 @@
     background: var(--gray-100);
 }
 
-/* Desktop-specific slideshow optimization */
+/* Desktop-specific slideshow optimization - CRITICAL FIX */
 @media (min-width: 768px) {
-    .slideshow-container {
-        height: 400px; /* Further reduced height for better image containment */
+    .portfolio-section .slideshow-container {
+        height: 400px !important; /* Further reduced height for better image containment */
     }
 
-    .slide {
-        padding: 10px; /* Minimal padding to give maximum space for images */
+    .portfolio-section .slide {
+        padding: 10px !important; /* Minimal padding to give maximum space for images */
     }
 
-    .slide-img {
-        max-width: calc(100% - 20px); /* Account for reduced padding */
-        max-height: calc(100% - 20px); /* Account for reduced padding */
-        object-fit: contain; /* Ensure images fit within bounds */
+    .portfolio-section .slide-img {
+        max-width: calc(100% - 20px) !important; /* Account for reduced padding */
+        max-height: calc(100% - 20px) !important; /* Account for reduced padding */
+        object-fit: contain !important; /* Ensure images fit within bounds */
     }
 }
 
