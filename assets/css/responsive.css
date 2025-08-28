@@ -87,18 +87,19 @@
         gap: var(--space-8);
     }
     
-    /* About Section */
-    .about-content {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--space-12);
+    /* About Section - Maintain vertical layout on tablet */
+    .story-content {
+        flex-direction: column;
+        gap: var(--space-6);
+        max-width: 700px;
     }
-    
-    .about-text {
-        order: 1;
+
+    .story-image {
+        max-width: 500px;
     }
-    
-    .about-image {
-        order: 2;
+
+    .story-img {
+        max-height: 350px;
     }
     
     /* CTA Section */
@@ -525,6 +526,22 @@
     .service-features li i {
         font-size: var(--text-xs);
         width: 14px;
+    }
+
+    /* About section mobile optimization */
+    .story-content {
+        gap: var(--space-4);
+        max-width: 100%;
+    }
+
+    .story-image {
+        max-width: 100%;
+        margin-bottom: var(--space-4);
+    }
+
+    .story-img {
+        max-height: 250px;
+        border-radius: var(--radius-lg);
     }
 
     .hero-badge {
