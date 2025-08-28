@@ -645,14 +645,15 @@
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    background: var(--accent-orange);
+    background: var(--secondary-color);
     color: var(--white);
     padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
     font-size: var(--text-sm);
     font-weight: var(--font-bold);
     margin-bottom: var(--space-4);
-    animation: pulse-glow 2s infinite;
+    border: 1px solid var(--accent-gold);
+    box-shadow: var(--shadow-md);
 }
 
 .cta-benefits {
@@ -3214,13 +3215,13 @@
 
 /* Urgency Banner */
 .urgency-banner {
-    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: var(--white);
     padding: var(--space-3) var(--space-6);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
     margin: var(--space-6) 0 var(--space-8) 0;
     box-shadow: var(--shadow-lg);
-    animation: pulse-glow 2s infinite;
+    border: 2px solid var(--secondary-color);
 }
 
 .urgency-content {
@@ -3260,26 +3261,32 @@
 }
 
 .btn-urgent {
-    background: linear-gradient(135deg, var(--accent-orange), #e55a2b);
-    border: 2px solid var(--secondary-color);
-    animation: btn-pulse 2s infinite;
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    border: 2px solid var(--accent-gold);
+    color: var(--white);
+    position: relative;
+    overflow: visible;
 }
 
 .btn-urgent:hover {
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-xl);
+    background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
 }
 
 .btn-urgency {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background: var(--secondary-color);
-    color: var(--white);
-    font-size: var(--text-xs);
-    padding: var(--space-1) var(--space-2);
+    top: -6px;
+    right: -6px;
+    background: var(--accent-gold);
+    color: var(--primary-color);
+    font-size: 10px;
+    padding: 2px 8px;
     border-radius: var(--radius-full);
     font-weight: var(--font-bold);
+    white-space: nowrap;
+    z-index: 10;
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-pulse {
