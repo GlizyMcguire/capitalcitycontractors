@@ -1240,8 +1240,8 @@
     }
 
     .slide-img {
-        max-width: 40% !important; /* REVERTED - back to original 40% */
-        max-height: 40% !important; /* REVERTED - back to original 40% */
+        max-width: 25% !important; /* MUCH SMALLER - zoomed out to show complete image */
+        max-height: 25% !important; /* MUCH SMALLER - zoomed out to show complete image */
         width: auto !important;
         height: auto !important;
         object-fit: contain !important; /* Scale down to show complete image without cropping */
@@ -1420,8 +1420,8 @@
     }
 
     .slide-img {
-        max-width: 40% !important; /* REVERTED - back to original 40% */
-        max-height: 40% !important; /* REVERTED - back to original 40% */
+        max-width: 25% !important; /* MUCH SMALLER - zoomed out to show complete image */
+        max-height: 25% !important; /* MUCH SMALLER - zoomed out to show complete image */
         width: auto !important;
         height: auto !important;
         object-fit: contain !important; /* Scale down to show complete image without cropping */
