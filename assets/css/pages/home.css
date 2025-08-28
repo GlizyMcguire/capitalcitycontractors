@@ -1217,25 +1217,25 @@
     background: var(--gray-100);
 }
 
-/* Desktop Portfolio Slideshow - COMPLETE IMAGE SCALING FIX */
+/* Desktop Portfolio Slideshow - MAXIMUM IMAGE VISIBILITY FIX */
 @media (min-width: 1200px) {
     .slideshow-container {
-        height: 600px !important; /* Increased height for better image display */
+        height: 700px !important; /* Much larger height to show more of the image */
     }
 
     .slide {
-        padding: 15px !important; /* Minimal padding for maximum image space */
+        padding: 10px !important; /* Absolute minimal padding */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
     }
 
     .slide-img {
-        max-width: calc(100% - 30px) !important; /* Account for minimal padding */
-        max-height: calc(100% - 30px) !important; /* Account for minimal padding */
+        max-width: calc(100% - 20px) !important; /* Minimal constraint for maximum image size */
+        max-height: calc(100% - 20px) !important; /* Minimal constraint for maximum image size */
         width: auto !important;
         height: auto !important;
-        object-fit: contain !important; /* Scale down to show complete image */
+        object-fit: contain !important; /* Scale down to show complete image without cropping */
         object-position: center !important;
         border: 2px solid var(--gray-300) !important;
         border-radius: 8px !important;
@@ -1390,25 +1390,25 @@
     }
 }
 
-/* Tablet Portfolio Slideshow Optimization - COMPLETE IMAGE SCALING */
+/* Tablet Portfolio Slideshow Optimization - MAXIMUM IMAGE VISIBILITY */
 @media (min-width: 769px) and (max-width: 1199px) {
     .slideshow-container {
-        height: 500px !important; /* Increased height for better image display */
+        height: 600px !important; /* Larger height for better image display */
     }
 
     .slide {
-        padding: 15px !important; /* Minimal padding for maximum image space */
+        padding: 10px !important; /* Absolute minimal padding */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
     }
 
     .slide-img {
-        max-width: calc(100% - 30px) !important; /* Account for minimal padding */
-        max-height: calc(100% - 30px) !important; /* Account for minimal padding */
+        max-width: calc(100% - 20px) !important; /* Minimal constraint for maximum image size */
+        max-height: calc(100% - 20px) !important; /* Minimal constraint for maximum image size */
         width: auto !important;
         height: auto !important;
-        object-fit: contain !important; /* Scale down to show complete image */
+        object-fit: contain !important; /* Scale down to show complete image without cropping */
         object-position: center !important;
     }
 
