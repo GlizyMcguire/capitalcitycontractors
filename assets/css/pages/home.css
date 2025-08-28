@@ -1193,22 +1193,22 @@
     background: var(--gray-100);
 }
 
-/* Desktop-specific slideshow optimization - SCALE IMAGES TO FIT */
-@media (min-width: 768px) {
-    .slideshow-container {
-        height: 500px; /* Keep original height */
+/* Desktop-specific slideshow optimization - SCALE IMAGES TO FIT - FINAL FIX */
+@media (min-width: 1025px) {
+    .portfolio-section .slideshow-container {
+        height: 500px !important; /* Keep original height */
     }
 
-    .slide {
-        padding: 20px; /* Reasonable padding */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .portfolio-section .slide {
+        padding: 20px !important; /* Reasonable padding */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
-    .slide-img {
-        max-width: 100% !important;
-        max-height: 100% !important;
+    .portfolio-section .slide-img {
+        max-width: calc(100% - 40px) !important; /* Account for padding */
+        max-height: calc(100% - 40px) !important; /* Account for padding */
         width: auto !important;
         height: auto !important;
         object-fit: contain !important; /* Scale down to fit, no cropping */
