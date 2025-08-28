@@ -1018,6 +1018,43 @@
     .service-features li {
         font-size: var(--text-sm);
     }
+
+    /* Desktop Service Cards Checkmark Alignment Fix */
+    .services-detailed-grid {
+        grid-template-columns: repeat(4, 1fr);
+        align-items: stretch;
+    }
+
+    .service-detail-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .service-detail-content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .service-detail-description {
+        min-height: 80px;
+        margin-bottom: var(--space-4);
+    }
+
+    /* Fix checkmark horizontal alignment across all service cards */
+    .service-features {
+        margin-top: auto;
+        margin-bottom: var(--space-6);
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .service-cta-row {
+        margin-top: auto;
+    }
 }
 
 /* Clean service card layout: bordered image, proper spacing, compact CTAs */
@@ -1529,16 +1566,34 @@
 }
 
 .story-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-12);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
     align-items: center;
     margin: 0 auto var(--space-16) auto;
-    max-width: 1200px;
+    max-width: 800px;
+}
+
+.story-image {
+    order: 1;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: var(--space-6);
+}
+
+.story-img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
 }
 
 .story-text {
+    order: 2;
     text-align: left;
+    width: 100%;
 }
 
 .story-image {
