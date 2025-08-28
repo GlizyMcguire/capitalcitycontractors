@@ -77,37 +77,53 @@
     outline-offset: 2px;
 }
 
+/* PRIMARY CTAs - High Priority/Attention-Grabbing (Amber/Gold Gradient) */
 .btn-primary {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
     color: var(--white);
-    border-color: var(--primary-color);
+    border: 2px solid var(--accent-gold);
+    font-weight: var(--font-semibold);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+    background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: var(--white);
 }
 
+/* SECONDARY CTAs - Supporting Actions (Black/Gold) */
 .btn-secondary {
-    background-color: var(--white);
-    color: var(--primary-color);
-    border-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+    border: 2px solid var(--secondary-color);
+    font-weight: var(--font-medium);
 }
 
 .btn-secondary:hover {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
     color: var(--white);
 }
 
+/* ACCENT CTAs - Phone/Call Actions (Maintain current amber for consistency) */
 .btn-accent {
-    background-color: var(--accent-orange);
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
     color: var(--white);
-    border-color: var(--accent-orange);
+    border: 2px solid var(--accent-gold);
+    font-weight: var(--font-semibold);
 }
 
 .btn-accent:hover {
-    background-color: var(--secondary-dark);
-    border-color: var(--secondary-dark);
+    background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
+    border-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: var(--white);
 }
 
 /* Testimonial Components */
@@ -470,10 +486,12 @@
 }
 
 .nav-link.cta-button {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
     color: var(--white);
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-lg);
+    border: 2px solid var(--accent-gold);
+    font-weight: var(--font-semibold);
     transition: all var(--transition-fast);
 }
 
@@ -482,9 +500,11 @@
 }
 
 .nav-link.cta-button:hover {
-    background-color: var(--primary-dark);
+    background: linear-gradient(135deg, var(--secondary-dark), var(--secondary-color));
+    border-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+    color: var(--white);
 }
 
 .hamburger {
