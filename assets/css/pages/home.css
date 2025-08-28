@@ -3006,12 +3006,74 @@
     transform: translateY(-2px);
 }
 
-/* Trust Signals Section */
+/* Enhanced Trust Signals Section */
 .trust-section {
-    padding: var(--space-16) 0;
+    padding: var(--space-20) 0;
     background: var(--white);
 }
 
+/* Trust Badges - Insurance & Certifications */
+.trust-badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-6);
+    margin: var(--space-12) 0 var(--space-16) 0;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.trust-badge {
+    display: flex;
+    align-items: center;
+    padding: var(--space-6);
+    background: linear-gradient(135deg, var(--gray-50), var(--white));
+    border: 2px solid var(--secondary-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.trust-badge:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-gold);
+}
+
+.badge-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--space-4);
+    color: var(--white);
+    font-size: var(--text-xl);
+    flex-shrink: 0;
+}
+
+.badge-content {
+    text-align: left;
+}
+
+.badge-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-1);
+    line-height: 1.2;
+}
+
+.badge-subtitle {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-medium);
+    margin: 0;
+}
+
+/* Trust Grid - Features */
 .trust-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
