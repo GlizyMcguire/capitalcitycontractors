@@ -544,6 +544,24 @@
         border-radius: var(--radius-lg);
     }
 
+    /* Local areas mobile optimization */
+    .local-areas-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    .area-card {
+        padding: var(--space-4);
+    }
+
+    .area-title {
+        font-size: var(--text-lg);
+    }
+
+    .area-description {
+        font-size: var(--text-sm);
+    }
+
     .hero-badge {
         font-size: var(--text-xs);
         padding: var(--space-1) var(--space-3);

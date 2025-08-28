@@ -3679,3 +3679,45 @@
     white-space: nowrap;
     border: 0;
 }
+
+/* Local Service Areas Section */
+.local-areas-section {
+    padding: var(--space-16) 0;
+    background-color: var(--gray-50);
+}
+
+.local-areas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-6);
+    margin-top: var(--space-12);
+}
+
+.area-card {
+    background: var(--white);
+    padding: var(--space-6);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    transition: all var(--transition-normal);
+    text-align: center;
+}
+
+.area-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--secondary-color);
+}
+
+.area-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    color: var(--primary-color);
+    margin-bottom: var(--space-3);
+}
+
+.area-description {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+}
