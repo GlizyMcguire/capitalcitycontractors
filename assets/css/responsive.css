@@ -510,6 +510,23 @@
         font-size: var(--text-sm);
     }
 
+    /* Service features mobile alignment */
+    .service-features {
+        text-align: left;
+        margin: var(--space-3) 0;
+    }
+
+    .service-features li {
+        gap: var(--space-2);
+        margin-bottom: var(--space-2);
+        font-size: var(--text-xs);
+    }
+
+    .service-features li i {
+        font-size: var(--text-xs);
+        width: 14px;
+    }
+
     .hero-badge {
         font-size: var(--text-xs);
         padding: var(--space-1) var(--space-3);
