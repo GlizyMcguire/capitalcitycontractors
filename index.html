@@ -1287,6 +1287,31 @@
     <!-- Scripts - Deferred for Performance -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
 
+    <!-- Hero Video Autoplay/Loop Enforcement -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hero video to autoplay and loop
+            const heroVideo = document.querySelector('.homepage-video');
+            if (heroVideo) {
+                heroVideo.autoplay = true;
+                heroVideo.loop = true;
+                heroVideo.muted = true;
+                heroVideo.playsInline = true;
+
+                // Force play if not already playing
+                heroVideo.play().catch(function(error) {
+                    console.log('Video autoplay failed:', error);
+                });
+
+                // Ensure loop continues
+                heroVideo.addEventListener('ended', function() {
+                    heroVideo.currentTime = 0;
+                    heroVideo.play();
+                });
+            }
+        });
+    </script>
+
     <!-- Review Navigation with Auto-Rotation -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
