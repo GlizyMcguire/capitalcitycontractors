@@ -295,3 +295,70 @@ if (changed.length > MAX_FILES) fail(`Too many files changed: ${changed.length} 
 ## 18) Acknowledge & Evolve
 
 This file is a living contract. If the agent frequently requests broader scope, prefer **splitting work** into explicit tickets with their own `task-envelope.yaml` rather than loosening these guardrails.
+
+---
+
+## 19) CRITICAL: PORTFOLIO SECTION SETTINGS - DO NOT CHANGE
+
+**⚠️ ABSOLUTE PROHIBITION: These portfolio slideshow settings are PERFECT and must NEVER be changed:**
+
+### Desktop Portfolio Settings (1200px+) - LOCKED PERMANENTLY:
+```css
+/* Desktop Portfolio Slideshow - SMALLER CONTAINER, LARGER IMAGES */
+@media (min-width: 1200px) {
+    .slideshow-container {
+        height: 500px !important; /* SMALLER container height */
+        background: var(--gray-50) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .slide {
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .slide-img {
+        max-width: 50% !important; /* PERFECT SIZE - shows complete image */
+        max-height: 50% !important; /* PERFECT SIZE - shows complete image */
+        width: auto !important;
+        height: auto !important;
+        object-fit: contain !important; /* NEVER CHANGE - prevents cropping */
+        object-position: center !important;
+        border: 2px solid var(--gray-300) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        margin: auto !important;
+    }
+}
+```
+
+### Tablet Portfolio Settings (769px-1199px) - LOCKED PERMANENTLY:
+```css
+.slide-img {
+    max-width: 25% !important; /* PERFECT SIZE for tablet */
+    max-height: 25% !important; /* PERFECT SIZE for tablet */
+    /* ... other properties same as desktop ... */
+}
+```
+
+### ABSOLUTE RULES:
+1. **NEVER change max-width/max-height percentages** - 50% desktop, 25% tablet
+2. **NEVER change object-fit: contain** - this prevents cropping
+3. **NEVER change container heights** - 500px desktop, 450px tablet
+4. **NEVER change display: flex centering** - perfect centering achieved
+5. **NEVER add cropping, zoom, or scaling** - images show complete content
+
+### WHY THESE SETTINGS ARE PERFECT:
+- **Complete image visibility**: Shows entire image without cropping
+- **Perfect size**: Large enough to see clearly, small enough to show full content
+- **Perfect centering**: Images perfectly centered in containers
+- **No cropping**: object-fit: contain ensures complete image display
+- **Optimal user experience**: User confirmed these are EXACTLY what they wanted
+
+**🚨 VIOLATION WARNING**: Any agent that changes these portfolio settings violates explicit user requirements and must be immediately reverted. These settings took extensive iteration to perfect and represent the user's exact specifications.
