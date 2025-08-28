@@ -1237,8 +1237,8 @@
     }
 
     .slide-img {
-        max-width: 40% !important; /* EXTREME ZOOM OUT - even smaller at 40% */
-        max-height: 40% !important; /* EXTREME ZOOM OUT - even smaller at 40% */
+        max-width: 60% !important; /* LARGER SIZE - increased from 40% to 60% */
+        max-height: 60% !important; /* LARGER SIZE - increased from 40% to 60% */
         width: auto !important;
         height: auto !important;
         object-fit: contain !important; /* Scale down to show complete image without cropping */
@@ -1417,8 +1417,8 @@
     }
 
     .slide-img {
-        max-width: 45% !important; /* EXTREME ZOOM OUT - even smaller at 45% */
-        max-height: 45% !important; /* EXTREME ZOOM OUT - even smaller at 45% */
+        max-width: 65% !important; /* LARGER SIZE - increased from 45% to 65% */
+        max-height: 65% !important; /* LARGER SIZE - increased from 45% to 65% */
         width: auto !important;
         height: auto !important;
         object-fit: contain !important; /* Scale down to show complete image without cropping */
