@@ -98,13 +98,14 @@
 .btn-secondary {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: var(--white);
-    border: 2px solid var(--secondary-color);
+    border: 2px solid var(--primary-color);
     font-weight: var(--font-medium);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
     background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
-    border-color: var(--accent-gold);
+    border-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
     color: var(--white);
@@ -986,19 +987,26 @@
 .service-features {
     list-style: none;
     margin-bottom: var(--space-6);
+    padding: 0;
+    text-align: left;
 }
 
 .service-features li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-3);
     margin-bottom: var(--space-3);
     color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
 }
 
 .service-features i {
-    color: var(--accent-color);
+    color: var(--secondary-color);
     font-size: var(--text-sm);
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 16px;
+    text-align: center;
 }
 
 .service-pricing {
