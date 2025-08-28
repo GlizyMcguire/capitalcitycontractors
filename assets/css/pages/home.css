@@ -613,12 +613,93 @@
     }
 }
 
-/* Contact CTA Section */
+/* Contact CTA Section - Enhanced */
 .contact-cta {
     padding: var(--space-20) 0;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: var(--white);
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+/* CTA Urgency Header */
+.cta-urgency-header {
+    position: relative;
+    z-index: 2;
+}
+
+.urgency-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--accent-orange);
+    color: var(--white);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-4);
+    animation: pulse-glow 2s infinite;
+}
+
+.cta-benefits {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+    flex-wrap: wrap;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--white);
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+}
+
+.benefit-item i {
+    color: var(--secondary-color);
+    font-size: var(--text-lg);
+}
+
+/* Enhanced Animations */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 53, 0);
+    }
+}
+
+@keyframes btn-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Portfolio Slideshow - Clean Implementation */
@@ -3131,6 +3212,36 @@
     font-size: var(--text-base);
 }
 
+/* Urgency Banner */
+.urgency-banner {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    color: var(--white);
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-full);
+    margin: var(--space-6) 0 var(--space-8) 0;
+    box-shadow: var(--shadow-lg);
+    animation: pulse-glow 2s infinite;
+}
+
+.urgency-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.urgency-text {
+    font-weight: var(--font-bold);
+    font-size: var(--text-lg);
+}
+
+.urgency-subtext {
+    font-size: var(--text-sm);
+    opacity: 0.9;
+}
+
+/* Enhanced Hero CTAs */
 .hero-cta {
     display: flex;
     flex-wrap: wrap;
@@ -3141,8 +3252,67 @@
 }
 
 .hero-cta .btn {
-    min-width: 180px;
+    min-width: 200px;
     justify-content: center;
+    position: relative;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.btn-urgent {
+    background: linear-gradient(135deg, var(--accent-orange), #e55a2b);
+    border: 2px solid var(--secondary-color);
+    animation: btn-pulse 2s infinite;
+}
+
+.btn-urgent:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn-urgency {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--secondary-color);
+    color: var(--white);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-bold);
+}
+
+.btn-pulse {
+    animation: btn-pulse 2s infinite;
+}
+
+.btn-subtext {
+    font-size: var(--text-xs);
+    opacity: 0.9;
+    font-weight: var(--font-normal);
+}
+
+/* Hero Trust Indicators */
+.hero-trust-indicators {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-top: var(--space-8);
+    flex-wrap: wrap;
+}
+
+.trust-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.trust-indicator i {
+    color: var(--secondary-color);
+    font-size: var(--text-base);
 }
 
 /* Sticky Mobile Call Button */
