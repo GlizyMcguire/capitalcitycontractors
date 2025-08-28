@@ -483,6 +483,31 @@
     }
 
     /* Mobile Trust Section */
+    .trust-badges {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+        margin: var(--space-8) 0 var(--space-12) 0;
+    }
+
+    .trust-badge {
+        padding: var(--space-4);
+    }
+
+    .badge-icon {
+        width: 50px;
+        height: 50px;
+        font-size: var(--text-lg);
+        margin-right: var(--space-3);
+    }
+
+    .badge-title {
+        font-size: var(--text-base);
+    }
+
+    .badge-subtitle {
+        font-size: var(--text-xs);
+    }
+
     .trust-stats {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-4);
