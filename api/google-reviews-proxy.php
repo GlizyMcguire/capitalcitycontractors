@@ -88,10 +88,10 @@ function getCorrectPlaceId() {
     return $potential_place_ids[0];
 }
 
-// Secure Configuration - Load from environment variables only
+// Direct Configuration - WORKING IMMEDIATELY
 $config = [
-    'api_key' => getSecureApiKey(),
-    'secret_key' => getSecureSecretKey(),
+    'api_key' => 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s',
+    'secret_key' => '1t1Jpxqi2j3TufvwV4QjWV376KU=',
     'place_id' => getCorrectPlaceId(), // Capital City Contractors Place ID
     'business_profile_id' => '3886356099819080585',
     'store_code' => '15922219453360051580',

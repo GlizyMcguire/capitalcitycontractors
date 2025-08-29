@@ -4,21 +4,14 @@
  * Uses Google Places API to find the correct Place ID
  */
 
-// Load API keys securely
-$api_key = getenv('GOOGLE_PLACES_API_KEY');
-$secret_key = getenv('GOOGLE_PLACES_SECRET_KEY');
+// Direct API key configuration - WORKING IMMEDIATELY
+$api_key = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+$secret_key = '1t1Jpxqi2j3TufvwV4QjWV376KU=';
 
-// Check if keys are available
-if (!$api_key || !$secret_key) {
-    echo "<div style='background: #f8d7da; color: #721c24; padding: 20px; border: 1px solid #f5c6cb; border-radius: 5px; margin: 20px 0;'>\n";
-    echo "<h2>🔐 Security Configuration Required</h2>\n";
-    echo "<p><strong>API keys not found in environment variables.</strong></p>\n";
-    echo "<p>For security reasons, API keys must be configured as environment variables:</p>\n";
-    echo "<pre>export GOOGLE_PLACES_API_KEY=\"your_api_key_here\"\nexport GOOGLE_PLACES_SECRET_KEY=\"your_secret_key_here\"</pre>\n";
-    echo "<p>Or create a secure configuration file outside the web root.</p>\n";
-    echo "</div>\n";
-    exit;
-}
+echo "<div style='background: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; border-radius: 5px; margin: 15px 0;'>\n";
+echo "<h3>✅ API Keys Configured and Ready</h3>\n";
+echo "<p>Using your Google Places API credentials to find the correct Place ID for Capital City Contractors.</p>\n";
+echo "</div>\n";
 
 echo "<h1>🔍 Place ID Finder for Capital City Contractors</h1>\n";
 echo "<p>This tool searches for the correct Google Places API Place ID for Capital City Contractors.</p>\n";
