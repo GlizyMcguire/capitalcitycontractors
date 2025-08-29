@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Portal - Project Updates | Capital City Contractors</title>
+    <meta name="description" content="Track your Ottawa renovation project progress, view updates, photos, and communicate with your contractor team in real-time.">
+    <meta name="keywords" content="Ottawa contractor customer portal, project tracking, renovation updates, contractor communication">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Customer Portal - Track Your Renovation Project">
+    <meta property="og:description" content="Real-time project updates and communication with your Ottawa contractor team.">
+    <meta property="og:image" content="https://capitalcitycontractors.ca/assets/images/CCC logo.jpg">
+    <meta property="og:url" content="https://capitalcitycontractors.ca/customer-portal.html">
+    
+    <!-- Critical Resources -->
+    <link rel="preload" href="assets/css/variables.css" as="style" fetchpriority="high">
+    <link rel="preload" href="assets/css/base.css" as="style" fetchpriority="high">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250829-PORTAL">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250829-PORTAL">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250829-PORTAL">
+    <link rel="stylesheet" href="assets/css/components.css?v=20250829-PORTAL" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250829-PORTAL" media="print" onload="this.media='all'">
+    
+    <!-- Portal-specific styles -->
+    <style>
+        .portal-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: var(--space-8) 0 var(--space-6);
+            text-align: center;
+        }
+        
+        .portal-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-4);
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-xl);
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .portal-dashboard {
+            display: none;
+            margin-top: var(--space-6);
+        }
+
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-8);
+            min-height: 600px;
+        }
+        
+        .portal-sidebar {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            height: fit-content;
+        }
+        
+        .portal-main {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .nav-menu {
+            list-style: none;
+            display: grid;
+            gap: var(--space-2);
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .project-status {
+            display: inline-block;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+        
+        .status-in-progress {
+            background: var(--warning-light);
+            color: var(--warning-dark);
+        }
+        
+        .status-completed {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+        
+        .status-scheduled {
+            background: var(--info-light);
+            color: var(--info-dark);
+        }
+        
+        .progress-section {
+            margin-bottom: var(--space-8);
+        }
+        
+        .progress-bar-container {
+            background: var(--gray-200);
+            border-radius: var(--radius-full);
+            height: 12px;
+            margin: var(--space-4) 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-gold));
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+        }
+        
+        .milestone-list {
+            display: grid;
+            gap: var(--space-4);
+        }
+        
+        .milestone-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .milestone-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-lg);
+        }
+        
+        .milestone-completed {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .milestone-current {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .milestone-pending {
+            background: var(--gray-200);
+            color: var(--text-muted);
+        }
+        
+        .milestone-content h4 {
+            margin-bottom: var(--space-1);
+            color: var(--text-primary);
+        }
+        
+        .milestone-date {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+        
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-top: var(--space-4);
+        }
+        
+        .photo-item {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: transform var(--transition-fast);
+        }
+        
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .photo-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .photo-caption {
+            padding: var(--space-3);
+            background: white;
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+        
+        .message-thread {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+        
+        .message {
+            margin-bottom: var(--space-4);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+        }
+        
+        .message-contractor {
+            background: var(--primary-light);
+            margin-right: var(--space-8);
+        }
+        
+        .message-customer {
+            background: var(--gray-100);
+            margin-left: var(--space-8);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+        }
+        
+        .message-sender {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .message-time {
+            color: var(--text-muted);
+        }
+        
+        .message-form {
+            display: flex;
+            gap: var(--space-3);
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: var(--space-3);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .send-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background var(--transition-fast);
+        }
+        
+        .send-button:hover {
+            background: var(--primary-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .portal-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .portal-sidebar {
+                order: 2;
+            }
+            
+            .project-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-3);
+            }
+        }
+    </style>
+    
+    <noscript>
+        <link rel="stylesheet" href="assets/css/components.css?v=20250829-PORTAL">
+        <link rel="stylesheet" href="assets/css/layout.css?v=20250829-PORTAL">
+    </noscript>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="navbar-logo">
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="quote-calculator.html">Quote Calculator</a></li>
+                <li><a href="customer-portal.html" class="active">Customer Portal</a></li>
+                <li><a href="index.html#contact" class="btn btn-primary">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="portal-hero">
+        <div class="container">
+            <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: var(--space-4);">
+                Customer Portal
+            </h1>
+            <p style="font-size: var(--text-lg); margin-bottom: var(--space-6); max-width: 600px; margin-left: auto; margin-right: auto;">
+                Track your project progress, view updates, and communicate with your contractor team
+            </p>
+        </div>
+    </section>
+    
+    <!-- Main Content -->
+    <main>
+        <div class="portal-container">
+            <!-- Login Form -->
+            <div class="login-card" id="login-form">
+                <h2 style="margin-bottom: var(--space-6); color: var(--text-primary);">Access Your Project</h2>
+                <form onsubmit="loginCustomer(event)">
+                    <div class="input-group" style="margin-bottom: var(--space-4);">
+                        <label class="input-label">Project ID or Email</label>
+                        <input type="text" class="input-field" id="login-identifier" placeholder="Enter your project ID or email" required>
+                    </div>
+                    <div class="input-group" style="margin-bottom: var(--space-6);">
+                        <label class="input-label">Access Code</label>
+                        <input type="password" class="input-field" id="login-code" placeholder="Enter your access code" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: var(--space-4);">
+                        Access Portal
+                    </button>
+                </form>
+                <p style="font-size: var(--text-sm); color: var(--text-muted);">
+                    Don't have your access code? <a href="tel:+16133011311" style="color: var(--primary-color);">Call (613) 301-1311</a>
+                </p>
+            </div>
+            
+            <!-- Dashboard (Hidden by default) -->
+            <div class="portal-dashboard" id="portal-dashboard">
+                <!-- Sidebar -->
+                <aside class="portal-sidebar">
+                    <div style="text-align: center; margin-bottom: var(--space-6);">
+                        <div style="width: 60px; height: 60px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3); color: white; font-size: var(--text-xl); font-weight: 700;">
+                            JS
+                        </div>
+                        <h3 style="color: var(--text-primary);">John Smith</h3>
+                        <p style="color: var(--text-muted); font-size: var(--text-sm);">Kitchen Renovation</p>
+                    </div>
+                    
+                    <nav>
+                        <ul class="nav-menu">
+                            <li><a href="#" class="nav-item active" data-section="overview">
+                                <i class="fas fa-tachometer-alt"></i> Project Overview
+                            </a></li>
+                            <li><a href="#" class="nav-item" data-section="progress">
+                                <i class="fas fa-tasks"></i> Progress Timeline
+                            </a></li>
+                            <li><a href="#" class="nav-item" data-section="photos">
+                                <i class="fas fa-camera"></i> Project Photos
+                            </a></li>
+                            <li><a href="#" class="nav-item" data-section="messages">
+                                <i class="fas fa-comments"></i> Messages
+                            </a></li>
+                            <li><a href="#" class="nav-item" data-section="documents">
+                                <i class="fas fa-file-alt"></i> Documents
+                            </a></li>
+                        </ul>
+                    </nav>
+                    
+                    <div style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--gray-200);">
+                        <button onclick="logout()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: var(--text-sm);">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </aside>
+                
+                <!-- Main Content -->
+                <main class="portal-main">
+                    <!-- Overview Section -->
+                    <div class="portal-section active" id="overview-section">
+                        <div class="project-header">
+                            <div>
+                                <h2 style="color: var(--text-primary); margin-bottom: var(--space-2);">Kitchen Renovation Project</h2>
+                                <p style="color: var(--text-secondary);">Started: March 15, 2024 • Expected Completion: April 20, 2024</p>
+                            </div>
+                            <span class="project-status status-in-progress">In Progress</span>
+                        </div>
+                        
+                        <div class="progress-section">
+                            <h3 style="margin-bottom: var(--space-4);">Overall Progress</h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 65%;"></div>
+                            </div>
+                            <p style="text-align: center; color: var(--text-secondary);">65% Complete</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-6);">
+                            <div style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-md);">
+                                <h4 style="color: var(--primary-color); margin-bottom: var(--space-2);">Project Manager</h4>
+                                <p style="font-weight: 600;">Mike Johnson</p>
+                                <p style="color: var(--text-muted); font-size: var(--text-sm);">mike@capitalcitycontractors.ca</p>
+                                <p style="color: var(--text-muted); font-size: var(--text-sm);">(613) 301-1311 ext. 102</p>
+                            </div>
+                            <div style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-md);">
+                                <h4 style="color: var(--primary-color); margin-bottom: var(--space-2);">Next Milestone</h4>
+                                <p style="font-weight: 600;">Cabinet Installation</p>
+                                <p style="color: var(--text-muted); font-size: var(--text-sm);">Scheduled: March 28, 2024</p>
+                                <p style="color: var(--text-muted); font-size: var(--text-sm);">Duration: 2-3 days</p>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="footer-logo-img">
+                    </div>
+                    <p>Track your Ottawa renovation project with real-time updates.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="tel:+16133011311">Emergency: (613) 301-1311</a></li>
+                        <li><a href="mailto:support@capitalcitycontractors.ca">Technical Support</a></li>
+                        <li><a href="index.html#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> (613) 301-1311</p>
+                        <p><i class="fas fa-envelope"></i> info@capitalcitycontractors.ca</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Ottawa, ON Canada</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Capital City Contractors. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="assets/js/analytics-conversion-tracking.js" defer></script>
+    <script src="assets/js/customer-portal.js" defer></script>
+</body>
+</html>

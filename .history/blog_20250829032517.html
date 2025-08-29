@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ottawa Contractor Blog - Home Renovation Tips & Insights | Capital City Contractors</title>
+    <meta name="description" content="Expert home renovation tips, painting guides, and contractor insights from Ottawa's trusted professionals. Get valuable advice for your next home improvement project.">
+    <meta name="keywords" content="Ottawa contractor blog, home renovation tips, painting guides, drywall advice, Ottawa home improvement, contractor insights">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Ottawa Contractor Blog - Home Renovation Tips & Insights">
+    <meta property="og:description" content="Expert home renovation tips, painting guides, and contractor insights from Ottawa's trusted professionals.">
+    <meta property="og:image" content="https://capitalcitycontractors.ca/assets/images/CCC logo.jpg">
+    <meta property="og:url" content="https://capitalcitycontractors.ca/blog.html">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ottawa Contractor Blog - Home Renovation Tips & Insights">
+    <meta name="twitter:description" content="Expert home renovation tips, painting guides, and contractor insights from Ottawa's trusted professionals.">
+    <meta name="twitter:image" content="https://capitalcitycontractors.ca/assets/images/CCC logo.jpg">
+    
+    <!-- Structured Data for Blog -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Capital City Contractors Blog",
+        "description": "Expert home renovation tips, painting guides, and contractor insights from Ottawa's trusted professionals",
+        "url": "https://capitalcitycontractors.ca/blog.html",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Capital City Contractors",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://capitalcitycontractors.ca/assets/images/CCC logo.jpg"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://capitalcitycontractors.ca/blog.html"
+        }
+    }
+    </script>
+    
+    <!-- Critical Resource Preloads -->
+    <link rel="preload" href="assets/images/CCC logo.jpg" as="image" type="image/jpeg" fetchpriority="high">
+    <link rel="preload" href="assets/css/variables.css" as="style" fetchpriority="high">
+    <link rel="preload" href="assets/css/base.css" as="style" fetchpriority="high">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" as="style">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Critical Stylesheets -->
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250829-BLOG">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250829-BLOG">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250829-BLOG">
+    
+    <!-- Non-Critical Stylesheets -->
+    <link rel="stylesheet" href="assets/css/components.css?v=20250829-BLOG" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250829-BLOG" media="print" onload="this.media='all'">
+    
+    <!-- Blog-specific styles -->
+    <style>
+        .blog-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: var(--space-12) 0 var(--space-8);
+            text-align: center;
+        }
+        
+        .blog-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: var(--space-4);
+            line-height: 1.2;
+        }
+        
+        .blog-hero .hero-highlight {
+            color: var(--accent-gold);
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-8);
+            margin: var(--space-10) 0;
+        }
+        
+        .blog-main {
+            display: grid;
+            gap: var(--space-6);
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-smooth);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .blog-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .blog-card-content {
+            padding: var(--space-6);
+        }
+        
+        .blog-card-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+        
+        .blog-card-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            line-height: 1.4;
+        }
+        
+        .blog-card-excerpt {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+        
+        .blog-card-link {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            transition: color var(--transition-fast);
+        }
+        
+        .blog-card-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        .blog-sidebar {
+            display: grid;
+            gap: var(--space-6);
+            align-content: start;
+        }
+        
+        .sidebar-widget {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+        
+        .sidebar-widget h3 {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            font-size: var(--text-lg);
+        }
+        
+        .category-list {
+            list-style: none;
+            display: grid;
+            gap: var(--space-2);
+        }
+        
+        .category-list a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .category-list a:hover {
+            background: var(--gray-50);
+            color: var(--primary-color);
+        }
+        
+        .lead-magnet {
+            background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
+            color: white;
+            text-align: center;
+        }
+        
+        .lead-magnet h3 {
+            color: white;
+        }
+        
+        .lead-magnet-form {
+            display: grid;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+        
+        .lead-magnet-input {
+            padding: var(--space-3);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+        }
+        
+        .lead-magnet-button {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        
+        .lead-magnet-button:hover {
+            background: var(--gray-100);
+            transform: translateY(-1px);
+        }
+        
+        /* Before/After Slider Styles */
+        .featured-post {
+            border: 2px solid var(--accent-gold);
+            position: relative;
+        }
+
+        .featured-badge {
+            background: var(--accent-gold);
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 700;
+        }
+
+        .before-after-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .before-after-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        .before-after-slider:active {
+            cursor: grabbing;
+        }
+
+        .before-image,
+        .after-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .before-image img,
+        .after-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .after-image {
+            clip-path: inset(0 50% 0 0);
+            transition: clip-path 0.3s ease;
+        }
+
+        .image-label {
+            position: absolute;
+            top: var(--space-3);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+
+        .before-image .image-label {
+            left: var(--space-3);
+        }
+
+        .after-image .image-label {
+            right: var(--space-3);
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gold);
+            transform: translateX(-50%);
+            cursor: ew-resize;
+            transition: left 0.3s ease;
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-lg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .customer-quote {
+            background: var(--gray-50);
+            border-left: 4px solid var(--primary-color);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .customer-quote i {
+            color: var(--primary-color);
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-2);
+        }
+
+        .customer-quote p {
+            font-style: italic;
+            margin-bottom: var(--space-2);
+            color: var(--text-primary);
+        }
+
+        .customer-quote cite {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: var(--text-sm);
+        }
+
+        .trust-signals {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+            padding: var(--space-3);
+            background: var(--success-light);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+        }
+
+        .trust-signals i {
+            color: var(--success-color);
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-6);
+            }
+
+            .blog-sidebar {
+                order: -1;
+            }
+
+            .before-after-container {
+                height: 200px;
+            }
+
+            .trust-signals {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-2);
+            }
+        }
+    </style>
+    
+    <!-- Fallback for browsers without JavaScript -->
+    <noscript>
+        <link rel="stylesheet" href="assets/css/components.css?v=20250829-BLOG">
+        <link rel="stylesheet" href="assets/css/layout.css?v=20250829-BLOG">
+    </noscript>
+</head>
+<body>
+    <!-- Skip to main content -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="navbar-logo">
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#portfolio">Portfolio</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="index.html#contact" class="btn btn-primary">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Blog Hero Section -->
+    <section class="blog-hero">
+        <div class="container">
+            <h1>Ottawa Contractor <span class="hero-highlight">Blog & Tips</span></h1>
+            <p style="font-size: var(--text-lg); margin-bottom: var(--space-6); max-width: 600px; margin-left: auto; margin-right: auto;">
+                Expert home renovation tips, painting guides, and professional insights from Ottawa's most trusted contractors
+            </p>
+        </div>
+    </section>
+    
+    <!-- Main Content -->
+    <main id="main-content">
+        <div class="container">
+            <div class="blog-grid">
+                <!-- Blog Posts -->
+                <div class="blog-main">
+                    <!-- Featured Post with Before/After Slider -->
+                    <article class="blog-card featured-post">
+                        <div class="before-after-container">
+                            <div class="before-after-slider" id="featured-slider">
+                                <div class="before-image">
+                                    <img src="assets/images/portfolio/kitchen-before.jpg" alt="Ottawa kitchen before painting" onerror="this.src='assets/images/aboutus.png'">
+                                    <div class="image-label">Before</div>
+                                </div>
+                                <div class="after-image">
+                                    <img src="assets/images/portfolio/kitchen-after.jpg" alt="Ottawa kitchen after painting" onerror="this.src='assets/images/aboutus.png'">
+                                    <div class="image-label">After</div>
+                                </div>
+                                <div class="slider-handle">
+                                    <div class="slider-button">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="blog-card-content">
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-calendar"></i> December 15, 2024</span>
+                                <span><i class="fas fa-tag"></i> Success Stories</span>
+                                <span><i class="fas fa-clock"></i> 3 min read</span>
+                                <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                            </div>
+                            <h2 class="blog-card-title">Ottawa Kitchen Transformation: From Dated to Stunning in 2 Days</h2>
+                            <p class="blog-card-excerpt">
+                                See how we transformed Sarah and Mike's outdated Kanata kitchen into a modern masterpiece. Complete with before/after photos and customer testimonial from this amazing Ottawa renovation project.
+                            </p>
+                            <div class="customer-quote">
+                                <i class="fas fa-quote-left"></i>
+                                <p>"Capital City Contractors exceeded our expectations! Our kitchen looks absolutely stunning."</p>
+                                <cite>- Sarah M., Kanata</cite>
+                            </div>
+                            <a href="blog/ottawa-kitchen-transformation.html" class="blog-card-link">
+                                Read Full Story <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                    
+                    <!-- Regular Posts -->
+                    <article class="blog-card">
+                        <img src="assets/images/blog/drywall-repair-guide.jpg" alt="DIY drywall repair guide" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                        <div class="blog-card-content">
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-calendar"></i> December 10, 2024</span>
+                                <span><i class="fas fa-tag"></i> Drywall</span>
+                                <span><i class="fas fa-clock"></i> 8 min read</span>
+                            </div>
+                            <h2 class="blog-card-title">Complete Guide to Drywall Repair: When to DIY vs Hire a Pro</h2>
+                            <p class="blog-card-excerpt">
+                                Learn which drywall repairs you can tackle yourself and when it's time to call Ottawa's professional contractors. Includes step-by-step instructions and cost comparisons.
+                            </p>
+                            <a href="blog/drywall-repair-guide.html" class="blog-card-link">
+                                Read More <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                    
+                    <article class="blog-card">
+                        <img src="assets/images/blog/basement-renovation-trends.jpg" alt="Ottawa basement renovation trends 2024" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                        <div class="blog-card-content">
+                            <div class="blog-card-meta">
+                                <span><i class="fas fa-calendar"></i> December 5, 2024</span>
+                                <span><i class="fas fa-tag"></i> Renovations</span>
+                                <span><i class="fas fa-clock"></i> 6 min read</span>
+                            </div>
+                            <h2 class="blog-card-title">Top 5 Basement Renovation Trends in Ottawa for 2024</h2>
+                            <p class="blog-card-excerpt">
+                                Explore the latest basement renovation trends that Ottawa homeowners are loving. From home offices to entertainment spaces, discover what's popular this year.
+                            </p>
+                            <a href="blog/basement-renovation-trends.html" class="blog-card-link">
+                                Read More <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+                
+                <!-- Sidebar -->
+                <aside class="blog-sidebar">
+                    <!-- Lead Magnet -->
+                    <div class="sidebar-widget lead-magnet">
+                        <h3><i class="fas fa-download"></i> Free Renovation Guide</h3>
+                        <p>Get our comprehensive "Ottawa Home Renovation Checklist" - a $50 value, absolutely free!</p>
+                        <form class="lead-magnet-form" id="lead-magnet-form">
+                            <input type="email" class="lead-magnet-input" placeholder="Enter your email" required>
+                            <button type="submit" class="lead-magnet-button">Download Free Guide</button>
+                        </form>
+                        <p style="font-size: var(--text-xs); margin-top: var(--space-2); opacity: 0.9;">
+                            No spam, unsubscribe anytime. Trusted by 500+ Ottawa homeowners.
+                        </p>
+                    </div>
+                    
+                    <!-- Categories -->
+                    <div class="sidebar-widget">
+                        <h3><i class="fas fa-folder"></i> Categories</h3>
+                        <ul class="category-list">
+                            <li><a href="blog/category/painting-tips.html">Painting Tips <span>12</span></a></li>
+                            <li><a href="blog/category/drywall-guides.html">Drywall Guides <span>8</span></a></li>
+                            <li><a href="blog/category/home-renovations.html">Home Renovations <span>15</span></a></li>
+                            <li><a href="blog/category/seasonal-maintenance.html">Seasonal Maintenance <span>6</span></a></li>
+                            <li><a href="blog/category/contractor-insights.html">Contractor Insights <span>10</span></a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Recent Posts -->
+                    <div class="sidebar-widget">
+                        <h3><i class="fas fa-clock"></i> Recent Posts</h3>
+                        <div style="display: grid; gap: var(--space-3);">
+                            <a href="blog/choosing-paint-colors.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                How to Choose Paint Colors That Increase Home Value
+                            </a>
+                            <a href="blog/spring-exterior-maintenance.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                Spring Exterior Maintenance Checklist for Ottawa Homes
+                            </a>
+                            <a href="blog/kitchen-renovation-timeline.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                Kitchen Renovation Timeline: What to Expect
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact CTA -->
+                    <div class="sidebar-widget" style="background: var(--gray-50); text-align: center;">
+                        <h3><i class="fas fa-phone"></i> Need Professional Help?</h3>
+                        <p style="margin-bottom: var(--space-4);">Get a free consultation from Ottawa's trusted contractors</p>
+                        <a href="tel:+16133011311" class="btn btn-primary" style="width: 100%; margin-bottom: var(--space-2);">
+                            Call (613) 301-1311
+                        </a>
+                        <a href="index.html#contact" class="btn btn-secondary" style="width: 100%;">
+                            Get Free Estimate
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="footer-logo-img">
+                    </div>
+                    <p>Professional Ottawa contractors with expert home renovation tips and insights.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="index.html#services">Painting Services</a></li>
+                        <li><a href="index.html#services">Drywall Services</a></li>
+                        <li><a href="index.html#services">Home Renovations</a></li>
+                        <li><a href="blog.html">Renovation Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> (613) 301-1311</p>
+                        <p><i class="fas fa-envelope"></i> info@capitalcitycontractors.ca</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Ottawa, ON Canada</p>
+                        <p><i class="fas fa-clock"></i> Mon-Sun: 24/7</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Capital City Contractors. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Google"><i class="fab fa-google"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="assets/js/main.js" defer></script>
+    <script>
+        // Lead magnet form handling
+        document.getElementById('lead-magnet-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            
+            // Here you would integrate with your email marketing service
+            // For now, we'll show a success message
+            alert('Thank you! Your free renovation guide will be sent to ' + email);
+            
+            // Track conversion
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL',
+                    'value': 50.0,
+                    'currency': 'CAD'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

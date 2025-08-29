@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Reviews API Debug - Capital City Contractors</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .results {
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin: 15px 0;
+        }
+        
+        .config-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .config-info code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #e83e8c;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-bug"></i> Google Reviews API Debug Tool</h1>
+            <p>Comprehensive testing for Capital City Contractors Google Business Profile integration</p>
+        </div>
+        
+        <div class="content">
+            <div class="config-info">
+                <h3><i class="fas fa-cog"></i> Configuration</h3>
+                <p><strong>Business:</strong> Capital City Contractors</p>
+                <p><strong>Place ID:</strong> <code>ChIJAZyYC-K4a04RRe9kJq7UZKo</code></p>
+                <p><strong>API Key:</strong> <code>AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8</code></p>
+                <p><strong>Google Maps URL:</strong> <a href="https://www.google.com/maps/place/Capital+City+Contractors/@45.2501659,-76.1298893,10z/data=!3m1!4b1!4m6!3m5!1s0x63eab8e20b989c01:0xa3640dae264def45!8m2!3d45.2501566!4d-75.8002569!16s%2Fg%2F11v0x2x8qr" target="_blank">View on Google Maps</a></p>
+            </div>
+            
+            <div class="test-section">
+                <h3><i class="fas fa-flask"></i> API Testing Methods</h3>
+                <p>Test each method individually to identify which approach works for fetching live reviews:</p>
+                
+                <button class="btn" onclick="testDirectAPI()">
+                    <i class="fas fa-direct-hit"></i> Test Direct Google API
+                </button>
+                
+                <button class="btn" onclick="testJSONP()">
+                    <i class="fas fa-code"></i> Test JSONP Callback
+                </button>
+                
+                <button class="btn" onclick="testProxy()">
+                    <i class="fas fa-server"></i> Test Proxy Services
+                </button>
+                
+                <button class="btn" onclick="testAlternative()">
+                    <i class="fas fa-route"></i> Test Alternative Endpoint
+                </button>
+                
+                <button class="btn btn-danger" onclick="clearResults()">
+                    <i class="fas fa-trash"></i> Clear Results
+                </button>
+            </div>
+            
+            <div id="status-container"></div>
+            
+            <div class="test-section">
+                <h3><i class="fas fa-terminal"></i> API Call Results</h3>
+                <div id="results" class="results">
+                    <div style="color: #fff;">🔍 Google Reviews API Debug Console</div>
+                    <div style="color: #fff;">Ready to test API connectivity...</div>
+                </div>
+            </div>
+            
+            <div class="test-section">
+                <h3><i class="fas fa-lightbulb"></i> Troubleshooting Guide</h3>
+                <div class="status warning">
+                    <h4>Common Issues & Solutions:</h4>
+                    <ul>
+                        <li><strong>CORS Error:</strong> Browser blocks direct API calls (expected)</li>
+                        <li><strong>API Key Invalid:</strong> Check Google Cloud Console API key settings</li>
+                        <li><strong>Place ID Wrong:</strong> Verify Place ID matches your Google Business Profile</li>
+                        <li><strong>No Reviews:</strong> Business might not have public reviews enabled</li>
+                        <li><strong>Quota Exceeded:</strong> API usage limits reached</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const config = {
+            placeId: 'ChIJAZyYC-K4a04RRe9kJq7UZKo',
+            apiKey: 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s',
+            businessName: 'Capital City Contractors'
+        };
+        
+        const results = document.getElementById('results');
+        const statusContainer = document.getElementById('status-container');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : '📝';
+            results.innerHTML += `\n[${timestamp}] ${prefix} ${message}`;
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = `<strong>${type.toUpperCase()}:</strong> ${message}`;
+            statusContainer.appendChild(statusDiv);
+        }
+        
+        async function testDirectAPI() {
+            log('🚀 TESTING: Direct Google Places API call...');
+            showStatus('Testing direct Google Places API...', 'warning');
+            
+            const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${config.placeId}&fields=reviews,rating,user_ratings_total,name,formatted_address&key=${config.apiKey}`;
+            
+            log(`🔗 URL: ${url}`);
+            
+            try {
+                const response = await fetch(url);
+                log(`📊 Response Status: ${response.status} ${response.statusText}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                log(`📊 Response Data: ${JSON.stringify(data, null, 2)}`);
+                
+                if (data.status === 'OK' && data.result) {
+                    if (data.result.reviews && data.result.reviews.length > 0) {
+                        log(`✅ SUCCESS: Found ${data.result.reviews.length} reviews!`);
+                        showStatus(`Direct API SUCCESS: Found ${data.result.reviews.length} reviews`, 'success');
+                        
+                        data.result.reviews.forEach((review, index) => {
+                            log(`📝 Review ${index + 1}: ${review.author_name} - ${review.rating} stars - "${review.text.substring(0, 100)}..."`);
+                        });
+                    } else {
+                        log('⚠️ API returned OK but no reviews found');
+                        showStatus('Direct API: No reviews in response', 'warning');
+                    }
+                } else {
+                    log(`❌ API Error: ${data.status} - ${data.error_message || 'Unknown error'}`);
+                    showStatus(`Direct API Error: ${data.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ DIRECT API FAILED: ${error.message}`);
+                showStatus(`Direct API Failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testJSONP() {
+            log('🚀 TESTING: JSONP callback approach...');
+            showStatus('Testing JSONP callback method...', 'warning');
+            
+            return new Promise((resolve) => {
+                const callbackName = 'testCallback_' + Date.now();
+                const script = document.createElement('script');
+                
+                window[callbackName] = (data) => {
+                    log(`📊 JSONP Response: ${JSON.stringify(data, null, 2)}`);
+                    
+                    document.head.removeChild(script);
+                    delete window[callbackName];
+                    
+                    if (data && data.result && data.result.reviews) {
+                        log(`✅ JSONP SUCCESS: Found ${data.result.reviews.length} reviews!`);
+                        showStatus(`JSONP SUCCESS: Found ${data.result.reviews.length} reviews`, 'success');
+                    } else {
+                        log('❌ JSONP: No reviews in response');
+                        showStatus('JSONP: No reviews found', 'warning');
+                    }
+                    resolve();
+                };
+                
+                script.onerror = () => {
+                    log('❌ JSONP: Script failed to load');
+                    showStatus('JSONP Failed: Script load error', 'error');
+                    document.head.removeChild(script);
+                    delete window[callbackName];
+                    resolve();
+                };
+                
+                script.src = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${config.apiKey}&callback=${callbackName}`;
+                log(`🔗 JSONP URL: ${script.src}`);
+                
+                document.head.appendChild(script);
+                
+                setTimeout(() => {
+                    if (window[callbackName]) {
+                        log('❌ JSONP: Request timeout');
+                        showStatus('JSONP Failed: Timeout', 'error');
+                        document.head.removeChild(script);
+                        delete window[callbackName];
+                        resolve();
+                    }
+                }, 15000);
+            });
+        }
+        
+        async function testProxy() {
+            log('🚀 TESTING: Proxy services...');
+            showStatus('Testing CORS proxy services...', 'warning');
+            
+            const proxies = [
+                'https://api.allorigins.win/raw?url=',
+                'https://cors-anywhere.herokuapp.com/',
+                'https://api.codetabs.com/v1/proxy?quest='
+            ];
+            
+            const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${config.apiKey}`;
+            
+            for (let i = 0; i < proxies.length; i++) {
+                try {
+                    log(`🔄 Testing proxy ${i + 1}: ${proxies[i]}`);
+                    
+                    const proxyUrl = proxies[i] + encodeURIComponent(apiUrl);
+                    const response = await fetch(proxyUrl);
+                    
+                    log(`📊 Proxy ${i + 1} Status: ${response.status}`);
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        log(`📊 Proxy ${i + 1} Data: ${JSON.stringify(data, null, 2)}`);
+                        
+                        if (data.result && data.result.reviews) {
+                            log(`✅ PROXY ${i + 1} SUCCESS: Found reviews!`);
+                            showStatus(`Proxy ${i + 1} SUCCESS: Found reviews`, 'success');
+                            return;
+                        }
+                    }
+                } catch (error) {
+                    log(`❌ Proxy ${i + 1} failed: ${error.message}`);
+                }
+            }
+            
+            showStatus('All proxy services failed', 'error');
+        }
+        
+        async function testAlternative() {
+            log('🚀 TESTING: Alternative endpoint...');
+            showStatus('Testing alternative Google API endpoint...', 'warning');
+            
+            const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(config.businessName)}&inputtype=textquery&fields=place_id,name,rating,user_ratings_total&key=${config.apiKey}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                log(`📊 Alternative API Response: ${JSON.stringify(data, null, 2)}`);
+                
+                if (data.status === 'OK' && data.candidates && data.candidates.length > 0) {
+                    const place = data.candidates[0];
+                    log(`✅ Found place: ${place.name} (${place.place_id})`);
+                    
+                    // Test if this Place ID matches ours
+                    if (place.place_id === config.placeId) {
+                        log('✅ Place ID matches our configuration!');
+                        showStatus('Alternative endpoint: Place ID verified', 'success');
+                    } else {
+                        log(`⚠️ Place ID mismatch: Found ${place.place_id}, Expected ${config.placeId}`);
+                        showStatus('Alternative endpoint: Place ID mismatch', 'warning');
+                    }
+                } else {
+                    log('❌ Alternative endpoint: No candidates found');
+                    showStatus('Alternative endpoint: No results', 'error');
+                }
+            } catch (error) {
+                log(`❌ Alternative endpoint failed: ${error.message}`);
+                showStatus(`Alternative endpoint failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearResults() {
+            results.innerHTML = '<div style="color: #fff;">🔍 Google Reviews API Debug Console</div><div style="color: #fff;">Ready to test API connectivity...</div>';
+            statusContainer.innerHTML = '';
+        }
+        
+        // Auto-run basic connectivity test
+        setTimeout(() => {
+            log('🔍 Starting automatic API connectivity test...');
+            testDirectAPI();
+        }, 1000);
+    </script>
+</body>
+</html>
