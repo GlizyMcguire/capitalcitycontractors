@@ -8,9 +8,15 @@
 $api_key = 'AIzaSyBKK9XJlbqT5n8rF2mP3wQ7vH4sL6nE9xY';
 $place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'; // Current Place ID being used
 
+// Business Profile Information provided
+$business_profile_id = '3886356099819080585';
+$store_code = '15922219453360051580';
+
 echo "<h2>Google Places API Test for Capital City Contractors</h2>\n";
 echo "<p><strong>Testing API Key:</strong> " . substr($api_key, 0, 10) . "...</p>\n";
-echo "<p><strong>Testing Place ID:</strong> $place_id</p>\n";
+echo "<p><strong>Current Place ID:</strong> $place_id</p>\n";
+echo "<p><strong>Business Profile ID:</strong> $business_profile_id</p>\n";
+echo "<p><strong>Store Code:</strong> $store_code</p>\n";
 
 // Test 1: Basic Place Details
 echo "<h3>Test 1: Basic Place Details</h3>\n";
@@ -90,37 +96,54 @@ if ($response2 === false) {
     }
 }
 
-// Test 3: Search for Capital City Contractors
+// Test 3: Search for Capital City Contractors (Multiple Variations)
 echo "<h3>Test 3: Search for Capital City Contractors</h3>\n";
-$search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?" . http_build_query([
-    'query' => 'Capital City Contractors Ottawa Ontario',
-    'key' => $api_key
-]);
 
-$response3 = @file_get_contents($search_url, false, $context);
+$search_queries = [
+    'Capital City Contractors Ottawa Ontario',
+    'Capital City Contractors Ottawa',
+    'Capital City Contractors painting Ottawa',
+    'Capital City Contractors renovation Ottawa',
+    'painting contractors Ottawa Capital City',
+    '613-301-1311 Ottawa contractor',
+    'Capital City Contractors 613-301-1311',
+    'painting drywall Ottawa Capital City'
+];
 
-if ($response3 === false) {
-    echo "<p style='color: red;'>❌ Failed to search for business</p>\n";
-} else {
-    $data3 = json_decode($response3, true);
-    echo "<p style='color: green;'>✅ Search API Call Successful</p>\n";
-    
-    if (isset($data3['results']) && count($data3['results']) > 0) {
-        echo "<p><strong>Search Results Found:</strong> " . count($data3['results']) . "</p>\n";
-        
-        foreach ($data3['results'] as $i => $result) {
-            echo "<div style='border: 1px solid #ccc; margin: 10px 0; padding: 10px;'>\n";
-            echo "<p><strong>Result " . ($i + 1) . ":</strong></p>\n";
-            echo "<p><strong>Name:</strong> " . ($result['name'] ?? 'Unknown') . "</p>\n";
-            echo "<p><strong>Address:</strong> " . ($result['formatted_address'] ?? 'Unknown') . "</p>\n";
-            echo "<p><strong>Place ID:</strong> " . ($result['place_id'] ?? 'Unknown') . "</p>\n";
-            echo "<p><strong>Rating:</strong> " . ($result['rating'] ?? 'N/A') . " (" . ($result['user_ratings_total'] ?? 0) . " reviews)</p>\n";
-            echo "</div>\n";
-        }
+foreach ($search_queries as $index => $query) {
+    echo "<h4>Search " . ($index + 1) . ": '$query'</h4>\n";
+
+    $search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?" . http_build_query([
+        'query' => $query,
+        'key' => $api_key
+    ]);
+
+    $response3 = @file_get_contents($search_url, false, $context);
+
+    if ($response3 === false) {
+        echo "<p style='color: red;'>❌ Failed to search for '$query'</p>\n";
     } else {
-        echo "<p style='color: orange;'>⚠️ No search results found</p>\n";
-        echo "<pre>" . json_encode($data3, JSON_PRETTY_PRINT) . "</pre>\n";
+        $data3 = json_decode($response3, true);
+        echo "<p style='color: green;'>✅ Search API Call Successful</p>\n";
+
+        if (isset($data3['results']) && count($data3['results']) > 0) {
+            echo "<p><strong>Search Results Found:</strong> " . count($data3['results']) . "</p>\n";
+
+            foreach ($data3['results'] as $i => $result) {
+                echo "<div style='border: 1px solid #ccc; margin: 10px 0; padding: 10px;'>\n";
+                echo "<p><strong>Result " . ($i + 1) . ":</strong></p>\n";
+                echo "<p><strong>Name:</strong> " . ($result['name'] ?? 'Unknown') . "</p>\n";
+                echo "<p><strong>Address:</strong> " . ($result['formatted_address'] ?? 'Unknown') . "</p>\n";
+                echo "<p><strong>Place ID:</strong> <code>" . ($result['place_id'] ?? 'Unknown') . "</code></p>\n";
+                echo "<p><strong>Rating:</strong> " . ($result['rating'] ?? 'N/A') . " (" . ($result['user_ratings_total'] ?? 0) . " reviews)</p>\n";
+                echo "<p><strong>Types:</strong> " . implode(', ', $result['types'] ?? []) . "</p>\n";
+                echo "</div>\n";
+            }
+        } else {
+            echo "<p style='color: orange;'>⚠️ No search results found for '$query'</p>\n";
+        }
     }
+    echo "<hr>\n";
 }
 
 echo "<h3>Diagnosis Summary</h3>\n";

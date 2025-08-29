@@ -10,14 +10,18 @@ class GoogleReviewsAPI {
         this.config = {
             // Google Places API configuration
             apiKey: this.getApiKey(),
-            placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4', // Capital City Contractors Place ID (may need verification)
+            // Updated Place ID - testing with potential correct ID
+            placeId: this.getCorrectPlaceId(),
             maxReviews: 5,
             minRating: 4, // Only show 4+ star reviews
             cacheTimeout: 3600000, // 1 hour cache
             retryAttempts: 3,
             retryDelay: 2000,
             // Diagnostic mode for troubleshooting
-            diagnosticMode: true
+            diagnosticMode: true,
+            // Business Profile Information
+            businessProfileId: '3886356099819080585',
+            storeCode: '15922219453360051580'
         };
         
         // State management
@@ -50,6 +54,22 @@ class GoogleReviewsAPI {
 
         // No API key configured - will use fallback reviews
         return null;
+    }
+
+    /**
+     * Get the correct Place ID for Capital City Contractors
+     * This method allows for easy testing of different Place IDs
+     */
+    getCorrectPlaceId() {
+        // Potential Place IDs to test (will be updated based on search results)
+        const potentialPlaceIds = [
+            'ChIJN1t_tDeuEmsRUsoyG83frY4', // Current (likely incorrect)
+            // Add more Place IDs here as we discover them
+        ];
+
+        // For now, return the first one, but this can be updated
+        // when we find the correct Place ID through testing
+        return potentialPlaceIds[0];
     }
     
     /**
