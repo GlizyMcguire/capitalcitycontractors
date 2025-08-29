@@ -4,7 +4,7 @@
  * Uses Google Places API to find the correct Place ID
  */
 
-$api_key = 'AIzaSyBKK9XJlbqT5n8rF2mP3wQ7vH4sL6nE9xY';
+$api_key = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
 
 echo "<h1>🔍 Place ID Finder for Capital City Contractors</h1>\n";
 echo "<p>This tool searches for the correct Google Places API Place ID for Capital City Contractors.</p>\n";
