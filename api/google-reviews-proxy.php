@@ -87,20 +87,10 @@ function getSecureSecretKey() {
 
 // Function to get the correct Place ID for Capital City Contractors
 function getCorrectPlaceId() {
-    // Potential Place IDs to test for Capital City Contractors
-    // These will be tested systematically to find the correct one
-    $potential_place_ids = [
-        'ChIJN1t_tDeuEmsRUsoyG83frY4', // Current (likely incorrect)
-        // Common Ottawa business Place ID patterns to test:
-        'ChIJOwg_06VPwokRYv534QpSuX8', // Ottawa pattern 1
-        'ChIJrxNRX7NDwokRQEk2G3N8VQQ', // Ottawa pattern 2
-        'ChIJrxNRX7NDwokRQEk2G3N8VQQ', // Ottawa pattern 3
-        // Will be updated when correct Place ID is found through search
-    ];
-
-    // Test each Place ID systematically
-    // For now, return the first one for testing
-    return $potential_place_ids[0];
+    // CORRECT Place ID for Capital City Contractors
+    // Found from verified Google Maps URL: https://www.google.com/maps/place/Capital+City+Contractors/
+    // This is the verified Google Business Profile Place ID
+    return 'ChIJAZyYC-K4a04RRe9kJq7UZKo';
 }
 
 // SECURE Configuration - Load from secure file
