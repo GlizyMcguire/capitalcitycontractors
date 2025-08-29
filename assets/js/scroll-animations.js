@@ -22,7 +22,10 @@ class ScrollAnimations {
         
         // Add parallax effects
         this.setupParallaxEffects();
-        
+
+        // Add enhanced navigation behavior
+        this.setupEnhancedNavigation();
+
         console.log('✨ Scroll animations initialized');
     }
 
@@ -130,6 +133,57 @@ class ScrollAnimations {
                 element.style.transform = `translateY(${yPos}px)`;
             });
         });
+    }
+
+    setupEnhancedNavigation() {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        const updateNavbar = () => {
+            const scrollY = window.scrollY;
+
+            // Add scrolled class when scrolled down
+            if (scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            // Hide/show navbar based on scroll direction
+            if (scrollY > 100) {
+                if (scrollY > lastScrollY && !navbar.classList.contains('hidden')) {
+                    // Scrolling down - hide navbar
+                    navbar.classList.add('hidden');
+                    navbar.classList.remove('visible');
+                } else if (scrollY < lastScrollY && !navbar.classList.contains('visible')) {
+                    // Scrolling up - show navbar
+                    navbar.classList.remove('hidden');
+                    navbar.classList.add('visible');
+                }
+            } else {
+                // Always show navbar at top
+                navbar.classList.remove('hidden');
+                navbar.classList.add('visible');
+            }
+
+            lastScrollY = scrollY;
+            ticking = false;
+        };
+
+        const requestTick = () => {
+            if (!ticking) {
+                requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', requestTick, { passive: true });
+
+        // Initial call
+        updateNavbar();
     }
 
     // Add loading animations for dynamic content
