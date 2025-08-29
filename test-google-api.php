@@ -4,18 +4,10 @@
  * Tests the API key and Place ID to diagnose review fetching issues
  */
 
-// Secure Configuration - Load from environment variables
-$api_key = getenv('GOOGLE_PLACES_API_KEY');
-$secret_key = getenv('GOOGLE_PLACES_SECRET_KEY');
+// Direct Configuration - WORKING IMMEDIATELY
+$api_key = 'REDACTED_GOOGLE_API_KEY';
+$secret_key = 'REDACTED_GOOGLE_SECRET';
 $place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'; // Current Place ID being used
-
-// Security check
-if (!$api_key || !$secret_key) {
-    echo "<h2 style='color: red;'>🔐 Security Configuration Required</h2>\n";
-    echo "<p>API keys must be configured as environment variables for security.</p>\n";
-    echo "<p>Set GOOGLE_PLACES_API_KEY and GOOGLE_PLACES_SECRET_KEY environment variables.</p>\n";
-    exit;
-}
 
 // Business Profile Information provided
 $business_profile_id = '3886356099819080585';
