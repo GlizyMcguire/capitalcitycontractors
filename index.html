@@ -352,9 +352,6 @@
     }
     </script>
 
-    <!-- Review Management System -->
-    <script src="assets/data/reviews.js"></script>
-
     <!-- DEFINITIVE Google Reviews Live API Integration -->
     <script src="assets/js/google-reviews-live.js"></script>
 
@@ -650,7 +647,15 @@
     <section class="homepage-video-section">
         <div class="container">
             <div class="video-container">
-                <video class="homepage-video" autoplay muted loop disablepictureinpicture>
+                <video class="homepage-video"
+                       autoplay
+                       muted
+                       loop
+                       playsinline
+                       disablepictureinpicture
+                       disableremoteplayback
+                       controlslist="nodownload nofullscreen noremoteplayback"
+                       style="pointer-events: none; user-select: none;">
                     <source src="assets/images/homepage-logo.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -1433,35 +1438,69 @@
     <!-- Scripts - Deferred for Performance -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
 
-    <!-- Hero Video Autoplay/Loop Enforcement -->
+    <!-- Hero Video Non-Interactive Background Element -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Force hero video to autoplay and loop
+            // Configure hero video as non-interactive background element
             const heroVideo = document.querySelector('.homepage-video');
             if (heroVideo) {
+                // Set video properties
                 heroVideo.autoplay = true;
                 heroVideo.loop = true;
                 heroVideo.muted = true;
                 heroVideo.playsInline = true;
+                heroVideo.controls = false;
+
+                // Make completely non-interactive
+                heroVideo.style.pointerEvents = 'none';
+                heroVideo.style.userSelect = 'none';
+                heroVideo.style.webkitUserSelect = 'none';
+                heroVideo.style.mozUserSelect = 'none';
+                heroVideo.style.msUserSelect = 'none';
+
+                // Disable context menu
+                heroVideo.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+
+                // Disable all click events
+                heroVideo.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                });
+
+                // Disable keyboard interactions
+                heroVideo.addEventListener('keydown', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
 
                 // Force play if not already playing
                 heroVideo.play().catch(function(error) {
-                    console.log('Video autoplay failed:', error);
+                    console.log('Video autoplay failed (this is normal on some browsers):', error);
                 });
 
-                // Ensure loop continues
+                // Ensure continuous loop
                 heroVideo.addEventListener('ended', function() {
                     heroVideo.currentTime = 0;
                     heroVideo.play();
                 });
+
+                // Monitor and maintain autoplay
+                setInterval(function() {
+                    if (heroVideo.paused && heroVideo.readyState >= 2) {
+                        heroVideo.play().catch(function(error) {
+                            // Silent fail - autoplay restrictions are normal
+                        });
+                    }
+                }, 5000);
             }
         });
     </script>
 
     <!-- Reviews now handled by google-reviews-live.js -->
-
-
-    </script>
 
     <!-- Main JavaScript - Loaded at end for performance -->
     <script src="assets/js/main.js" defer></script>
