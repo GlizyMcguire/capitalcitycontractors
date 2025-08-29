@@ -1214,18 +1214,51 @@
     background-color: var(--white);
 }
 
-/* Ensure text remains visible in all states */
+/* Proper form validation styling - maintain white background always */
+.form-input,
+.form-select,
+.form-textarea {
+    color: var(--text-primary) !important;
+    background-color: var(--white) !important;
+}
+
 .form-input:focus,
 .form-input:active,
 .form-input:hover,
+.form-input:valid,
+.form-input:invalid,
 .form-select:focus,
 .form-select:active,
 .form-select:hover,
+.form-select:valid,
+.form-select:invalid,
 .form-textarea:focus,
 .form-textarea:active,
-.form-textarea:hover {
-    color: var(--text-primary);
-    background-color: var(--white);
+.form-textarea:hover,
+.form-textarea:valid,
+.form-textarea:invalid {
+    color: var(--text-primary) !important;
+    background-color: var(--white) !important;
+}
+
+/* Error state - red border only, maintain white background */
+.form-input.error,
+.form-input:invalid,
+.form-select.error,
+.form-select:invalid,
+.form-textarea.error,
+.form-textarea:invalid {
+    border-color: #ef4444 !important;
+    background-color: var(--white) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 1px #ef4444 !important;
+}
+
+/* Placeholder text styling */
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
 }
 
 .form-input:focus,
