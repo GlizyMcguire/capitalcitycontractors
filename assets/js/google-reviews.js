@@ -10,12 +10,14 @@ class GoogleReviewsAPI {
         this.config = {
             // Google Places API configuration
             apiKey: this.getApiKey(),
-            placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4', // Capital City Contractors Place ID
+            placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4', // Capital City Contractors Place ID (may need verification)
             maxReviews: 5,
             minRating: 4, // Only show 4+ star reviews
             cacheTimeout: 3600000, // 1 hour cache
             retryAttempts: 3,
-            retryDelay: 2000
+            retryDelay: 2000,
+            // Diagnostic mode for troubleshooting
+            diagnosticMode: true
         };
         
         // State management
@@ -23,6 +25,7 @@ class GoogleReviewsAPI {
         this.isLoading = false;
         this.hasError = false;
         this.lastFetch = null;
+        this.lastError = null;
         
         // Fallback reviews (existing hardcoded data)
         this.fallbackReviews = this.getFallbackReviews();
@@ -53,53 +56,61 @@ class GoogleReviewsAPI {
      * Initialize the Google Reviews system
      */
     async init() {
+        console.log('🔄 Initializing Google Reviews API...');
+
         try {
             // Check if we have cached reviews
             const cachedReviews = this.getCachedReviews();
             if (cachedReviews && this.isCacheValid()) {
+                console.log('✅ Using cached reviews:', cachedReviews.length, 'reviews');
                 this.reviews = cachedReviews;
                 this.displayReviews();
                 return;
             }
-            
+
+            console.log('🌐 Fetching fresh reviews from Google API...');
             // Fetch fresh reviews from Google API
             await this.fetchGoogleReviews();
-            
+
         } catch (error) {
-            console.warn('Google Reviews API initialization failed:', error);
+            console.warn('❌ Google Reviews API initialization failed:', error);
             this.handleError(error);
         }
     }
     
     /**
-     * Fetch reviews from Google Places API
+     * Fetch reviews from Google Places API via server-side proxy
      */
     async fetchGoogleReviews() {
-        if (!this.config.apiKey) {
-            throw new Error('Google Places API key not configured');
-        }
-        
+        // Server-side proxy handles API key, so no client-side key needed
         this.isLoading = true;
         this.hasError = false;
         
         try {
+            console.log('📡 Making API request to server proxy...');
             const response = await this.makeAPIRequest();
+            console.log('📡 API Response status:', response.status, response.statusText);
+
             const data = await response.json();
-            
+            console.log('📡 API Response data:', data);
+
             if (!response.ok) {
-                throw new Error(`API request failed: ${data.error_message || response.statusText}`);
+                throw new Error(`API request failed: ${data.error || data.error_message || response.statusText}`);
             }
-            
+
             if (data.result && data.result.reviews) {
+                console.log('✅ Reviews found:', data.result.reviews.length, 'reviews');
                 this.reviews = this.processReviews(data.result.reviews);
                 this.cacheReviews(this.reviews);
                 this.displayReviews();
+                console.log('✅ Reviews displayed successfully');
             } else {
+                console.warn('⚠️ No reviews found in API response:', data);
                 throw new Error('No reviews found in API response');
             }
-            
+
         } catch (error) {
-            console.error('Failed to fetch Google reviews:', error);
+            console.error('❌ Failed to fetch Google reviews:', error);
             await this.handleError(error);
         } finally {
             this.isLoading = false;
@@ -161,12 +172,14 @@ class GoogleReviewsAPI {
      */
     async handleError(error) {
         this.hasError = true;
-        console.warn('Using fallback reviews due to API error:', error.message);
-        
+        this.lastError = error.message;
+        console.warn('🔄 Using fallback reviews due to API error:', error.message);
+
         // Use fallback reviews
         this.reviews = this.fallbackReviews;
+        console.log('📋 Loaded fallback reviews:', this.reviews.length, 'reviews');
         this.displayReviews();
-        
+
         // Show user-friendly error message (optional)
         this.showErrorMessage();
     }
@@ -296,8 +309,21 @@ class GoogleReviewsAPI {
      * Show error message to user (optional)
      */
     showErrorMessage() {
-        // Optional: Show a subtle message that reviews are from cache
-        // This could be implemented as a small notice in the testimonials section
+        if (this.config.diagnosticMode) {
+            // Show diagnostic information in console for troubleshooting
+            console.group('🔍 Google Reviews API Diagnostic Information');
+            console.log('Place ID:', this.config.placeId);
+            console.log('Using fallback reviews:', this.fallbackReviews.length, 'reviews');
+            console.log('Error state:', this.hasError);
+            console.log('Last error:', this.lastError);
+            console.log('Cache status:', this.isCacheValid() ? 'Valid' : 'Invalid/Empty');
+            console.groupEnd();
+
+            // Optional: Show a subtle notice to developers
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.warn('💡 Development Mode: Check console for Google Reviews API diagnostic information');
+            }
+        }
     }
     
     /**
