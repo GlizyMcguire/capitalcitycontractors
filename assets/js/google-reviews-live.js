@@ -334,27 +334,79 @@ class GoogleReviewsLive {
     
     updateReviewDisplay(index) {
         const review = this.reviews[index];
-        if (!review) return;
-        
-        // Update reviewer info
+        if (!review) {
+            console.warn('⚠️ No review found at index:', index);
+            return;
+        }
+
+        console.log('🎨 Updating review display for index:', index, 'Review:', review.name);
+
+        // Update reviewer info with error checking
         const avatarEl = document.getElementById('reviewerAvatar');
         const nameEl = document.getElementById('reviewerName');
         const dateEl = document.getElementById('reviewDate');
         const textEl = document.getElementById('reviewText');
         const serviceEl = document.getElementById('serviceTag');
         const counterEl = document.getElementById('currentReviewNumber');
-        
-        if (avatarEl) avatarEl.textContent = review.avatar;
-        if (nameEl) nameEl.textContent = review.name;
-        if (dateEl) dateEl.textContent = `${review.date} • ${review.source}`;
-        if (textEl) textEl.textContent = `"${review.text}"`;
-        if (serviceEl) serviceEl.textContent = review.service;
-        if (counterEl) counterEl.textContent = index + 1;
-        
+
+        if (avatarEl) {
+            avatarEl.textContent = review.avatar;
+            console.log('✅ Updated avatar:', review.avatar);
+        } else {
+            console.warn('⚠️ Avatar element not found');
+        }
+
+        if (nameEl) {
+            nameEl.textContent = review.name;
+            console.log('✅ Updated name:', review.name);
+        } else {
+            console.warn('⚠️ Name element not found');
+        }
+
+        if (dateEl) {
+            dateEl.textContent = `${review.date} • ${review.source}`;
+            console.log('✅ Updated date:', review.date);
+        } else {
+            console.warn('⚠️ Date element not found');
+        }
+
+        if (textEl) {
+            textEl.textContent = `"${review.text}"`;
+            console.log('✅ Updated text (first 50 chars):', review.text.substring(0, 50) + '...');
+        } else {
+            console.warn('⚠️ Text element not found');
+        }
+
+        if (serviceEl) {
+            serviceEl.textContent = review.service;
+            console.log('✅ Updated service:', review.service);
+        } else {
+            console.warn('⚠️ Service element not found');
+        }
+
+        if (counterEl) {
+            counterEl.textContent = index + 1;
+            console.log('✅ Updated counter:', index + 1);
+        } else {
+            console.warn('⚠️ Counter element not found');
+        }
+
         // Update stars
         const starsEl = document.querySelector('.reviewer-stars');
         if (starsEl) {
             starsEl.textContent = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+            console.log('✅ Updated stars:', review.rating);
+        } else {
+            console.warn('⚠️ Stars element not found');
+        }
+
+        // Ensure testimonials section is visible on mobile
+        const testimonialsSection = document.getElementById('testimonials');
+        if (testimonialsSection) {
+            testimonialsSection.style.display = 'block';
+            testimonialsSection.style.visibility = 'visible';
+            testimonialsSection.style.opacity = '1';
+            console.log('✅ Ensured testimonials section is visible');
         }
     }
     
@@ -458,25 +510,74 @@ class GoogleReviewsLive {
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 STARTING: Google Reviews Live Integration');
+    console.log('📱 Device info:', {
+        userAgent: navigator.userAgent,
+        screenWidth: window.innerWidth,
+        isMobile: window.innerWidth <= 768
+    });
+
+    // Check if testimonials section exists
+    const testimonialsSection = document.getElementById('testimonials');
+    if (!testimonialsSection) {
+        console.error('❌ CRITICAL: Testimonials section not found!');
+        return;
+    }
+
+    // Check if required elements exist
+    const requiredElements = [
+        'reviewerAvatar', 'reviewerName', 'reviewDate',
+        'reviewText', 'serviceTag', 'currentReviewNumber'
+    ];
+
+    const missingElements = requiredElements.filter(id => !document.getElementById(id));
+    if (missingElements.length > 0) {
+        console.error('❌ CRITICAL: Missing required elements:', missingElements);
+    } else {
+        console.log('✅ All required elements found');
+    }
+
+    // Initialize Google Reviews
     window.googleReviewsLive = new GoogleReviewsLive();
-    
+
     // Set up navigation controls
     const prevBtn = document.getElementById('prevReview');
     const nextBtn = document.getElementById('nextReview');
-    
+
     if (prevBtn) {
         prevBtn.addEventListener('click', () => {
             if (window.googleReviewsLive) {
+                console.log('🔄 Previous review clicked');
                 window.googleReviewsLive.previousReview();
             }
         });
+        console.log('✅ Previous button event listener added');
+    } else {
+        console.warn('⚠️ Previous button not found');
     }
-    
+
     if (nextBtn) {
         nextBtn.addEventListener('click', () => {
             if (window.googleReviewsLive) {
+                console.log('🔄 Next review clicked');
                 window.googleReviewsLive.nextReview();
             }
         });
+        console.log('✅ Next button event listener added');
+    } else {
+        console.warn('⚠️ Next button not found');
+    }
+
+    // Mobile-specific initialization
+    if (window.innerWidth <= 768) {
+        console.log('📱 Mobile device detected - ensuring testimonials visibility');
+        setTimeout(() => {
+            const testimonialsSection = document.getElementById('testimonials');
+            if (testimonialsSection) {
+                testimonialsSection.style.display = 'block';
+                testimonialsSection.style.visibility = 'visible';
+                testimonialsSection.style.opacity = '1';
+                console.log('✅ Mobile testimonials visibility ensured');
+            }
+        }, 1000);
     }
 });
