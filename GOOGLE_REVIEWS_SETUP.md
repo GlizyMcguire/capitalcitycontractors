@@ -43,6 +43,7 @@ This guide explains how to set up the Google Reviews API integration for Capital
 Add to your server's environment variables:
 ```bash
 export GOOGLE_PLACES_API_KEY="REDACTED_GOOGLE_API_KEY"
+export GOOGLE_PLACES_SECRET_KEY="REDACTED_GOOGLE_SECRET"
 ```
 
 #### Option B: PHP Configuration
@@ -50,6 +51,7 @@ Edit `api/google-reviews-proxy.php`:
 ```php
 $config = [
     'api_key' => 'REDACTED_GOOGLE_API_KEY', // Replace with your actual API key
+    'secret_key' => 'REDACTED_GOOGLE_SECRET', // Replace with your actual secret key
     // ... rest of config
 ];
 ```
@@ -59,6 +61,7 @@ Add to your HTML before the Google Reviews script:
 ```html
 <script>
     window.GOOGLE_PLACES_API_KEY = 'REDACTED_GOOGLE_API_KEY';
+    window.GOOGLE_PLACES_SECRET_KEY = 'REDACTED_GOOGLE_SECRET';
 </script>
 ```
 

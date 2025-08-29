@@ -6,6 +6,7 @@
 
 // Configuration
 $api_key = 'REDACTED_GOOGLE_API_KEY';
+$secret_key = 'REDACTED_GOOGLE_SECRET';
 $place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'; // Current Place ID being used
 
 // Business Profile Information provided

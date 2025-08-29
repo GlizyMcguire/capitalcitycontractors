@@ -38,6 +38,7 @@ function getCorrectPlaceId() {
 // Configuration
 $config = [
     'api_key' => getenv('GOOGLE_PLACES_API_KEY') ?: 'REDACTED_GOOGLE_API_KEY',
+    'secret_key' => getenv('GOOGLE_PLACES_SECRET_KEY') ?: 'REDACTED_GOOGLE_SECRET',
     'place_id' => getCorrectPlaceId(), // Capital City Contractors Place ID
     'business_profile_id' => '3886356099819080585',
     'store_code' => '15922219453360051580',

@@ -10,6 +10,7 @@ class GoogleReviewsAPI {
         this.config = {
             // Google Places API configuration
             apiKey: this.getApiKey(),
+            secretKey: this.getSecretKey(),
             // Updated Place ID - testing with potential correct ID
             placeId: this.getCorrectPlaceId(),
             maxReviews: 5,
@@ -53,6 +54,24 @@ class GoogleReviewsAPI {
         }
 
         // No API key configured - will use fallback reviews
+        return null;
+    }
+
+    /**
+     * Get secret key from environment or configuration
+     * In production, this should be loaded from a secure configuration
+     */
+    getSecretKey() {
+        // Priority order for secret key sources:
+        // 1. Server-side configuration (recommended)
+        // 2. Environment variable
+        // 3. Client-side configuration (development only)
+
+        if (typeof window !== 'undefined' && window.GOOGLE_PLACES_SECRET_KEY) {
+            return window.GOOGLE_PLACES_SECRET_KEY;
+        }
+
+        // No secret key configured - server-side proxy will handle this
         return null;
     }
 
