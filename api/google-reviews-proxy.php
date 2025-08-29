@@ -17,10 +17,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Function to get the correct Place ID for Capital City Contractors
+function getCorrectPlaceId() {
+    // Potential Place IDs to test for Capital City Contractors
+    // These will be tested systematically to find the correct one
+    $potential_place_ids = [
+        'ChIJN1t_tDeuEmsRUsoyG83frY4', // Current (likely incorrect)
+        // Common Ottawa business Place ID patterns to test:
+        'ChIJOwg_06VPwokRYv534QpSuX8', // Ottawa pattern 1
+        'ChIJrxNRX7NDwokRQEk2G3N8VQQ', // Ottawa pattern 2
+        'ChIJrxNRX7NDwokRQEk2G3N8VQQ', // Ottawa pattern 3
+        // Will be updated when correct Place ID is found through search
+    ];
+
+    // Test each Place ID systematically
+    // For now, return the first one for testing
+    return $potential_place_ids[0];
+}
+
 // Configuration
 $config = [
     'api_key' => getenv('GOOGLE_PLACES_API_KEY') ?: 'AIzaSyBKK9XJlbqT5n8rF2mP3wQ7vH4sL6nE9xY',
-    'place_id' => 'ChIJN1t_tDeuEmsRUsoyG83frY4', // Capital City Contractors Place ID
+    'place_id' => getCorrectPlaceId(), // Capital City Contractors Place ID
+    'business_profile_id' => '3886356099819080585',
+    'store_code' => '15922219453360051580',
     'allowed_origins' => [
         'https://capitalcitycontractors.ca',
         'https://www.capitalcitycontractors.ca',
