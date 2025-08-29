@@ -5,7 +5,7 @@
  */
 
 // Configuration
-$api_key = 'AIzaSyBKK9XJlbqT5n8rF2mP3wQ7vH4sL6nE9xY';
+$api_key = 'REDACTED_GOOGLE_API_KEY';
 $place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'; // Current Place ID being used
 
 // Business Profile Information provided
