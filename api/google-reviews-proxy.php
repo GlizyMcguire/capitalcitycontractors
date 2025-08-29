@@ -17,6 +17,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Secure API Key Loading Functions
+function getSecureApiKey() {
+    // Priority order for secure API key loading:
+    // 1. Environment variable (most secure)
+    // 2. Secure config file outside web root
+    // 3. Encrypted config file
+
+    // Try environment variable first
+    $api_key = getenv('GOOGLE_PLACES_API_KEY');
+    if ($api_key) {
+        return $api_key;
+    }
+
+    // Try secure config file outside web root
+    $config_file = dirname(__DIR__) . '/config/secure-keys.php';
+    if (file_exists($config_file)) {
+        $secure_config = include $config_file;
+        if (isset($secure_config['google_places_api_key'])) {
+            return $secure_config['google_places_api_key'];
+        }
+    }
+
+    // Log security error and return null
+    error_log('SECURITY WARNING: Google Places API key not found in secure configuration');
+    return null;
+}
+
+function getSecureSecretKey() {
+    // Priority order for secure secret key loading:
+    // 1. Environment variable (most secure)
+    // 2. Secure config file outside web root
+    // 3. Encrypted config file
+
+    // Try environment variable first
+    $secret_key = getenv('GOOGLE_PLACES_SECRET_KEY');
+    if ($secret_key) {
+        return $secret_key;
+    }
+
+    // Try secure config file outside web root
+    $config_file = dirname(__DIR__) . '/config/secure-keys.php';
+    if (file_exists($config_file)) {
+        $secure_config = include $config_file;
+        if (isset($secure_config['google_places_secret_key'])) {
+            return $secure_config['google_places_secret_key'];
+        }
+    }
+
+    // Log security error and return null
+    error_log('SECURITY WARNING: Google Places secret key not found in secure configuration');
+    return null;
+}
+
 // Function to get the correct Place ID for Capital City Contractors
 function getCorrectPlaceId() {
     // Potential Place IDs to test for Capital City Contractors
@@ -35,10 +88,10 @@ function getCorrectPlaceId() {
     return $potential_place_ids[0];
 }
 
-// Configuration
+// Secure Configuration - Load from environment variables only
 $config = [
-    'api_key' => getenv('GOOGLE_PLACES_API_KEY') ?: 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s',
-    'secret_key' => getenv('GOOGLE_PLACES_SECRET_KEY') ?: '1t1Jpxqi2j3TufvwV4QjWV376KU=',
+    'api_key' => getSecureApiKey(),
+    'secret_key' => getSecureSecretKey(),
     'place_id' => getCorrectPlaceId(), // Capital City Contractors Place ID
     'business_profile_id' => '3886356099819080585',
     'store_code' => '15922219453360051580',

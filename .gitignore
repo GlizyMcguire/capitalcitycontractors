@@ -1,0 +1,56 @@
+# Security - API Keys and Sensitive Configuration
+config/secure-keys.php
+*.key
+*.pem
+.env
+.env.local
+.env.production
+
+# Logs and temporary files
+*.log
+error.log
+access.log
+rate_limit.json
+
+# Development and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Cache and temporary directories
+cache/
+tmp/
+temp/
+
+# Node modules (if using Node.js tools)
+node_modules/
+npm-debug.log*
+
+# PHP specific
+vendor/
+composer.lock
+
+# Database files
+*.sqlite
+*.db
+
+# Configuration files with sensitive data
+config.php
+database.php
+secrets.php

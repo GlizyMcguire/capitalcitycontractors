@@ -37,33 +37,38 @@ This guide explains how to set up the Google Reviews API integration for Capital
    - Choose "Places API"
 4. Save changes
 
-### Step 3: Configure API Key on Server
+### Step 3: Configure API Keys Securely
 
-#### Option A: Environment Variable (Recommended)
+⚠️ **SECURITY NOTICE**: Never hardcode API keys in source code or commit them to version control!
+
+#### Option A: Automated Secure Setup (Recommended)
+Run the secure setup script:
+```bash
+chmod +x setup-secure-environment.sh
+./setup-secure-environment.sh
+```
+
+#### Option B: Manual Environment Variables (Secure)
 Add to your server's environment variables:
 ```bash
-export GOOGLE_PLACES_API_KEY="AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s"
-export GOOGLE_PLACES_SECRET_KEY="1t1Jpxqi2j3TufvwV4QjWV376KU="
+export GOOGLE_PLACES_API_KEY="your_actual_api_key_here"
+export GOOGLE_PLACES_SECRET_KEY="your_actual_secret_key_here"
 ```
 
-#### Option B: PHP Configuration
-Edit `api/google-reviews-proxy.php`:
-```php
-$config = [
-    'api_key' => 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s', // Replace with your actual API key
-    'secret_key' => '1t1Jpxqi2j3TufvwV4QjWV376KU=', // Replace with your actual secret key
-    // ... rest of config
-];
+#### Option C: Secure Configuration File
+1. Copy `config/secure-keys.example.php` to `config/secure-keys.php`
+2. Move the file OUTSIDE your web root directory
+3. Update with your actual API keys
+4. Set file permissions to 600:
+```bash
+chmod 600 config/secure-keys.php
 ```
 
-#### Option C: Client-side (Development Only)
-Add to your HTML before the Google Reviews script:
-```html
-<script>
-    window.GOOGLE_PLACES_API_KEY = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
-    window.GOOGLE_PLACES_SECRET_KEY = '1t1Jpxqi2j3TufvwV4QjWV376KU=';
-</script>
-```
+#### ❌ What NOT to Do:
+- ❌ Never hardcode API keys in PHP files
+- ❌ Never commit API keys to Git repositories
+- ❌ Never expose API keys in client-side JavaScript
+- ❌ Never store API keys in publicly accessible files
 
 ### Step 4: Verify Setup
 1. Open your website
