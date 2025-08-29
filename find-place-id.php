@@ -93,6 +93,24 @@ $search_strategies = [
         'method' => 'findplacefromtext',
         'query' => 'Capital City Contractors Ottawa',
         'description' => 'Find Place API search'
+    ],
+    // Strategy 6: Service area business search
+    [
+        'method' => 'textsearch',
+        'query' => 'Capital City Contractors service area Ottawa',
+        'description' => 'Service area business search'
+    ],
+    // Strategy 7: Business Profile ID search
+    [
+        'method' => 'textsearch',
+        'query' => 'Capital City Contractors verified business Ottawa',
+        'description' => 'Verified business search'
+    ],
+    // Strategy 8: Specific service areas
+    [
+        'method' => 'textsearch',
+        'query' => 'Capital City Contractors Kanata Nepean Orleans',
+        'description' => 'Service areas search'
     ]
 ];
 
