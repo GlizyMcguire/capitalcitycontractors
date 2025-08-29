@@ -130,6 +130,16 @@
     --transition-normal: 250ms ease-in-out;
     --transition-slow: 350ms ease-in-out;
 
+    /* Phase 2 Enhancement Colors */
+    --error-color: #ef4444;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --info-color: #3b82f6;
+
+    /* Enhanced Transitions */
+    --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
     /* Z-Index */
     --z-dropdown: 1000;
     --z-sticky: 1020;

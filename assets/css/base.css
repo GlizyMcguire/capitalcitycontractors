@@ -226,6 +226,155 @@ select:focus-visible {
     top: 6px;
 }
 
+/* Enhanced Animations & Visual Effects - Phase 2 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Scroll Animation Classes */
+.animate-on-scroll {
+    opacity: 0;
+    transition: all 0.6s ease-out;
+}
+
+.animate-on-scroll.animate-fade-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-on-scroll.animate-fade-left {
+    animation: fadeInLeft 0.6s ease-out forwards;
+}
+
+.animate-on-scroll.animate-fade-right {
+    animation: fadeInRight 0.6s ease-out forwards;
+}
+
+.animate-on-scroll.animate-scale-in {
+    animation: scaleIn 0.6s ease-out forwards;
+}
+
+/* Enhanced Form Styles - Phase 2 */
+.form-group {
+    position: relative;
+    margin-bottom: var(--space-4);
+}
+
+.form-group.focused label {
+    transform: translateY(-20px) scale(0.85);
+    color: var(--primary-color);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid var(--gray-300);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
+    transform: translateY(-1px);
+}
+
+.form-group input.error,
+.form-group textarea.error,
+.form-group select.error {
+    border-color: var(--error-color, #ef4444);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.form-group input.valid,
+.form-group textarea.valid,
+.form-group select.valid {
+    border-color: var(--success-color, #10b981);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.error-message {
+    color: var(--error-color, #ef4444);
+    font-size: var(--text-sm);
+    margin-top: var(--space-1);
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Loading Button State */
+.btn.loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* PRIMARY CTAs - High Priority/Attention-Grabbing (Amber/Gold Gradient) */
 .btn-primary {
     background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
@@ -241,6 +390,12 @@ select:focus-visible {
     color: var(--white);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    transition: all 0.1s ease;
 }
 
 /* SECONDARY CTAs - Supporting Actions (Black/Gold) */
@@ -257,6 +412,12 @@ select:focus-visible {
     color: var(--white);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    transition: all 0.1s ease;
 }
 
 /* Enhanced Button Interactions */
