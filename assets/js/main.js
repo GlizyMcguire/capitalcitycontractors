@@ -225,16 +225,20 @@ function initScrollEffects() {
     });
 }
 
-// Load and Display Real Reviews from reviews.js
+// Load and Display Real Reviews (now supports both Google API and fallback data)
 function initTestimonialSlider() {
     const container = document.getElementById('testimonials-container');
 
-    if (!container || typeof reviewsData === 'undefined') {
+    // Check for reviewsData from Google Reviews API or fallback
+    if (!container || (typeof reviewsData === 'undefined' && typeof window.reviewsData === 'undefined')) {
         return;
     }
 
+    // Use Google Reviews data if available, otherwise use fallback
+    const reviews = window.reviewsData || reviewsData;
+
     let currentReviewIndex = 0;
-    const totalReviews = reviewsData.length;
+    const totalReviews = reviews.length;
 
     // Generate initials from name
     function getInitials(name) {
@@ -339,7 +343,7 @@ function initTestimonialSlider() {
     function displayReview(index) {
         if (index < 0 || index >= totalReviews) return;
 
-        const review = reviewsData[index];
+        const review = reviews[index];
         container.innerHTML = createReviewCard(review, index);
 
         // Add event listeners to navigation buttons
