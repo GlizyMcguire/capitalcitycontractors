@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Google Reviews Test - Capital City Contractors</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/google-reviews-widget.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .status-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .status-icon {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+        .info { color: #17a2b8; }
+        
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: #4285f4;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .testimonials-container {
+            margin-top: 30px;
+        }
+        
+        .console-output {
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-top: 30px;
+        }
+        
+        .place-id {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .place-id code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #e83e8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Live Google Reviews Test</h1>
+            <p>Testing live Google Business Profile integration for Capital City Contractors</p>
+        </div>
+        
+        <div class="content">
+            <div class="place-id">
+                <h3>📍 Business Configuration</h3>
+                <p><strong>Business:</strong> Capital City Contractors</p>
+                <p><strong>Place ID:</strong> <code>ChIJAZyYC-K4a04RRe9kJq7UZKo</code></p>
+                <p><strong>Status:</strong> Verified Google Business Profile</p>
+                <p><strong>Integration:</strong> Live Reviews Widget (No PHP Required)</p>
+            </div>
+            
+            <div class="status-section">
+                <h3>🔍 Integration Status</h3>
+                <div id="status-items">
+                    <div class="status-item info">
+                        <i class="fas fa-spinner fa-spin status-icon"></i>
+                        <span>Initializing live reviews integration...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" onclick="testIntegration()">
+                    <i class="fas fa-play"></i> Test Integration
+                </button>
+                <button class="btn btn-secondary" onclick="refreshReviews()">
+                    <i class="fas fa-sync-alt"></i> Refresh Reviews
+                </button>
+                <button class="btn btn-secondary" onclick="clearConsole()">
+                    <i class="fas fa-trash"></i> Clear Console
+                </button>
+            </div>
+            
+            <!-- This is where the live reviews will be displayed -->
+            <div class="testimonials-container" id="testimonials-container">
+                <!-- Live reviews widget will be inserted here -->
+            </div>
+            
+            <div class="console-output" id="console-output">
+                <div style="color: #fff; margin-bottom: 10px;">📊 Live Console Output:</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Console capture for display
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalWarn = console.warn;
+        const originalError = console.error;
+
+        function addToConsole(type, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'warn' ? '⚠️' : '📝';
+            consoleOutput.innerHTML += `[${timestamp}] ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole('log', args.join(' '));
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsole('warn', args.join(' '));
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole('error', args.join(' '));
+        };
+
+        // Status tracking
+        function updateStatus() {
+            const statusContainer = document.getElementById('status-items');
+            const items = [];
+            
+            // Check if widget is loaded
+            if (typeof GoogleReviewsWidget !== 'undefined') {
+                items.push({
+                    icon: 'fas fa-check success',
+                    text: 'Google Reviews Widget loaded successfully'
+                });
+            } else {
+                items.push({
+                    icon: 'fas fa-times text-danger',
+                    text: 'Google Reviews Widget not loaded'
+                });
+            }
+            
+            // Check if instance exists
+            if (window.googleReviewsWidget) {
+                items.push({
+                    icon: 'fas fa-check success',
+                    text: 'Widget instance created and active'
+                });
+                
+                if (window.googleReviewsWidget.reviews && window.googleReviewsWidget.reviews.length > 0) {
+                    items.push({
+                        icon: 'fas fa-star success',
+                        text: `${window.googleReviewsWidget.reviews.length} live reviews loaded`
+                    });
+                }
+            } else {
+                items.push({
+                    icon: 'fas fa-clock warning',
+                    text: 'Widget instance not yet created'
+                });
+            }
+            
+            // Check if reviews are displaying
+            const reviewsWidget = document.querySelector('.live-reviews-widget');
+            if (reviewsWidget) {
+                items.push({
+                    icon: 'fas fa-eye success',
+                    text: 'Live reviews widget is displaying'
+                });
+            } else {
+                items.push({
+                    icon: 'fas fa-eye-slash warning',
+                    text: 'Reviews widget not yet visible'
+                });
+            }
+            
+            statusContainer.innerHTML = items.map(item => `
+                <div class="status-item">
+                    <i class="${item.icon} status-icon"></i>
+                    <span>${item.text}</span>
+                </div>
+            `).join('');
+        }
+
+        function testIntegration() {
+            console.log('🧪 Running integration test...');
+            updateStatus();
+            
+            if (window.googleReviewsWidget) {
+                console.log('✅ Widget instance found');
+                console.log('📊 Reviews loaded:', window.googleReviewsWidget.reviews.length);
+                console.log('🔧 Is loading:', window.googleReviewsWidget.isLoading);
+            } else {
+                console.log('❌ Widget instance not found');
+            }
+        }
+
+        function refreshReviews() {
+            if (window.refreshGoogleReviews) {
+                console.log('🔄 Refreshing reviews...');
+                window.refreshGoogleReviews();
+                setTimeout(updateStatus, 2000);
+            } else {
+                console.log('❌ Refresh function not available');
+            }
+        }
+
+        function clearConsole() {
+            consoleOutput.innerHTML = '<div style="color: #fff; margin-bottom: 10px;">📊 Live Console Output:</div>';
+        }
+
+        // Auto-update status every 2 seconds
+        setInterval(updateStatus, 2000);
+
+        // Initial status update
+        setTimeout(updateStatus, 1000);
+        
+        // Test integration after 3 seconds
+        setTimeout(testIntegration, 3000);
+    </script>
+
+    <!-- Load the live reviews widget -->
+    <script src="assets/js/google-reviews-widget.js"></script>
+</body>
+</html>
