@@ -448,6 +448,39 @@
         transform: translateY(-50%) scale(0.95) !important;
     }
 
+    /* Phase 2: Enhanced Mobile Touch Interactions */
+    .btn {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .btn:active {
+        transform: translateY(1px) scale(0.98);
+        transition: all 0.1s ease;
+    }
+
+    /* Enhanced service card touch feedback */
+    .service-card:active,
+    .service-detail-card:active {
+        transform: translateY(-2px) scale(0.98);
+        transition: all 0.1s ease;
+    }
+
+    /* Better portfolio navigation touch targets */
+    .portfolio-nav button {
+        min-height: 48px;
+        min-width: 48px;
+        padding: var(--space-3);
+    }
+
+    /* Enhanced form input touch experience */
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        min-height: 48px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
 
     
     /* Mobile CTA */
