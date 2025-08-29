@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place ID Finder - Capital City Contractors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .info-box {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .result-box {
+            border: 2px solid #4CAF50;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: #f9fff9;
+        }
+        .high-confidence {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .place-id {
+            background: yellow;
+            padding: 5px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Place ID Finder for Capital City Contractors</h1>
+        <p>This tool will search for your verified Google Business Profile Place ID.</p>
+        
+        <div class="info-box">
+            <h3>Business Information:</h3>
+            <p><strong>Name:</strong> Capital City Contractors</p>
+            <p><strong>Phone:</strong> 613-301-1311</p>
+            <p><strong>Type:</strong> Service Area Business (Ottawa & Surrounding Areas)</p>
+            <p><strong>Services:</strong> Painting, Drywall, Renovation, Flooring</p>
+            <p><strong>Business Profile ID:</strong> 3886356099819080585</p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button onclick="findPlaceId()" id="searchBtn">🔍 Find My Place ID</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Searching Google Places API for Capital City Contractors...</p>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Your API credentials
+        const API_KEY = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+        
+        // Search strategies for service-area businesses
+        const searchStrategies = [
+            {
+                query: 'Capital City Contractors Ottawa Ontario',
+                description: 'Exact business name with location'
+            },
+            {
+                query: 'Capital City Contractors 613-301-1311',
+                description: 'Business name with phone number'
+            },
+            {
+                query: '613-301-1311 Ottawa contractor',
+                description: 'Phone number with service type'
+            },
+            {
+                query: 'Capital City Contractors painting Ottawa',
+                description: 'Service-based search'
+            },
+            {
+                query: 'Capital City Contractors service area Ottawa',
+                description: 'Service area business search'
+            }
+        ];
+
+        let foundPlaces = [];
+
+        async function findPlaceId() {
+            const searchBtn = document.getElementById('searchBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            searchBtn.disabled = true;
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            foundPlaces = [];
+
+            for (let i = 0; i < searchStrategies.length; i++) {
+                const strategy = searchStrategies[i];
+                await searchWithStrategy(strategy, i + 1);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Rate limiting
+            }
+
+            loading.style.display = 'none';
+            searchBtn.disabled = false;
+            showFinalResults();
+        }
+
+        async function searchWithStrategy(strategy, strategyNum) {
+            const results = document.getElementById('results');
+            
+            results.innerHTML += `<h3>Strategy ${strategyNum}: ${strategy.description}</h3>`;
+            results.innerHTML += `<p><strong>Query:</strong> ${strategy.query}</p>`;
+
+            const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(strategy.query)}&key=${API_KEY}`;
+            
+            try {
+                // Note: This will likely fail due to CORS policy
+                // Google Places API doesn't allow direct browser requests
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.status === 'OK' && data.results && data.results.length > 0) {
+                    results.innerHTML += `<p style="color: green;">✅ Found ${data.results.length} result(s)</p>`;
+                    
+                    data.results.forEach((result, index) => {
+                        const confidence = calculateConfidence(result);
+                        const resultHtml = createResultHtml(result, confidence, strategyNum, index + 1);
+                        results.innerHTML += resultHtml;
+                        
+                        foundPlaces.push({
+                            place_id: result.place_id,
+                            name: result.name,
+                            address: result.formatted_address,
+                            confidence: confidence,
+                            strategy: strategy.description,
+                            reviews: result.user_ratings_total || 0,
+                            rating: result.rating || 'N/A'
+                        });
+                    });
+                } else {
+                    results.innerHTML += `<p style="color: orange;">⚠️ No results found for this search</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<div class="error">❌ Search failed: ${error.message}<br><br><strong>Note:</strong> Direct browser requests to Google Places API are blocked by CORS policy. This tool works better when run from a server.</div>`;
+            }
+        }
+
+        function calculateConfidence(result) {
+            let confidence = 0;
+            const reasons = [];
+
+            if (result.name && result.name.toLowerCase().includes('capital city')) {
+                confidence += 40;
+                reasons.push("Name contains 'Capital City'");
+            }
+
+            if (result.name && result.name.toLowerCase().includes('contractor')) {
+                confidence += 30;
+                reasons.push("Name contains 'Contractor'");
+            }
+
+            if (result.formatted_address && result.formatted_address.toLowerCase().includes('ottawa')) {
+                confidence += 20;
+                reasons.push("Address includes Ottawa");
+            }
+
+            if (result.user_ratings_total && result.user_ratings_total > 0) {
+                confidence += 10;
+                reasons.push(`Has ${result.user_ratings_total} reviews`);
+            }
+
+            return { score: confidence, reasons: reasons };
+        }
+
+        function createResultHtml(result, confidence, strategyNum, resultNum) {
+            const isHighConfidence = confidence.score >= 50;
+            const boxClass = isHighConfidence ? 'result-box high-confidence' : 'result-box';
+            
+            return `
+                <div class="${boxClass}">
+                    <h4>🎯 Result ${resultNum}</h4>
+                    <p><strong>Name:</strong> ${result.name}</p>
+                    <p><strong>Address:</strong> ${result.formatted_address}</p>
+                    <p><strong>Place ID:</strong> <span class="place-id">${result.place_id}</span></p>
+                    <p><strong>Rating:</strong> ${result.rating || 'N/A'} ⭐ (${result.user_ratings_total || 0} reviews)</p>
+                    <p><strong>Confidence Score:</strong> ${confidence.score}%</p>
+                    <p><strong>Confidence Reasons:</strong> ${confidence.reasons.join(', ')}</p>
+                    ${isHighConfidence ? '<p style="color: green; font-weight: bold; font-size: 16px;">🎉 HIGH CONFIDENCE MATCH!</p>' : ''}
+                </div>
+            `;
+        }
+
+        function showFinalResults() {
+            const results = document.getElementById('results');
+            
+            if (foundPlaces.length === 0) {
+                results.innerHTML += `
+                    <div class="error">
+                        <h3>❌ No Place IDs Found</h3>
+                        <p><strong>This is likely due to CORS restrictions.</strong></p>
+                        <p>Google Places API blocks direct browser requests for security reasons.</p>
+                        <h4>Alternative Solutions:</h4>
+                        <ol>
+                            <li><strong>Manual Search:</strong> Go to <a href="https://maps.google.com" target="_blank">Google Maps</a> and search for "Capital City Contractors Ottawa"</li>
+                            <li><strong>Google My Business:</strong> Check your Google Business Profile dashboard</li>
+                            <li><strong>Contact Support:</strong> Let me know and I'll help you find it another way</li>
+                        </ol>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by confidence
+            foundPlaces.sort((a, b) => b.confidence.score - a.confidence.score);
+            const bestMatch = foundPlaces[0];
+
+            if (bestMatch.confidence.score >= 50) {
+                results.innerHTML += `
+                    <div class="success">
+                        <h3>🏆 RECOMMENDED PLACE ID</h3>
+                        <p style="font-size: 18px;"><strong>Place ID:</strong> <span class="place-id" style="font-size: 16px;">${bestMatch.place_id}</span></p>
+                        <p><strong>Business Name:</strong> ${bestMatch.name}</p>
+                        <p><strong>Confidence:</strong> ${bestMatch.confidence.score}%</p>
+                        <p><strong>Reviews:</strong> ${bestMatch.reviews}</p>
+                        <h4>📝 Next Steps:</h4>
+                        <ol>
+                            <li>Copy the Place ID above</li>
+                            <li>Share it with me to update your Google Reviews integration</li>
+                            <li>Your live Google Business reviews will display automatically</li>
+                        </ol>
+                    </div>
+                `;
+            }
+        }
+
+        // Show CORS warning on page load
+        window.addEventListener('load', function() {
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <div class="info-box">
+                    <h3>⚠️ Important Note</h3>
+                    <p>This browser-based tool may be limited by CORS (Cross-Origin Resource Sharing) restrictions from Google's API.</p>
+                    <p>If the search doesn't work, I can help you find your Place ID using alternative methods.</p>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
