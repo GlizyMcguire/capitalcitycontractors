@@ -355,15 +355,8 @@
     <!-- Review Management System -->
     <script src="assets/data/reviews.js"></script>
 
-    <!-- Google Reviews API Integration -->
-    <script src="assets/js/google-reviews.js"></script>
-
-    <!-- Client-Side Google Reviews (No PHP Required) -->
-    <script src="assets/js/google-reviews-client.js"></script>
-
-    <!-- Live Google Reviews Widget -->
-    <link rel="stylesheet" href="assets/css/google-reviews-widget.css">
-    <script src="assets/js/google-reviews-widget.js"></script>
+    <!-- DEFINITIVE Google Reviews Live API Integration -->
+    <script src="assets/js/google-reviews-live.js"></script>
 
     <!-- EmailJS Form Integration -->
     <link rel="stylesheet" href="assets/css/emailjs-form-styles.css">
@@ -1086,12 +1079,7 @@
 
 
 
-            <div class="testimonials-cta">
-                <a href="https://share.google/45SwI5TaNxxHkS6wu" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-                    <i class="fab fa-google"></i>
-                    Read More Reviews
-                </a>
-            </div>
+
         </div>
     </section>
 
@@ -1470,148 +1458,9 @@
         });
     </script>
 
-    <!-- Review Navigation with Auto-Rotation -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dynamic review data - will be updated by Google Reviews integration
-            let reviews = [
-                {
-                    name: "Moe Chamma",
-                    avatar: "MC",
-                    text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
-                    date: "7 months ago • Google Review",
-                    service: "Interior Painting"
-                },
-                {
-                    name: "Tamer Salem",
-                    avatar: "TS",
-                    text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
-                    date: "8 months ago • Google Review",
-                    service: "Interior Painting"
-                },
-                {
-                    name: "Adam Zein",
-                    avatar: "AZ",
-                    text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
-                    date: "1 year ago • Google Review",
-                    service: "Multiple Services"
-                },
-                {
-                    name: "Al Cham",
-                    avatar: "AC",
-                    text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
-                    date: "1 year ago • Google Review",
-                    service: "Multiple Services"
-                }
-            ];
+    <!-- Reviews now handled by google-reviews-live.js -->
 
-            // Function to refresh testimonials with new data
-            window.refreshTestimonials = function() {
-                if (window.reviewsData && window.reviewsData.length > 0) {
-                    console.log('🔄 Refreshing testimonials with new review data');
-                    reviews = window.reviewsData.map(review => ({
-                        name: review.customerName,
-                        avatar: review.customerName.split(' ').map(n => n[0]).join(''),
-                        text: review.reviewText,
-                        date: `${review.source === 'google' ? 'Live Google Review' : 'Customer Testimonial'}`,
-                        service: review.service || 'Google Business Review'
-                    }));
 
-                    // Update counter
-                    const counter = document.querySelector('.review-counter span');
-                    if (counter) {
-                        counter.textContent = `1 of ${reviews.length} reviews`;
-                    }
-
-                    // Update dots
-                    const dotsContainer = document.querySelector('.review-dots');
-                    if (dotsContainer) {
-                        dotsContainer.innerHTML = '';
-                        reviews.forEach((_, index) => {
-                            const dot = document.createElement('span');
-                            dot.className = 'review-dot';
-                            if (index === 0) dot.classList.add('active');
-                            dot.addEventListener('click', () => goToReview(index));
-                            dotsContainer.appendChild(dot);
-                        });
-                    }
-
-                    // Reset to first review
-                    currentReviewIndex = 0;
-                    updateReview(0);
-
-                    console.log('✅ Testimonials refreshed with', reviews.length, 'reviews');
-                }
-            };
-
-            let currentReviewIndex = 0;
-
-            // Update review display
-            function updateReview(index) {
-                const review = reviews[index];
-                const card = document.getElementById('reviewCard');
-
-                if (!card) return;
-
-                // Fade out
-                card.style.opacity = '0.5';
-
-                setTimeout(() => {
-                    // Update content
-                    document.getElementById('reviewerAvatar').textContent = review.avatar;
-                    document.getElementById('reviewerName').textContent = review.name;
-                    document.getElementById('reviewText').textContent = `"${review.text}"`;
-                    document.getElementById('reviewDate').textContent = review.date;
-                    document.getElementById('serviceTag').textContent = review.service;
-                    document.getElementById('currentReviewNumber').textContent = index + 1;
-
-                    // Update dots
-                    const dots = document.querySelectorAll('.dot');
-                    dots.forEach((dot, i) => {
-                        if (i === index) {
-                            dot.style.background = '#667eea';
-                            dot.classList.add('active');
-                        } else {
-                            dot.style.background = '#ddd';
-                            dot.classList.remove('active');
-                        }
-                    });
-
-                    // Fade in
-                    card.style.opacity = '1';
-                }, 150);
-            }
-
-            // Navigation functions
-            function nextReview() {
-                currentReviewIndex = (currentReviewIndex + 1) % reviews.length;
-                updateReview(currentReviewIndex);
-            }
-
-            function prevReview() {
-                currentReviewIndex = (currentReviewIndex - 1 + reviews.length) % reviews.length;
-                updateReview(currentReviewIndex);
-            }
-
-            function goToReview(index) {
-                currentReviewIndex = index;
-                updateReview(currentReviewIndex);
-            }
-
-            // Initialize
-            // Add click events to navigation buttons
-            document.getElementById('nextReview')?.addEventListener('click', nextReview);
-            document.getElementById('prevReview')?.addEventListener('click', prevReview);
-
-            // Add click events to dots
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => goToReview(index));
-            });
-
-            // Start with first review
-            updateReview(0);
-        });
     </script>
 
     <!-- Main JavaScript - Loaded at end for performance -->
