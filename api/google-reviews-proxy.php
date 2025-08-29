@@ -136,9 +136,30 @@ function handleRequest($config) {
     // Check for API errors
     if (isset($data['status']) && $data['status'] !== 'OK') {
         http_response_code(502);
-        return [
-            'error' => 'Google Places API error: ' . ($data['error_message'] ?? $data['status'])
+        $error_details = [
+            'error' => 'Google Places API error: ' . ($data['error_message'] ?? $data['status']),
+            'status' => $data['status'],
+            'place_id' => $config['place_id'],
+            'diagnostic' => 'This may indicate the business does not have a Google Business Profile or the Place ID is incorrect'
         ];
+
+        // Add specific error messages for common issues
+        switch ($data['status']) {
+            case 'NOT_FOUND':
+                $error_details['suggestion'] = 'The Place ID may be incorrect or the business may not have a Google Business Profile';
+                break;
+            case 'INVALID_REQUEST':
+                $error_details['suggestion'] = 'Check the API request parameters and Place ID format';
+                break;
+            case 'REQUEST_DENIED':
+                $error_details['suggestion'] = 'Check API key restrictions and billing settings in Google Cloud Console';
+                break;
+            case 'OVER_QUERY_LIMIT':
+                $error_details['suggestion'] = 'API quota exceeded. Check usage limits in Google Cloud Console';
+                break;
+        }
+
+        return $error_details;
     }
     
     // Process and filter reviews
