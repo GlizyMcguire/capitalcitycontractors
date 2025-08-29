@@ -270,9 +270,143 @@ function generateRecommendations() {
 // Initialize performance monitoring when script loads
 initPerformanceMonitoring();
 
+/**
+ * Cross-browser compatibility testing
+ */
+function runCrossBrowserTests() {
+    const browserTests = {
+        userAgent: navigator.userAgent,
+        browserName: getBrowserName(),
+        browserVersion: getBrowserVersion(),
+        features: {
+            webp: supportsWebP(),
+            intersectionObserver: 'IntersectionObserver' in window,
+            customProperties: CSS.supports('color', 'var(--test)'),
+            gridLayout: CSS.supports('display', 'grid'),
+            flexbox: CSS.supports('display', 'flex'),
+            es6: supportsES6(),
+            serviceWorker: 'serviceWorker' in navigator,
+            localStorage: supportsLocalStorage()
+        },
+        performance: {
+            navigationTiming: 'performance' in window && 'timing' in performance,
+            resourceTiming: 'performance' in window && 'getEntriesByType' in performance,
+            userTiming: 'performance' in window && 'mark' in performance
+        }
+    };
+
+    logMetric('Browser Compatibility', JSON.stringify(browserTests, null, 2));
+    return browserTests;
+}
+
+/**
+ * Get browser name
+ */
+function getBrowserName() {
+    const userAgent = navigator.userAgent;
+    if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) return 'Chrome';
+    if (userAgent.includes('Firefox')) return 'Firefox';
+    if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
+    if (userAgent.includes('Edg')) return 'Edge';
+    return 'Unknown';
+}
+
+/**
+ * Get browser version
+ */
+function getBrowserVersion() {
+    const userAgent = navigator.userAgent;
+    const browserName = getBrowserName();
+
+    let version = 'Unknown';
+    switch (browserName) {
+        case 'Chrome':
+            version = userAgent.match(/Chrome\/(\d+)/)?.[1] || 'Unknown';
+            break;
+        case 'Firefox':
+            version = userAgent.match(/Firefox\/(\d+)/)?.[1] || 'Unknown';
+            break;
+        case 'Safari':
+            version = userAgent.match(/Version\/(\d+)/)?.[1] || 'Unknown';
+            break;
+        case 'Edge':
+            version = userAgent.match(/Edg\/(\d+)/)?.[1] || 'Unknown';
+            break;
+    }
+
+    return version;
+}
+
+/**
+ * Check WebP support
+ */
+function supportsWebP() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1;
+    canvas.height = 1;
+    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+}
+
+/**
+ * Check ES6 support
+ */
+function supportsES6() {
+    try {
+        new Function('(a = 0) => a');
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
+/**
+ * Check localStorage support
+ */
+function supportsLocalStorage() {
+    try {
+        const test = 'test';
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+/**
+ * Test form functionality across browsers
+ */
+function testFormCompatibility() {
+    const formTests = {
+        html5Validation: 'checkValidity' in document.createElement('input'),
+        placeholderSupport: 'placeholder' in document.createElement('input'),
+        inputTypes: {
+            email: testInputType('email'),
+            tel: testInputType('tel'),
+            url: testInputType('url')
+        },
+        formData: 'FormData' in window,
+        customValidity: 'setCustomValidity' in document.createElement('input')
+    };
+
+    logMetric('Form Compatibility', JSON.stringify(formTests, null, 2));
+    return formTests;
+}
+
+/**
+ * Test input type support
+ */
+function testInputType(type) {
+    const input = document.createElement('input');
+    input.setAttribute('type', type);
+    return input.type === type;
+}
+
 // Export for external use
 window.PerformanceMonitor = {
     getMetrics: () => performanceMetrics,
     generateReport: generatePerformanceReport,
+    runCrossBrowserTests: runCrossBrowserTests,
+    testFormCompatibility: testFormCompatibility,
     config: PERFORMANCE_CONFIG
 };
