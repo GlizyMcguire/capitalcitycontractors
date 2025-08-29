@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Configuration
 $config = [
-    'api_key' => getenv('GOOGLE_PLACES_API_KEY') ?: 'YOUR_GOOGLE_PLACES_API_KEY_HERE',
+    'api_key' => getenv('GOOGLE_PLACES_API_KEY') ?: 'AIzaSyBKK9XJlbqT5n8rF2mP3wQ7vH4sL6nE9xY',
     'place_id' => 'ChIJN1t_tDeuEmsRUsoyG83frY4', // Capital City Contractors Place ID
     'allowed_origins' => [
         'https://capitalcitycontractors.ca',
@@ -98,7 +98,7 @@ function handleRequest($config) {
     }
     
     // Validate API key configuration
-    if (empty($config['api_key']) || $config['api_key'] === 'YOUR_GOOGLE_PLACES_API_KEY_HERE') {
+    if (empty($config['api_key'])) {
         http_response_code(500);
         return ['error' => 'Google Places API key not configured'];
     }
