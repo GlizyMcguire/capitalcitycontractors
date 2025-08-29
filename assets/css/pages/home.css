@@ -1053,7 +1053,7 @@
     }
 
     .service-cta-row {
-        margin-top: auto;
+        margin-top: var(--space-4);
     }
 }
 
@@ -1117,16 +1117,16 @@
     font-size: 0.95rem;
 }
 .services-detailed-grid .service-detail-card .service-features {
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-6);
 }
 .services-detailed-grid .service-detail-card .service-features li {
     font-size: 0.9rem;
     margin-bottom: var(--space-1);
 }
 
-/* Centered, compact CTA buttons */
+/* Centered, compact CTA buttons - Fixed consistent spacing */
 .services-detailed-grid .service-detail-card .service-cta-row {
-    margin-top: auto;
+    margin-top: var(--space-4);
     display: flex;
     justify-content: center;
     gap: 12px;
