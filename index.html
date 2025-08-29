@@ -72,11 +72,11 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
-    <!-- Preload Critical Resources -->
+    <!-- Critical Resource Preloads - Optimized -->
     <link rel="preload" href="assets/images/CCC logo.jpg" as="image" type="image/jpeg" fetchpriority="high">
-    <link rel="preload" href="assets/css/reset.css" as="style">
-    <link rel="preload" href="assets/css/variables.css" as="style">
-    <link rel="preload" href="assets/css/base.css" as="style">
+    <link rel="preload" href="assets/css/variables.css" as="style" fetchpriority="high">
+    <link rel="preload" href="assets/css/base.css" as="style" fetchpriority="high">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" as="style">
     <link rel="preload" href="assets/js/main.js" as="script">
 
     <!-- DNS Prefetch for External Resources -->
@@ -112,13 +112,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
 
-    <!-- Performance Optimizations -->
-    <link rel="preload" href="assets/css/variables.css" as="style">
-    <link rel="preload" href="assets/css/base.css" as="style">
-    <link rel="preload" href="assets/images/CCC logo.jpg" as="image">
+    <!-- Additional Performance Optimizations -->
     <link rel="preload" href="assets/images/aboutus.png" as="image">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="assets/js/main.js" as="script">
 
     <!-- Preload key slideshow images (optimized) for instant performance -->
     <link rel="preload" href="assets/images/optimized/pic1-1280.jpg" as="image" imagesrcset="assets/images/optimized/pic1-768.jpg 768w, assets/images/optimized/pic1-1280.jpg 1280w, assets/images/optimized/pic1-1920.jpg 1920w" imagesizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px">
@@ -654,13 +649,22 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script src="assets/js/emailjs-integration.js"></script>
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="assets/css/reset.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/variables.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/base.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/components.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/layout.css?v=20250823-4">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250824-FORCE">
+    <!-- Critical Stylesheets - Load Immediately -->
+    <link rel="stylesheet" href="assets/css/reset.css?v=20250829-PERF">
+    <link rel="stylesheet" href="assets/css/variables.css?v=20250829-PERF">
+    <link rel="stylesheet" href="assets/css/base.css?v=20250829-PERF">
+
+    <!-- Non-Critical Stylesheets - Load with Media Query Trick -->
+    <link rel="stylesheet" href="assets/css/components.css?v=20250829-PERF" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/layout.css?v=20250829-PERF" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250829-PERF" media="print" onload="this.media='all'">
+
+    <!-- Fallback for browsers without JavaScript -->
+    <noscript>
+        <link rel="stylesheet" href="assets/css/components.css?v=20250829-PERF">
+        <link rel="stylesheet" href="assets/css/layout.css?v=20250829-PERF">
+        <link rel="stylesheet" href="assets/css/pages/home.css?v=20250829-PERF">
+    </noscript>
 
 
 
@@ -844,7 +848,9 @@
             }
         });
     </script>
-    <link rel="stylesheet" href="assets/css/responsive.css?v=20250823-4">
+    <!-- Responsive CSS - Load Deferred -->
+    <link rel="stylesheet" href="assets/css/responsive.css?v=20250829-PERF" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="assets/css/responsive.css?v=20250829-PERF"></noscript>
 </head>
 <body>
     <!-- Skip Link for Accessibility -->
@@ -1851,6 +1857,9 @@
     </script>
 
     <!-- Reviews now handled by google-reviews-live.js -->
+
+    <!-- Performance Monitoring - Load First -->
+    <script src="assets/js/performance-monitor.js" defer></script>
 
     <!-- Main JavaScript - Loaded at end for performance -->
     <script src="assets/js/main.js" defer></script>
