@@ -125,7 +125,7 @@ class GoogleReviewsWidget {
     }
 
     async tryDirectGoogleAPI() {
-        const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+        const apiKey = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
         const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name,formatted_address&key=${apiKey}`;
 
         console.log('🌐 DIRECT API: Calling Google Places API...');
@@ -190,7 +190,7 @@ class GoogleReviewsWidget {
             };
 
             // Create JSONP request
-            const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+            const apiKey = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
             script.src = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}&callback=${callbackName}`;
 
             document.head.appendChild(script);
@@ -215,7 +215,7 @@ class GoogleReviewsWidget {
             'https://api.codetabs.com/v1/proxy?quest='
         ];
 
-        const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+        const apiKey = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
         const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}`;
 
         for (let i = 0; i < proxies.length; i++) {
@@ -251,7 +251,7 @@ class GoogleReviewsWidget {
         console.log('🔄 ALTERNATIVE: Trying different Google API endpoint...');
 
         // Try the findplacefromtext endpoint as alternative
-        const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+        const apiKey = 'AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8';
         const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(this.config.businessName)}&inputtype=textquery&fields=place_id,name,rating,user_ratings_total&key=${apiKey}`;
 
         console.log('🔗 Alternative URL:', url);
