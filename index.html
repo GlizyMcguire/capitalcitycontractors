@@ -365,6 +365,11 @@
     <link rel="stylesheet" href="assets/css/google-reviews-widget.css">
     <script src="assets/js/google-reviews-widget.js"></script>
 
+    <!-- EmailJS Form Integration -->
+    <link rel="stylesheet" href="assets/css/emailjs-form-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="assets/js/emailjs-integration.js"></script>
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/reset.css?v=20250823-4">
     <link rel="stylesheet" href="assets/css/variables.css?v=20250823-4">
@@ -1272,14 +1277,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <i class="fas fa-check-circle success-icon"></i>
-                <h2>Quote Request Sent!</h2>
+                <h2>Quote Request Sent Successfully!</h2>
             </div>
             <div class="modal-body">
-                <p>Thank you for your quote request. We have received your information and will contact you within 24 hours to discuss your project.</p>
-                <p class="modal-contact">For urgent matters, call us at <strong>(613) 301-1311</strong></p>
+                <p>Thank you for choosing Capital City Contractors! We've received your quote request and will respond within 24 hours with a detailed estimate.</p>
+                <div class="modal-contact">
+                    <p><strong>Need immediate assistance?</strong></p>
+                    <p><i class="fas fa-phone"></i> Call us: <a href="tel:613-301-1311">(613) 301-1311</a></p>
+                    <p><i class="fas fa-envelope"></i> Email: <a href="mailto:info@capitalcitycontractors.ca">info@capitalcitycontractors.ca</a></p>
+                    <p><i class="fas fa-clock"></i> Available: Mon-Sun 24/7</p>
+                </div>
             </div>
             <div class="modal-footer">
-                <button id="closeModal" class="btn btn-primary" type="button">Close</button>
+                <button id="closeModal" class="btn btn-primary" type="button">
+                    <i class="fas fa-times"></i> Close
+                </button>
             </div>
         </div>
     </div>
