@@ -40,38 +40,22 @@ class GoogleReviewsAPI {
     }
     
     /**
-     * Get API key from environment or configuration
-     * In production, this should be loaded from a secure configuration
+     * Get API key - SECURITY: Client-side should NOT have direct API key access
+     * All API requests go through server-side proxy for security
      */
     getApiKey() {
-        // Priority order for API key sources:
-        // 1. Server-side configuration (recommended)
-        // 2. Environment variable
-        // 3. Client-side configuration (development only)
-
-        if (typeof window !== 'undefined' && window.GOOGLE_PLACES_API_KEY) {
-            return window.GOOGLE_PLACES_API_KEY;
-        }
-
-        // No API key configured - will use fallback reviews
+        // SECURITY: Return null - API key handled server-side only
+        // This prevents client-side exposure of sensitive API credentials
         return null;
     }
 
     /**
-     * Get secret key from environment or configuration
-     * In production, this should be loaded from a secure configuration
+     * Get secret key - SECURITY: Client-side should NOT have direct secret key access
+     * All API requests go through server-side proxy for security
      */
     getSecretKey() {
-        // Priority order for secret key sources:
-        // 1. Server-side configuration (recommended)
-        // 2. Environment variable
-        // 3. Client-side configuration (development only)
-
-        if (typeof window !== 'undefined' && window.GOOGLE_PLACES_SECRET_KEY) {
-            return window.GOOGLE_PLACES_SECRET_KEY;
-        }
-
-        // No secret key configured - server-side proxy will handle this
+        // SECURITY: Return null - Secret key handled server-side only
+        // This prevents client-side exposure of sensitive API credentials
         return null;
     }
 
