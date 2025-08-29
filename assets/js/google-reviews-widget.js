@@ -67,173 +67,265 @@ class GoogleReviewsWidget {
     }
     
     async fetchReviews() {
-        console.log('📡 Fetching live Google Reviews...');
+        console.log('📡 Fetching live Google Reviews from Google Business Profile...');
         this.isLoading = true;
-        
+
         try {
-            // Use the most reliable approach: Embed-based extraction
-            const reviews = await this.fetchFromGoogleMaps();
-            
+            // CRITICAL: Only attempt live API calls - NO FALLBACK TO HARDCODED DATA
+            const reviews = await this.fetchLiveGoogleReviews();
+
             if (reviews && reviews.length > 0) {
-                console.log(`✅ Successfully fetched ${reviews.length} live reviews`);
+                console.log(`✅ SUCCESS: Fetched ${reviews.length} live reviews from Google API`);
                 this.reviews = reviews;
                 this.displayReviews();
                 this.cacheReviews();
             } else {
-                throw new Error('No reviews found');
+                throw new Error('No live reviews returned from Google API');
             }
         } catch (error) {
-            console.warn('❌ Failed to fetch live reviews:', error.message);
-            // Instead of fallback, show a message to get reviews
-            this.showGetReviewsMessage();
+            console.error('❌ CRITICAL: Failed to fetch live Google Reviews:', error.message);
+            console.error('🔍 This means the API connection is not working properly');
+
+            // Show error message instead of fallback
+            this.showAPIErrorMessage(error.message);
         }
-        
+
         this.isLoading = false;
     }
     
-    async fetchFromGoogleMaps() {
-        console.log('🔍 Attempting to fetch live Google Reviews from API...');
+    async fetchLiveGoogleReviews() {
+        console.log('🔍 LIVE API CALL: Fetching reviews from Google Business Profile...');
+        console.log('📍 Place ID:', this.config.placeId);
 
-        // Try multiple approaches to get real Google Reviews
+        // Try multiple proven methods for live Google Reviews
         const methods = [
-            () => this.tryGooglePlacesAPI(),
-            () => this.tryAlternativeProxy(),
-            () => this.tryPublicReviewsAPI(),
-            () => this.tryGoogleMapsEmbed()
+            () => this.tryDirectGoogleAPI(),
+            () => this.tryJSONPCallback(),
+            () => this.tryProxyService(),
+            () => this.tryAlternativeEndpoint()
         ];
 
         for (let i = 0; i < methods.length; i++) {
             try {
-                console.log(`🔄 Trying method ${i + 1} for live reviews...`);
+                console.log(`🔄 ATTEMPT ${i + 1}: Trying live API method...`);
                 const reviews = await methods[i]();
 
                 if (reviews && reviews.length > 0) {
-                    console.log(`✅ Success! Fetched ${reviews.length} live reviews using method ${i + 1}`);
-                    return reviews;
+                    console.log(`✅ SUCCESS METHOD ${i + 1}: Fetched ${reviews.length} live reviews!`);
+                    console.log('📊 Sample review:', reviews[0]);
+                    return this.validateAndFormatReviews(reviews);
                 }
             } catch (error) {
-                console.warn(`❌ Method ${i + 1} failed:`, error.message);
+                console.warn(`❌ METHOD ${i + 1} FAILED:`, error.message);
             }
         }
 
-        // If all methods fail, throw error to trigger fallback
-        throw new Error('Unable to fetch live reviews from Google Business Profile');
+        // If all methods fail, this is a real API connectivity issue
+        throw new Error('All live API methods failed - Google Reviews API not accessible');
     }
 
-    async tryGooglePlacesAPI() {
+    async tryDirectGoogleAPI() {
         const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
-        const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}`;
+        const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name,formatted_address&key=${apiKey}`;
 
-        console.log('🌐 Trying direct Google Places API...');
+        console.log('🌐 DIRECT API: Calling Google Places API...');
+        console.log('🔗 URL:', url);
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('📊 API Response:', data);
+
+        if (data.status === 'OK' && data.result) {
+            if (data.result.reviews && data.result.reviews.length > 0) {
+                console.log(`✅ FOUND ${data.result.reviews.length} reviews in API response`);
+                return data.result.reviews;
+            } else {
+                console.warn('⚠️ API returned OK but no reviews found');
+                throw new Error('No reviews in API response');
+            }
+        }
+
+        throw new Error(`Google Places API error: ${data.status} - ${data.error_message || 'Unknown error'}`);
+    }
+
+    async tryJSONPCallback() {
+        console.log('🔄 JSONP: Trying callback approach...');
+
+        return new Promise((resolve, reject) => {
+            const callbackName = 'googleReviewsCallback_' + Date.now();
+            const script = document.createElement('script');
+
+            // Set up callback function
+            window[callbackName] = (data) => {
+                console.log('📊 JSONP Response:', data);
+
+                // Clean up
+                document.head.removeChild(script);
+                delete window[callbackName];
+
+                if (data && data.result && data.result.reviews) {
+                    console.log(`✅ JSONP SUCCESS: Found ${data.result.reviews.length} reviews`);
+                    resolve(data.result.reviews);
+                } else {
+                    reject(new Error('JSONP: No reviews in response'));
+                }
+            };
+
+            // Handle errors
+            script.onerror = () => {
+                document.head.removeChild(script);
+                delete window[callbackName];
+                reject(new Error('JSONP script failed to load'));
+            };
+
+            // Create JSONP request
+            const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+            script.src = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}&callback=${callbackName}`;
+
+            document.head.appendChild(script);
+
+            // Timeout after 15 seconds
+            setTimeout(() => {
+                if (window[callbackName]) {
+                    document.head.removeChild(script);
+                    delete window[callbackName];
+                    reject(new Error('JSONP request timeout'));
+                }
+            }, 15000);
+        });
+    }
+
+    async tryProxyService() {
+        console.log('🔄 PROXY: Trying CORS proxy service...');
+
+        const proxies = [
+            'https://api.allorigins.win/raw?url=',
+            'https://cors-anywhere.herokuapp.com/',
+            'https://api.codetabs.com/v1/proxy?quest='
+        ];
+
+        const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}`;
+
+        for (let i = 0; i < proxies.length; i++) {
+            try {
+                console.log(`🔄 Trying proxy ${i + 1}: ${proxies[i]}`);
+
+                const proxyUrl = proxies[i] + encodeURIComponent(apiUrl);
+                const response = await fetch(proxyUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`📊 Proxy ${i + 1} response:`, data);
+
+                    if (data.result && data.result.reviews) {
+                        console.log(`✅ PROXY ${i + 1} SUCCESS: Found reviews`);
+                        return data.result.reviews;
+                    }
+                }
+            } catch (error) {
+                console.warn(`❌ Proxy ${i + 1} failed:`, error.message);
+            }
+        }
+
+        throw new Error('All proxy services failed');
+    }
+
+    async tryAlternativeEndpoint() {
+        console.log('🔄 ALTERNATIVE: Trying different Google API endpoint...');
+
+        // Try the findplacefromtext endpoint as alternative
+        const apiKey = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+        const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(this.config.businessName)}&inputtype=textquery&fields=place_id,name,rating,user_ratings_total&key=${apiKey}`;
+
+        console.log('🔗 Alternative URL:', url);
 
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.status === 'OK' && data.result && data.result.reviews) {
-            return data.result.reviews.map(review => ({
-                author_name: review.author_name,
-                rating: review.rating,
-                text: review.text,
-                time: review.time,
-                relative_time_description: review.relative_time_description,
-                profile_photo_url: review.profile_photo_url
-            }));
-        }
+        console.log('📊 Alternative API response:', data);
 
-        throw new Error(`Google Places API error: ${data.status}`);
-    }
+        if (data.status === 'OK' && data.candidates && data.candidates.length > 0) {
+            const place = data.candidates[0];
 
-    async tryAlternativeProxy() {
-        console.log('🔄 Trying CORS proxy approach...');
+            // Now get details with reviews
+            const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}`;
 
-        const proxyUrl = 'https://api.allorigins.win/raw?url=';
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s`;
+            const detailsResponse = await fetch(detailsUrl);
+            const detailsData = await detailsResponse.json();
 
-        const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
-        const data = await response.json();
-
-        if (data.result && data.result.reviews) {
-            return data.result.reviews;
-        }
-
-        throw new Error('Proxy method failed');
-    }
-
-    async tryPublicReviewsAPI() {
-        console.log('🔄 Trying public reviews API...');
-
-        // Try alternative approach using a different endpoint
-        const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews&key=AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s`;
-
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                mode: 'cors'
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.result && data.result.reviews) {
-                    return data.result.reviews;
-                }
+            if (detailsData.status === 'OK' && detailsData.result && detailsData.result.reviews) {
+                console.log(`✅ ALTERNATIVE SUCCESS: Found ${detailsData.result.reviews.length} reviews`);
+                return detailsData.result.reviews;
             }
-        } catch (error) {
-            console.warn('Public API method failed:', error);
         }
 
-        throw new Error('Public reviews API failed');
+        throw new Error('Alternative endpoint failed');
     }
 
-    async tryGoogleMapsEmbed() {
-        console.log('🔄 Trying Google Maps embed approach...');
+    validateAndFormatReviews(reviews) {
+        console.log('🔍 VALIDATING: Checking review data quality...');
 
-        // This approach would extract reviews from the Google Maps embed
-        // For now, we'll use the actual reviews from your Google Business Profile
-        // that we can verify exist
+        if (!Array.isArray(reviews) || reviews.length === 0) {
+            throw new Error('Invalid reviews data: not an array or empty');
+        }
 
-        // These are your actual Google Business Profile reviews
-        // In a production environment, these would be fetched dynamically
-        const actualReviews = [
-            {
-                author_name: "Moe Chamma",
-                rating: 5,
-                text: "I had my rental unit renovated by CCC and was stunned by the quality and service they provided. Adam is a great person to deal with and he provided 100% customer satisfaction at all time. Workmanship was excellent and I Highly recommend for any of your upcoming projects!",
-                time: Math.floor(Date.now() / 1000) - 7776000, // ~3 months ago
-                relative_time_description: "3 months ago",
-                profile_photo_url: null
-            },
-            {
-                author_name: "Tamer Salem",
-                rating: 5,
-                text: "Hired this company to paint my house before selling it, and they did a fantastic job. I would highly recommend them for professionalism and fair pricing",
-                time: Math.floor(Date.now() / 1000) - 7776000, // ~3 months ago
-                relative_time_description: "3 months ago",
-                profile_photo_url: null
-            },
-            {
-                author_name: "Adam Zein",
-                rating: 5,
-                text: "Had them do my whole basement after a flooding and they were great. Great prices and great turn around time.",
-                time: Math.floor(Date.now() / 1000) - 31536000, // ~1 year ago
-                relative_time_description: "1 year ago",
-                profile_photo_url: null
-            },
-            {
-                author_name: "Al Cham",
-                rating: 5,
-                text: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
-                time: Math.floor(Date.now() / 1000) - 31536000, // ~1 year ago
-                relative_time_description: "1 year ago",
-                profile_photo_url: null
+        const validReviews = reviews.filter(review => {
+            // Validate required fields
+            const hasRequiredFields = review.author_name &&
+                                    review.rating &&
+                                    review.text &&
+                                    review.time;
+
+            if (!hasRequiredFields) {
+                console.warn('⚠️ Skipping invalid review:', review);
+                return false;
             }
-        ];
 
-        console.log('✅ Using verified Google Business Profile reviews');
-        return actualReviews;
+            return true;
+        }).map(review => ({
+            author_name: review.author_name,
+            rating: parseInt(review.rating),
+            text: review.text,
+            time: parseInt(review.time),
+            relative_time_description: review.relative_time_description || this.formatTimeAgo(review.time),
+            profile_photo_url: review.profile_photo_url || null
+        }));
+
+        console.log(`✅ VALIDATED: ${validReviews.length} valid reviews out of ${reviews.length} total`);
+
+        if (validReviews.length === 0) {
+            throw new Error('No valid reviews after validation');
+        }
+
+        return validReviews.slice(0, this.config.maxReviews);
+    }
+
+    formatTimeAgo(timestamp) {
+        const now = Math.floor(Date.now() / 1000);
+        const diff = now - timestamp;
+
+        if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+        if (diff < 2592000) return `${Math.floor(diff / 86400)} days ago`;
+        if (diff < 31536000) return `${Math.floor(diff / 2592000)} months ago`;
+        return `${Math.floor(diff / 31536000)} years ago`;
     }
     
     displayReviews() {
@@ -403,6 +495,37 @@ class GoogleReviewsWidget {
         }
     }
     
+    showAPIErrorMessage(errorDetails) {
+        const container = this.findTestimonialsContainer();
+        if (container) {
+            container.innerHTML = `
+                <div class="api-error-message">
+                    <div class="error-content">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Google Reviews API Error</h3>
+                        <p><strong>Unable to fetch live reviews from Google Business Profile</strong></p>
+                        <div class="error-details">
+                            <p><strong>Place ID:</strong> ${this.config.placeId}</p>
+                            <p><strong>Error:</strong> ${errorDetails}</p>
+                            <p><strong>Business:</strong> ${this.config.businessName}</p>
+                        </div>
+                        <div class="error-actions">
+                            <button onclick="window.googleReviewsWidget.refresh()" class="btn btn-primary">
+                                <i class="fas fa-sync-alt"></i> Retry API Call
+                            </button>
+                            <a href="${this.config.businessUrl}" target="_blank" class="btn btn-secondary">
+                                <i class="fab fa-google"></i> View Reviews on Google
+                            </a>
+                        </div>
+                        <div class="debug-info">
+                            <p><strong>Debug Info:</strong> Check browser console for detailed API logs</p>
+                            <p><strong>Expected:</strong> This should display live Google Business reviews</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
     showGetReviewsMessage() {
         const container = this.findTestimonialsContainer();
         if (container) {
