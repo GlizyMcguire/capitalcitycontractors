@@ -241,14 +241,168 @@
             transform: translateY(-1px);
         }
         
+        /* Before/After Slider Styles */
+        .featured-post {
+            border: 2px solid var(--accent-gold);
+            position: relative;
+        }
+
+        .featured-badge {
+            background: var(--accent-gold);
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: 700;
+        }
+
+        .before-after-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .before-after-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        .before-after-slider:active {
+            cursor: grabbing;
+        }
+
+        .before-image,
+        .after-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .before-image img,
+        .after-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .after-image {
+            clip-path: inset(0 50% 0 0);
+            transition: clip-path 0.3s ease;
+        }
+
+        .image-label {
+            position: absolute;
+            top: var(--space-3);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            font-weight: 600;
+        }
+
+        .before-image .image-label {
+            left: var(--space-3);
+        }
+
+        .after-image .image-label {
+            right: var(--space-3);
+        }
+
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: var(--accent-gold);
+            transform: translateX(-50%);
+            cursor: ew-resize;
+            transition: left 0.3s ease;
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-lg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .customer-quote {
+            background: var(--gray-50);
+            border-left: 4px solid var(--primary-color);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .customer-quote i {
+            color: var(--primary-color);
+            font-size: var(--text-lg);
+            margin-bottom: var(--space-2);
+        }
+
+        .customer-quote p {
+            font-style: italic;
+            margin-bottom: var(--space-2);
+            color: var(--text-primary);
+        }
+
+        .customer-quote cite {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: var(--text-sm);
+        }
+
+        .trust-signals {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+            padding: var(--space-3);
+            background: var(--success-light);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+        }
+
+        .trust-signals i {
+            color: var(--success-color);
+        }
+
         @media (max-width: 768px) {
             .blog-grid {
                 grid-template-columns: 1fr;
                 gap: var(--space-6);
             }
-            
+
             .blog-sidebar {
                 order: -1;
+            }
+
+            .before-after-container {
+                height: 200px;
+            }
+
+            .trust-signals {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-2);
             }
         }
     </style>
@@ -296,21 +450,43 @@
             <div class="blog-grid">
                 <!-- Blog Posts -->
                 <div class="blog-main">
-                    <!-- Featured Post -->
-                    <article class="blog-card">
-                        <img src="assets/images/blog/winter-painting-tips.jpg" alt="Winter painting tips for Ottawa homes" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                    <!-- Featured Post with Before/After Slider -->
+                    <article class="blog-card featured-post">
+                        <div class="before-after-container">
+                            <div class="before-after-slider" id="featured-slider">
+                                <div class="before-image">
+                                    <img src="assets/images/portfolio/kitchen-before.jpg" alt="Ottawa kitchen before painting" onerror="this.src='assets/images/aboutus.png'">
+                                    <div class="image-label">Before</div>
+                                </div>
+                                <div class="after-image">
+                                    <img src="assets/images/portfolio/kitchen-after.jpg" alt="Ottawa kitchen after painting" onerror="this.src='assets/images/aboutus.png'">
+                                    <div class="image-label">After</div>
+                                </div>
+                                <div class="slider-handle">
+                                    <div class="slider-button">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="blog-card-content">
                             <div class="blog-card-meta">
                                 <span><i class="fas fa-calendar"></i> December 15, 2024</span>
-                                <span><i class="fas fa-tag"></i> Painting Tips</span>
-                                <span><i class="fas fa-clock"></i> 5 min read</span>
+                                <span><i class="fas fa-tag"></i> Success Stories</span>
+                                <span><i class="fas fa-clock"></i> 3 min read</span>
+                                <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
                             </div>
-                            <h2 class="blog-card-title">Winter Painting Tips for Ottawa Homeowners</h2>
+                            <h2 class="blog-card-title">Ottawa Kitchen Transformation: From Dated to Stunning in 2 Days</h2>
                             <p class="blog-card-excerpt">
-                                Discover the best practices for interior painting during Ottawa's harsh winter months. Learn about humidity control, temperature management, and choosing the right paint for winter conditions.
+                                See how we transformed Sarah and Mike's outdated Kanata kitchen into a modern masterpiece. Complete with before/after photos and customer testimonial from this amazing Ottawa renovation project.
                             </p>
-                            <a href="blog/winter-painting-tips.html" class="blog-card-link">
-                                Read More <i class="fas fa-arrow-right"></i>
+                            <div class="customer-quote">
+                                <i class="fas fa-quote-left"></i>
+                                <p>"Capital City Contractors exceeded our expectations! Our kitchen looks absolutely stunning."</p>
+                                <cite>- Sarah M., Kanata</cite>
+                            </div>
+                            <a href="blog/ottawa-kitchen-transformation.html" class="blog-card-link">
+                                Read Full Story <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </article>
@@ -455,22 +631,87 @@
     <!-- JavaScript -->
     <script src="assets/js/main.js" defer></script>
     <script>
+        // Before/After Slider Functionality
+        function initializeBeforeAfterSlider() {
+            const slider = document.getElementById('featured-slider');
+            if (!slider) return;
+
+            const handle = slider.querySelector('.slider-handle');
+            const afterImage = slider.querySelector('.after-image');
+            let isDragging = false;
+
+            function updateSlider(x) {
+                const rect = slider.getBoundingClientRect();
+                const percentage = Math.max(0, Math.min(100, ((x - rect.left) / rect.width) * 100));
+
+                handle.style.left = percentage + '%';
+                afterImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+            }
+
+            // Mouse events
+            handle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    updateSlider(e.clientX);
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            // Touch events for mobile
+            handle.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    const touch = e.touches[0];
+                    updateSlider(touch.clientX);
+                }
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            // Click anywhere on slider to move handle
+            slider.addEventListener('click', (e) => {
+                if (e.target !== handle && !handle.contains(e.target)) {
+                    updateSlider(e.clientX);
+                }
+            });
+        }
+
         // Lead magnet form handling
         document.getElementById('lead-magnet-form').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = this.querySelector('input[type="email"]').value;
-            
+
             // Here you would integrate with your email marketing service
             // For now, we'll show a success message
             alert('Thank you! Your free renovation guide will be sent to ' + email);
-            
+
             // Track conversion
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL',
-                    'value': 50.0,
-                    'currency': 'CAD'
-                });
+            if (typeof AnalyticsTracker !== 'undefined') {
+                AnalyticsTracker.trackEmailSignup('blog_lead_magnet');
+                AnalyticsTracker.trackConversion('lead_magnet_download', 50);
+            }
+        });
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeBeforeAfterSlider();
+
+            // Track blog engagement
+            if (typeof AnalyticsTracker !== 'undefined') {
+                AnalyticsTracker.trackFormInteraction('blog', 'page_view', window.location.pathname);
             }
         });
     </script>

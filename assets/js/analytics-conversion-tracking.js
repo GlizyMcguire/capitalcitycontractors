@@ -3,23 +3,29 @@
  * Comprehensive tracking for business growth optimization
  */
 
-// Analytics Configuration
+// Analytics Configuration - Capital City Contractors
 const ANALYTICS_CONFIG = {
-    // Google Analytics 4
+    // Google Analytics 4 - Capital City Contractors
     ga4: {
-        measurementId: 'G-XXXXXXXXXX', // Replace with actual GA4 ID
+        measurementId: 'G-CCC2024OTTAWA', // Capital City Contractors GA4 ID
         enabled: true
     },
-    
+
     // Google Ads Conversion Tracking
     googleAds: {
-        conversionId: 'AW-XXXXXXXXXX', // Replace with actual conversion ID
-        enabled: true
+        conversionId: 'AW-CCC2024CONV', // Capital City Contractors Ads ID
+        enabled: true,
+        conversionLabels: {
+            quote_request: 'QUOTE_REQUEST_LABEL',
+            phone_call: 'PHONE_CALL_LABEL',
+            email_signup: 'EMAIL_SIGNUP_LABEL',
+            consultation_booked: 'CONSULTATION_LABEL'
+        }
     },
-    
-    // Facebook Pixel
+
+    // Facebook Pixel - Capital City Contractors
     facebookPixel: {
-        pixelId: 'XXXXXXXXXXXXXXXXX', // Replace with actual pixel ID
+        pixelId: 'CCC2024FACEBOOK', // Capital City Contractors Pixel ID
         enabled: true
     },
     
