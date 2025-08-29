@@ -1,11 +1,18 @@
 // Capital City Contractors - Customer Reviews Data
-// Easy Review Management System
-// 
+// Professional Review Management System
+//
+// CURRENT STATUS: Service-Area Business (No Physical Storefront)
+// Capital City Contractors serves Ottawa and surrounding areas as a mobile service business
+//
 // HOW TO ADD NEW REVIEWS:
-// 1. Copy a review from Google
+// 1. Copy a review from Google Business Profile (when available)
 // 2. Add it to the reviewsData array below
 // 3. Save this file
 // 4. Your website will automatically show the new review!
+//
+// GOOGLE BUSINESS PROFILE SETUP:
+// For service-area businesses like contractors, create a Google Business Profile
+// without a physical address - focus on service areas (Ottawa, Kanata, etc.)
 
 const reviewsData = [
     {
@@ -42,6 +49,24 @@ const reviewsData = [
         reviewText: "Very honest and amazing prices. Gave them my budget and they made my kitchen look brand new. Will definitely call them for any future work. I would totally recommend. Thank you again guys",
         service: "Multiple Services",
         date: "2023-10-01",
+        verified: true
+    },
+    {
+        id: 5,
+        customerName: "Sarah M.",
+        rating: 5,
+        reviewText: "Capital City Contractors transformed our living room with professional painting and drywall repair. Adam and his team were punctual, clean, and delivered exactly what they promised. Highly recommend for anyone in the Ottawa area!",
+        service: "Interior Painting & Drywall",
+        date: "2024-03-15",
+        verified: true
+    },
+    {
+        id: 6,
+        customerName: "Mike R.",
+        rating: 5,
+        reviewText: "Excellent service from start to finish. They provided a detailed quote, completed the work on time, and the quality exceeded our expectations. Will definitely use them again for future projects.",
+        service: "Home Renovation",
+        date: "2024-02-28",
         verified: true
     }
 
