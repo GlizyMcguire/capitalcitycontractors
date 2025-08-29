@@ -1052,6 +1052,11 @@
         justify-content: flex-start;
     }
 
+    /* Specific fix for Taping & Mudding card (3rd card) bullet point alignment */
+    .service-detail-card:nth-child(3) .service-features {
+        margin-top: var(--space-6);
+    }
+
     .service-cta-row {
         margin-top: var(--space-4);
     }
