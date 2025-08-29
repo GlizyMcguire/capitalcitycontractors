@@ -6,6 +6,7 @@
 
 // Configuration
 $api_key = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+$secret_key = '1t1Jpxqi2j3TufvwV4QjWV376KU=';
 $place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'; // Current Place ID being used
 
 // Business Profile Information provided

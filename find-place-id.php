@@ -5,6 +5,7 @@
  */
 
 $api_key = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
+$secret_key = '1t1Jpxqi2j3TufvwV4QjWV376KU=';
 
 echo "<h1>🔍 Place ID Finder for Capital City Contractors</h1>\n";
 echo "<p>This tool searches for the correct Google Places API Place ID for Capital City Contractors.</p>\n";
@@ -20,6 +21,9 @@ $business_info = [
 ];
 
 echo "<div style='background: #f0f0f0; padding: 15px; margin: 15px 0; border-radius: 5px;'>\n";
+echo "<h3>API Configuration:</h3>\n";
+echo "<p><strong>API Key:</strong> " . substr($api_key, 0, 10) . "...</p>\n";
+echo "<p><strong>Secret Key:</strong> " . substr($secret_key, 0, 10) . "...</p>\n";
 echo "<h3>Known Business Information:</h3>\n";
 echo "<p><strong>Name:</strong> {$business_info['name']}</p>\n";
 echo "<p><strong>Phone:</strong> {$business_info['phone']}</p>\n";
