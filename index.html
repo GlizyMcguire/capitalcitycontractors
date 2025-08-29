@@ -358,6 +358,9 @@
     <!-- Google Reviews API Integration -->
     <script src="assets/js/google-reviews.js"></script>
 
+    <!-- Client-Side Google Reviews (No PHP Required) -->
+    <script src="assets/js/google-reviews-client.js"></script>
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/css/reset.css?v=20250823-4">
     <link rel="stylesheet" href="assets/css/variables.css?v=20250823-4">
@@ -1457,8 +1460,8 @@
     <!-- Review Navigation with Auto-Rotation -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Review data
-            const reviews = [
+            // Dynamic review data - will be updated by Google Reviews integration
+            let reviews = [
                 {
                     name: "Moe Chamma",
                     avatar: "MC",
@@ -1488,6 +1491,45 @@
                     service: "Multiple Services"
                 }
             ];
+
+            // Function to refresh testimonials with new data
+            window.refreshTestimonials = function() {
+                if (window.reviewsData && window.reviewsData.length > 0) {
+                    console.log('🔄 Refreshing testimonials with new review data');
+                    reviews = window.reviewsData.map(review => ({
+                        name: review.customerName,
+                        avatar: review.customerName.split(' ').map(n => n[0]).join(''),
+                        text: review.reviewText,
+                        date: `${review.source === 'google' ? 'Live Google Review' : 'Customer Testimonial'}`,
+                        service: review.service || 'Google Business Review'
+                    }));
+
+                    // Update counter
+                    const counter = document.querySelector('.review-counter span');
+                    if (counter) {
+                        counter.textContent = `1 of ${reviews.length} reviews`;
+                    }
+
+                    // Update dots
+                    const dotsContainer = document.querySelector('.review-dots');
+                    if (dotsContainer) {
+                        dotsContainer.innerHTML = '';
+                        reviews.forEach((_, index) => {
+                            const dot = document.createElement('span');
+                            dot.className = 'review-dot';
+                            if (index === 0) dot.classList.add('active');
+                            dot.addEventListener('click', () => goToReview(index));
+                            dotsContainer.appendChild(dot);
+                        });
+                    }
+
+                    // Reset to first review
+                    currentReviewIndex = 0;
+                    updateReview(0);
+
+                    console.log('✅ Testimonials refreshed with', reviews.length, 'reviews');
+                }
+            };
 
             let currentReviewIndex = 0;
 
