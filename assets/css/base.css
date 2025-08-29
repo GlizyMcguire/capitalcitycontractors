@@ -302,44 +302,14 @@ select:focus-visible {
     animation: scaleIn 0.6s ease-out forwards;
 }
 
-/* Enhanced Form Styles - Phase 2 */
-.form-group {
+/* Enhanced Form Styles - Phase 2 (Non-conflicting) */
+.form-enhanced {
     position: relative;
-    margin-bottom: var(--space-4);
 }
 
-.form-group.focused label {
+.form-enhanced.focused label {
     transform: translateY(-20px) scale(0.85);
     color: var(--primary-color);
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid var(--gray-300);
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
-    transform: translateY(-1px);
-}
-
-.form-group input.error,
-.form-group textarea.error,
-.form-group select.error {
-    border-color: var(--error-color, #ef4444);
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
-}
-
-.form-group input.valid,
-.form-group textarea.valid,
-.form-group select.valid {
-    border-color: var(--success-color, #10b981);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
 }
 
 .error-message {
