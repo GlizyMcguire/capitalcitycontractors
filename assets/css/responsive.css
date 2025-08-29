@@ -448,36 +448,7 @@
         transform: translateY(-50%) scale(0.95) !important;
     }
 
-    /* SEO Content Section - Mobile Optimization */
-    .seo-content-grid {
-        grid-template-columns: 1fr !important;
-        gap: var(--space-4) !important;
-    }
 
-    .seo-content-section h2 {
-        font-size: var(--text-xl) !important;
-    }
-
-    .service-areas {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* Local SEO Content Section - Mobile Optimization */
-    section[style*="grid-template-columns: 1fr 1fr 1fr"] {
-        display: block !important;
-    }
-
-    section[style*="grid-template-columns: 1fr 1fr 1fr"] > div {
-        margin-bottom: var(--space-4) !important;
-    }
-
-    div[style*="grid-template-columns: 1fr 1fr"] {
-        display: block !important;
-    }
-
-    div[style*="grid-template-columns: 1fr 1fr"] > div {
-        margin-bottom: var(--space-4) !important;
-    }
     
     /* Mobile CTA */
     .cta-title {
