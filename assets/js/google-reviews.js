@@ -61,18 +61,13 @@ class GoogleReviewsAPI {
 
     /**
      * Get the correct Place ID for Capital City Contractors
-     * This method allows for easy testing of different Place IDs
+     * VERIFIED Place ID from Google Maps URL
      */
     getCorrectPlaceId() {
-        // Potential Place IDs to test (will be updated based on search results)
-        const potentialPlaceIds = [
-            'ChIJN1t_tDeuEmsRUsoyG83frY4', // Current (likely incorrect)
-            // Add more Place IDs here as we discover them
-        ];
-
-        // For now, return the first one, but this can be updated
-        // when we find the correct Place ID through testing
-        return potentialPlaceIds[0];
+        // CORRECT Place ID for Capital City Contractors
+        // Source: https://www.google.com/maps/place/Capital+City+Contractors/
+        // This is the verified Google Business Profile Place ID
+        return 'ChIJAZyYC-K4a04RRe9kJq7UZKo';
     }
     
     /**
