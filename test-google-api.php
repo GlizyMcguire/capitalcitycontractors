@@ -4,10 +4,25 @@
  * Tests the API key and Place ID to diagnose review fetching issues
  */
 
-// Direct Configuration - WORKING IMMEDIATELY
-$api_key = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
-$secret_key = '1t1Jpxqi2j3TufvwV4QjWV376KU=';
+// SECURE Configuration - Load from secure file
+$secure_config_file = __DIR__ . '/config/api-keys.php';
+$api_key = null;
+$secret_key = null;
+
+if (file_exists($secure_config_file)) {
+    $keys = include $secure_config_file;
+    $api_key = $keys['api_key'] ?? null;
+    $secret_key = $keys['secret_key'] ?? null;
+}
+
 $place_id = 'ChIJN1t_tDeuEmsRUsoyG83frY4'; // Current Place ID being used
+
+// Security check
+if (!$api_key || !$secret_key) {
+    echo "<h2 style='color: red;'>🔐 Secure API Configuration Required</h2>\n";
+    echo "<p>Create <code>config/api-keys.php</code> with your API keys for security.</p>\n";
+    exit;
+}
 
 // Business Profile Information provided
 $business_profile_id = '3886356099819080585';

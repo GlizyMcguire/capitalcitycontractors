@@ -4,13 +4,37 @@
  * Uses Google Places API to find the correct Place ID
  */
 
-// Direct API key configuration - WORKING IMMEDIATELY
-$api_key = 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s';
-$secret_key = '1t1Jpxqi2j3TufvwV4QjWV376KU=';
+// SECURE API key loading - NO HARDCODED KEYS
+$api_key = null;
+$secret_key = null;
+
+// Try to load from secure configuration file
+$secure_config_file = __DIR__ . '/config/api-keys.php';
+if (file_exists($secure_config_file)) {
+    $keys = include $secure_config_file;
+    $api_key = $keys['api_key'] ?? null;
+    $secret_key = $keys['secret_key'] ?? null;
+}
+
+// If no secure config, show setup instructions
+if (!$api_key || !$secret_key) {
+    echo "<div style='background: #fff3cd; color: #856404; padding: 20px; border: 1px solid #ffeaa7; border-radius: 5px; margin: 20px 0;'>\n";
+    echo "<h2>🔐 Secure API Configuration Required</h2>\n";
+    echo "<p><strong>For security, API keys must be configured in a separate file.</strong></p>\n";
+    echo "<h3>Quick Setup:</h3>\n";
+    echo "<ol>\n";
+    echo "<li>Create file: <code>config/api-keys.php</code></li>\n";
+    echo "<li>Add this content:</li>\n";
+    echo "</ol>\n";
+    echo "<pre style='background: #f8f9fa; padding: 10px; border-radius: 5px;'>&lt;?php\nreturn [\n    'api_key' => 'YOUR_API_KEY_HERE',\n    'secret_key' => 'YOUR_SECRET_KEY_HERE'\n];\n?&gt;</pre>\n";
+    echo "<p><strong>This keeps your API keys secure and out of version control.</strong></p>\n";
+    echo "</div>\n";
+    exit;
+}
 
 echo "<div style='background: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; border-radius: 5px; margin: 15px 0;'>\n";
-echo "<h3>✅ API Keys Configured and Ready</h3>\n";
-echo "<p>Using your Google Places API credentials to find the correct Place ID for Capital City Contractors.</p>\n";
+echo "<h3>✅ API Keys Loaded Securely</h3>\n";
+echo "<p>Using secure configuration to find the correct Place ID for Capital City Contractors.</p>\n";
 echo "</div>\n";
 
 echo "<h1>🔍 Place ID Finder for Capital City Contractors</h1>\n";

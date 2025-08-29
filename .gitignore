@@ -1,5 +1,6 @@
 # Security - API Keys and Sensitive Configuration
 config/secure-keys.php
+config/api-keys.php
 *.key
 *.pem
 .env

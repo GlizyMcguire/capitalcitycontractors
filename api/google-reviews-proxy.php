@@ -17,6 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Load API keys from secure configuration file
+function loadSecureKeys() {
+    $secure_config_file = __DIR__ . '/../config/api-keys.php';
+
+    if (file_exists($secure_config_file)) {
+        $keys = include $secure_config_file;
+        if (isset($keys['api_key']) && isset($keys['secret_key'])) {
+            return $keys;
+        }
+    }
+
+    // Return null keys if not found - will trigger error handling
+    return ['api_key' => null, 'secret_key' => null];
+}
+
 // Secure API Key Loading Functions
 function getSecureApiKey() {
     // Priority order for secure API key loading:
@@ -88,10 +103,11 @@ function getCorrectPlaceId() {
     return $potential_place_ids[0];
 }
 
-// Direct Configuration - WORKING IMMEDIATELY
+// SECURE Configuration - Load from secure file
+$secure_keys = loadSecureKeys();
 $config = [
-    'api_key' => 'AIzaSyCoeZ8b6mDNFaLVbqTx5H9FgNjpTBbWW1s',
-    'secret_key' => '1t1Jpxqi2j3TufvwV4QjWV376KU=',
+    'api_key' => $secure_keys['api_key'],
+    'secret_key' => $secure_keys['secret_key'],
     'place_id' => getCorrectPlaceId(), // Capital City Contractors Place ID
     'business_profile_id' => '3886356099819080585',
     'store_code' => '15922219453360051580',
