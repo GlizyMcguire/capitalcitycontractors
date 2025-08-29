@@ -1458,24 +1458,39 @@
                 heroVideo.style.mozUserSelect = 'none';
                 heroVideo.style.msUserSelect = 'none';
 
-                // Disable context menu
-                heroVideo.addEventListener('contextmenu', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
-
-                // Disable all click events
-                heroVideo.addEventListener('click', function(e) {
+                // FORCE disable all interactions - especially on mobile
+                const disableInteraction = function(e) {
                     e.preventDefault();
                     e.stopPropagation();
+                    e.stopImmediatePropagation();
                     return false;
-                });
+                };
+
+                // Disable context menu
+                heroVideo.addEventListener('contextmenu', disableInteraction, { passive: false });
+
+                // Disable all click events
+                heroVideo.addEventListener('click', disableInteraction, { passive: false });
+                heroVideo.addEventListener('mousedown', disableInteraction, { passive: false });
+                heroVideo.addEventListener('mouseup', disableInteraction, { passive: false });
+
+                // Disable touch events on mobile
+                heroVideo.addEventListener('touchstart', disableInteraction, { passive: false });
+                heroVideo.addEventListener('touchend', disableInteraction, { passive: false });
+                heroVideo.addEventListener('touchmove', disableInteraction, { passive: false });
+                heroVideo.addEventListener('touchcancel', disableInteraction, { passive: false });
 
                 // Disable keyboard interactions
-                heroVideo.addEventListener('keydown', function(e) {
-                    e.preventDefault();
-                    return false;
-                });
+                heroVideo.addEventListener('keydown', disableInteraction, { passive: false });
+                heroVideo.addEventListener('keyup', disableInteraction, { passive: false });
+
+                // Disable drag events
+                heroVideo.addEventListener('dragstart', disableInteraction, { passive: false });
+                heroVideo.addEventListener('drag', disableInteraction, { passive: false });
+                heroVideo.addEventListener('dragend', disableInteraction, { passive: false });
+
+                // Disable selection
+                heroVideo.addEventListener('selectstart', disableInteraction, { passive: false });
 
                 // Force play if not already playing
                 heroVideo.play().catch(function(error) {
@@ -1487,6 +1502,23 @@
                     heroVideo.currentTime = 0;
                     heroVideo.play();
                 });
+
+                // Create invisible overlay on mobile to prevent any interaction
+                if (window.innerWidth <= 768) {
+                    const overlay = document.createElement('div');
+                    overlay.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        z-index: 10;
+                        pointer-events: none;
+                        background: transparent;
+                    `;
+                    heroVideo.parentElement.style.position = 'relative';
+                    heroVideo.parentElement.appendChild(overlay);
+                }
 
                 // Monitor and maintain autoplay
                 setInterval(function() {

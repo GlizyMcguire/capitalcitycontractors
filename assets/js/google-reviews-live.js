@@ -30,11 +30,61 @@ class GoogleReviewsLive {
     async init() {
         try {
             console.log('📡 STARTING: Live Google Reviews API fetch...');
+
+            // Clear any existing hardcoded content first
+            this.clearHardcodedContent();
+
+            // Show loading state
+            this.showLoadingState();
+
             await this.fetchLiveReviews();
         } catch (error) {
             console.error('❌ CRITICAL ERROR: Google Reviews API integration failed:', error);
             this.handleAPIFailure(error);
         }
+    }
+
+    clearHardcodedContent() {
+        console.log('🗑️ CLEARING: Hardcoded review content...');
+
+        // Clear any global review variables
+        if (window.reviews) {
+            window.reviews = [];
+        }
+        if (window.reviewsData) {
+            window.reviewsData = [];
+        }
+
+        // Clear hardcoded HTML content
+        const avatarEl = document.getElementById('reviewerAvatar');
+        const nameEl = document.getElementById('reviewerName');
+        const dateEl = document.getElementById('reviewDate');
+        const textEl = document.getElementById('reviewText');
+        const serviceEl = document.getElementById('serviceTag');
+
+        if (avatarEl) avatarEl.textContent = '';
+        if (nameEl) nameEl.textContent = '';
+        if (dateEl) dateEl.textContent = '';
+        if (textEl) textEl.textContent = '';
+        if (serviceEl) serviceEl.textContent = '';
+
+        console.log('✅ Hardcoded content cleared');
+    }
+
+    showLoadingState() {
+        console.log('⏳ SHOWING: Loading state for reviews...');
+
+        const avatarEl = document.getElementById('reviewerAvatar');
+        const nameEl = document.getElementById('reviewerName');
+        const dateEl = document.getElementById('reviewDate');
+        const textEl = document.getElementById('reviewText');
+        const serviceEl = document.getElementById('serviceTag');
+
+        if (avatarEl) avatarEl.textContent = '⏳';
+        if (nameEl) nameEl.textContent = 'Loading Reviews...';
+        if (dateEl) dateEl.textContent = 'Fetching live Google Reviews...';
+        if (textEl) textEl.textContent = '"Please wait while we load your reviews from Google Business Profile..."';
+        if (serviceEl) serviceEl.textContent = 'Live Google Reviews';
     }
     
     async fetchLiveReviews() {
@@ -233,22 +283,53 @@ class GoogleReviewsLive {
     
     displayLiveReviews() {
         console.log('🎨 DISPLAYING: Live Google Reviews on website...');
-        
+
         if (this.reviews.length === 0) {
             console.error('❌ No reviews to display');
             return;
         }
-        
-        // Update global reviews data
+
+        // Force override any existing review data
         window.reviews = this.reviews;
-        
+        window.reviewsData = this.reviews;
+
+        // Update dots count to match our reviews
+        this.updateDotsCount();
+
+        // Reset to first review
+        this.currentIndex = 0;
+
         // Update the review display
         this.updateReviewDisplay(0);
-        
+
         // Update dots
         this.updateDots();
-        
+
         console.log(`✅ SUCCESS: Displaying ${this.reviews.length} live Google Reviews`);
+        console.log('📊 Reviews source: Live Google Business Profile API');
+    }
+
+    updateDotsCount() {
+        const dotsContainer = document.getElementById('reviewDots');
+        if (dotsContainer && this.reviews.length > 0) {
+            // Clear existing dots
+            dotsContainer.innerHTML = '';
+
+            // Create new dots based on actual review count
+            for (let i = 0; i < this.reviews.length; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'review-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    this.currentIndex = i;
+                    this.updateReviewDisplay(i);
+                    this.updateDots();
+                });
+                dotsContainer.appendChild(dot);
+            }
+
+            console.log(`✅ Updated dots count to ${this.reviews.length}`);
+        }
     }
     
     updateReviewDisplay(index) {
