@@ -77,6 +77,11 @@
     -moz-user-drag: none !important;
     -o-user-drag: none !important;
     user-drag: none !important;
+    /* Ensure video displays properly */
+    background-color: transparent !important;
+    background: none !important;
+    z-index: 1 !important;
+    position: relative !important;
     /* Force autoplay and loop */
     autoplay: true;
     loop: true;
@@ -784,9 +789,12 @@
         -moz-user-drag: none !important;
         -o-user-drag: none !important;
         user-drag: none !important;
-        /* Ensure video is background element only */
-        z-index: -1 !important;
+        /* Keep video visible but non-interactive */
+        z-index: 1 !important;
         position: relative !important;
+        /* Ensure video displays properly */
+        background-color: transparent !important;
+        background: none !important;
     }
 
     /* Force hide all video controls on mobile */
