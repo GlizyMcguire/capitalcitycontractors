@@ -68,22 +68,22 @@
     
     <!-- Blog-specific styles -->
     <style>
-        .blog-header {
-            background: var(--gray-50);
-            padding: var(--space-4) 0;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .blog-header h1 {
-            font-size: var(--text-3xl);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 0;
+        .blog-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: var(--space-6) 0 var(--space-4);
             text-align: center;
         }
 
-        .blog-header .hero-highlight {
-            color: var(--primary-color);
+        .blog-hero h1 {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+            line-height: 1.3;
+        }
+        
+        .blog-hero .hero-highlight {
+            color: var(--accent-gold);
         }
 
         /* Blog Content Styles */
@@ -112,39 +112,6 @@
 
         .trend-list li:last-child, .tips-preview li:last-child, .color-tips li:last-child {
             border-bottom: none;
-        }
-
-        /* Sidebar Styles */
-        .lead-magnet-disclaimer {
-            font-size: var(--text-xs);
-            margin-top: var(--space-2);
-            opacity: 0.9;
-        }
-
-        .recent-posts-grid {
-            display: grid;
-            gap: var(--space-3);
-        }
-
-        .recent-post-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: var(--text-sm);
-            line-height: 1.4;
-        }
-
-        .contact-cta-widget {
-            background: var(--gray-50);
-            text-align: center;
-        }
-
-        .contact-cta-text {
-            margin-bottom: var(--space-4);
-        }
-
-        .contact-cta-button {
-            width: 100%;
-            margin-bottom: var(--space-2);
         }
         
         .blog-grid {
@@ -520,10 +487,13 @@
         </div>
     </nav>
     
-    <!-- Blog Header Section -->
-    <section class="blog-header">
+    <!-- Blog Hero Section -->
+    <section class="blog-hero">
         <div class="container">
             <h1>Ottawa Contractor <span class="hero-highlight">Blog & Tips</span></h1>
+            <p style="font-size: var(--text-base); margin-bottom: var(--space-3); max-width: 500px; margin-left: auto; margin-right: auto;">
+                Expert home renovation tips, painting guides, and professional insights from Ottawa's most trusted contractors
+            </p>
         </div>
     </section>
     
@@ -535,7 +505,7 @@
                 <div class="blog-main">
                     <!-- Featured Post -->
                     <article class="blog-card featured-post" id="basement-trends">
-                        <img src="assets/images/pic5.jpg" alt="Modern basement renovation trends 2024" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                        <img src="assets/images/portfolio/basement-renovation.jpg" alt="Modern basement renovation trends 2024" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
                         <div class="blog-card-content">
                             <div class="blog-card-meta">
                                 <span><i class="fas fa-calendar"></i> December 15, 2024</span>
@@ -565,7 +535,7 @@
                     
                     <!-- Regular Posts -->
                     <article class="blog-card" id="winter-painting">
-                        <img src="assets/images/painting-service.jpg" alt="Winter interior painting tips" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                        <img src="assets/images/blog/winter-painting-tips.jpg" alt="Winter interior painting tips" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
                         <div class="blog-card-content">
                             <div class="blog-card-meta">
                                 <span><i class="fas fa-calendar"></i> December 10, 2024</span>
@@ -591,7 +561,7 @@
                     </article>
                     
                     <article class="blog-card" id="color-guide">
-                        <img src="assets/images/pic2.jpg" alt="Interior paint color selection guide" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                        <img src="assets/images/blog/paint-color-selection.jpg" alt="Interior paint color selection guide" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
                         <div class="blog-card-content">
                             <div class="blog-card-meta">
                                 <span><i class="fas fa-calendar"></i> December 5, 2024</span>
@@ -627,7 +597,7 @@
                             <input type="email" class="lead-magnet-input" placeholder="Enter your email" required>
                             <button type="submit" class="lead-magnet-button">Download Free Guide</button>
                         </form>
-                        <p class="lead-magnet-disclaimer">
+                        <p style="font-size: var(--text-xs); margin-top: var(--space-2); opacity: 0.9;">
                             No spam, unsubscribe anytime. Trusted by 500+ Ottawa homeowners.
                         </p>
                     </div>
@@ -647,27 +617,27 @@
                     <!-- Recent Posts -->
                     <div class="sidebar-widget">
                         <h3><i class="fas fa-clock"></i> Recent Posts</h3>
-                        <div class="recent-posts-grid">
-                            <a href="#color-guide" class="recent-post-link">
+                        <div style="display: grid; gap: var(--space-3);">
+                            <a href="blog/choosing-paint-colors.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
                                 How to Choose Paint Colors That Increase Home Value
                             </a>
-                            <a href="#winter-painting" class="recent-post-link">
-                                5 Essential Tips for Interior Painting in Winter
+                            <a href="blog/spring-exterior-maintenance.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                Spring Exterior Maintenance Checklist for Ottawa Homes
                             </a>
-                            <a href="#basement-trends" class="recent-post-link">
-                                Top 5 Basement Renovation Trends for 2024
+                            <a href="blog/kitchen-renovation-timeline.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                Kitchen Renovation Timeline: What to Expect
                             </a>
                         </div>
                     </div>
                     
                     <!-- Contact CTA -->
-                    <div class="sidebar-widget contact-cta-widget">
+                    <div class="sidebar-widget" style="background: var(--gray-50); text-align: center;">
                         <h3><i class="fas fa-phone"></i> Need Professional Help?</h3>
-                        <p class="contact-cta-text">Get a free consultation from Ottawa's trusted contractors</p>
-                        <a href="tel:+16133011311" class="btn btn-primary contact-cta-button">
+                        <p style="margin-bottom: var(--space-4);">Get a free consultation from Ottawa's trusted contractors</p>
+                        <a href="tel:+16133011311" class="btn btn-primary" style="width: 100%; margin-bottom: var(--space-2);">
                             Call (613) 301-1311
                         </a>
-                        <a href="index.html#contact" class="btn btn-secondary contact-cta-button">
+                        <a href="index.html#contact" class="btn btn-secondary" style="width: 100%;">
                             Get Free Estimate
                         </a>
                     </div>

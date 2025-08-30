@@ -113,39 +113,6 @@
         .trend-list li:last-child, .tips-preview li:last-child, .color-tips li:last-child {
             border-bottom: none;
         }
-
-        /* Sidebar Styles */
-        .lead-magnet-disclaimer {
-            font-size: var(--text-xs);
-            margin-top: var(--space-2);
-            opacity: 0.9;
-        }
-
-        .recent-posts-grid {
-            display: grid;
-            gap: var(--space-3);
-        }
-
-        .recent-post-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: var(--text-sm);
-            line-height: 1.4;
-        }
-
-        .contact-cta-widget {
-            background: var(--gray-50);
-            text-align: center;
-        }
-
-        .contact-cta-text {
-            margin-bottom: var(--space-4);
-        }
-
-        .contact-cta-button {
-            width: 100%;
-            margin-bottom: var(--space-2);
-        }
         
         .blog-grid {
             display: grid;
@@ -591,7 +558,7 @@
                     </article>
                     
                     <article class="blog-card" id="color-guide">
-                        <img src="assets/images/pic2.jpg" alt="Interior paint color selection guide" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
+                        <img src="assets/images/blog/paint-color-selection.jpg" alt="Interior paint color selection guide" class="blog-card-image" onerror="this.src='assets/images/aboutus.png'">
                         <div class="blog-card-content">
                             <div class="blog-card-meta">
                                 <span><i class="fas fa-calendar"></i> December 5, 2024</span>
@@ -627,7 +594,7 @@
                             <input type="email" class="lead-magnet-input" placeholder="Enter your email" required>
                             <button type="submit" class="lead-magnet-button">Download Free Guide</button>
                         </form>
-                        <p class="lead-magnet-disclaimer">
+                        <p style="font-size: var(--text-xs); margin-top: var(--space-2); opacity: 0.9;">
                             No spam, unsubscribe anytime. Trusted by 500+ Ottawa homeowners.
                         </p>
                     </div>
@@ -647,27 +614,27 @@
                     <!-- Recent Posts -->
                     <div class="sidebar-widget">
                         <h3><i class="fas fa-clock"></i> Recent Posts</h3>
-                        <div class="recent-posts-grid">
-                            <a href="#color-guide" class="recent-post-link">
+                        <div style="display: grid; gap: var(--space-3);">
+                            <a href="blog/choosing-paint-colors.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
                                 How to Choose Paint Colors That Increase Home Value
                             </a>
-                            <a href="#winter-painting" class="recent-post-link">
-                                5 Essential Tips for Interior Painting in Winter
+                            <a href="blog/spring-exterior-maintenance.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                Spring Exterior Maintenance Checklist for Ottawa Homes
                             </a>
-                            <a href="#basement-trends" class="recent-post-link">
-                                Top 5 Basement Renovation Trends for 2024
+                            <a href="blog/kitchen-renovation-timeline.html" style="color: var(--text-secondary); text-decoration: none; font-size: var(--text-sm); line-height: 1.4;">
+                                Kitchen Renovation Timeline: What to Expect
                             </a>
                         </div>
                     </div>
                     
                     <!-- Contact CTA -->
-                    <div class="sidebar-widget contact-cta-widget">
+                    <div class="sidebar-widget" style="background: var(--gray-50); text-align: center;">
                         <h3><i class="fas fa-phone"></i> Need Professional Help?</h3>
-                        <p class="contact-cta-text">Get a free consultation from Ottawa's trusted contractors</p>
-                        <a href="tel:+16133011311" class="btn btn-primary contact-cta-button">
+                        <p style="margin-bottom: var(--space-4);">Get a free consultation from Ottawa's trusted contractors</p>
+                        <a href="tel:+16133011311" class="btn btn-primary" style="width: 100%; margin-bottom: var(--space-2);">
                             Call (613) 301-1311
                         </a>
-                        <a href="index.html#contact" class="btn btn-secondary contact-cta-button">
+                        <a href="index.html#contact" class="btn btn-secondary" style="width: 100%;">
                             Get Free Estimate
                         </a>
                     </div>
