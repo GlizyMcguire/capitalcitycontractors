@@ -123,31 +123,92 @@ class LeadGenerationSystem {
 
     async sendEmailNotification(leadRecord) {
         try {
-            // Initialize EmailJS with public key (using a demo service for testing)
-            if (typeof emailjs !== 'undefined') {
-                emailjs.init("user_demo_public_key"); // Demo key for testing
+            // Check if EmailJS is loaded
+            if (typeof emailjs === 'undefined') {
+                throw new Error('EmailJS library not loaded');
+            }
 
-                // Send immediate welcome email with discount code
-                await this.sendWelcomeEmail(leadRecord);
+            // Initialize EmailJS with public key
+            // IMPORTANT: Replace with your actual EmailJS public key
+            const PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // Replace this
+            emailjs.init(PUBLIC_KEY);
 
-                // Schedule follow-up email sequence
+            console.log('🔧 EmailJS initialized, sending emails...');
+
+            // Send emails in sequence with proper error handling
+            const emailResults = await Promise.allSettled([
+                this.sendWelcomeEmail(leadRecord),
+                this.sendBusinessNotification(leadRecord)
+            ]);
+
+            // Check results and handle any failures
+            let successCount = 0;
+            let failureCount = 0;
+
+            emailResults.forEach((result, index) => {
+                if (result.status === 'fulfilled') {
+                    successCount++;
+                    console.log(`✅ Email ${index + 1} sent successfully`);
+                } else {
+                    failureCount++;
+                    console.error(`❌ Email ${index + 1} failed:`, result.reason);
+                }
+            });
+
+            if (successCount > 0) {
+                console.log(`✅ Email system: ${successCount} emails sent, ${failureCount} failed`);
+                // Schedule follow-up emails only if at least one email succeeded
                 this.scheduleFollowUpEmails(leadRecord);
-
-                // Send notification to business owner
-                await this.sendBusinessNotification(leadRecord);
-
-                console.log('✅ Email system initialized and emails sent successfully');
+                return true;
             } else {
-                console.warn('⚠️ EmailJS not loaded, using fallback system');
-                this.simulateEmailDelivery(leadRecord);
+                throw new Error('All email deliveries failed');
             }
 
         } catch (error) {
             console.error('❌ Email system error:', error);
-            // Fallback: Store for manual follow-up and simulate success
+            // Store for manual follow-up
             this.storeForManualFollowUp(leadRecord);
-            this.simulateEmailDelivery(leadRecord);
+            // Show user-friendly error message
+            this.showEmailError(error.message);
+            return false;
         }
+    }
+
+    showEmailError(errorMessage) {
+        // Create a user-friendly error notification
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'email-error-notification';
+        errorDiv.innerHTML = `
+            <div class="error-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h4>Email Delivery Issue</h4>
+                <p>Your discount code has been generated, but there was an issue sending the email. Please contact us at (613) 301-1311 to receive your code.</p>
+                <button onclick="this.parentElement.parentElement.remove()" class="error-close-btn">Close</button>
+            </div>
+        `;
+
+        // Add error styling
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 16px;
+            max-width: 400px;
+            z-index: 10000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        `;
+
+        document.body.appendChild(errorDiv);
+
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+            if (errorDiv.parentElement) {
+                errorDiv.remove();
+            }
+        }, 10000);
     }
 
     simulateEmailDelivery(leadRecord) {
@@ -164,119 +225,210 @@ class LeadGenerationSystem {
     }
 
     async sendWelcomeEmail(leadRecord) {
+        // IMPORTANT: Replace these with your actual EmailJS IDs
+        const SERVICE_ID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
+        const TEMPLATE_ID = 'YOUR_WELCOME_TEMPLATE_ID'; // Replace with your welcome template ID
+
         const templateParams = {
+            // Standard EmailJS parameters
             to_name: leadRecord.name,
             to_email: leadRecord.email,
+            from_name: 'Capital City Contractors',
+            reply_to: 'info@capitalcitycontractors.ca',
+
+            // Custom parameters for the discount email
             discount_code: leadRecord.discountCode,
             project_type: leadRecord.project || 'Not specified',
-            phone: leadRecord.phone || 'Not provided',
-            expiry_date: new Date(leadRecord.codeExpiry).toLocaleDateString('en-CA'),
+            customer_phone: leadRecord.phone || 'Not provided',
+            expiry_date: new Date(leadRecord.codeExpiry).toLocaleDateString('en-CA', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            }),
+
+            // Company information
             company_name: 'Capital City Contractors',
             company_phone: '(613) 301-1311',
             company_email: 'info@capitalcitycontractors.ca',
             website: 'https://capitalcitycontractors.ca',
-            message: `Dear ${leadRecord.name},
 
-Thank you for your interest in Capital City Contractors! Your exclusive 15% discount code is ready:
+            // Email subject
+            subject: 'Your 15% Discount Code is Ready! - Capital City Contractors',
 
-🎁 DISCOUNT CODE: ${leadRecord.discountCode}
-📅 EXPIRES: ${new Date(leadRecord.codeExpiry).toLocaleDateString('en-CA')}
-💰 SAVINGS: 15% off your first project
+            // Formatted message content
+            discount_percentage: '15%',
+            savings_amount: '15% off your first project',
+            call_to_action: 'Call (613) 301-1311 to book your FREE estimate',
 
-PROJECT INTEREST: ${leadRecord.project || 'Not specified'}
+            // Trust indicators
+            experience_years: '14+',
+            customer_count: '500+',
+            rating: '5-star Google rating',
 
-How to Use Your Code:
-1. Call us at (613) 301-1311 to discuss your project
+            // Instructions
+            usage_instructions: `1. Call us at (613) 301-1311 to discuss your project
 2. Mention your discount code: ${leadRecord.discountCode}
 3. Schedule your FREE estimate
-4. Save 15% on your renovation project!
+4. Save 15% on your renovation project!`,
 
-Why Choose Capital City Contractors?
-✅ 14+ years of experience in Ottawa
-✅ Fully licensed and insured
-✅ 500+ satisfied customers
-✅ 5-star Google rating
-
-Ready to get started? Call (613) 301-1311 or visit https://capitalcitycontractors.ca
-
-Best regards,
-The Capital City Contractors Team
-info@capitalcitycontractors.ca`
+            // Current timestamp for tracking
+            timestamp: new Date().toISOString()
         };
 
         try {
-            // Send welcome email with discount code using EmailJS
-            await emailjs.send(
-                'service_demo', // Demo service ID
-                'template_demo', // Demo template ID
-                templateParams
-            );
+            console.log('📧 Sending welcome email to:', leadRecord.email);
+            console.log('📋 Template parameters:', templateParams);
 
-            console.log('✅ Welcome email sent successfully to:', leadRecord.email);
+            // Send welcome email with discount code using EmailJS
+            const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+
+            console.log('✅ Welcome email sent successfully:', response);
+            console.log('📧 Email sent to:', leadRecord.email);
+            console.log('🎟️ Discount code:', leadRecord.discountCode);
+
             return true;
         } catch (error) {
             console.error('❌ Welcome email failed:', error);
+
+            // Detailed error logging for troubleshooting
+            console.log('🔍 Error details:', {
+                error: error.message,
+                serviceId: SERVICE_ID,
+                templateId: TEMPLATE_ID,
+                recipientEmail: leadRecord.email,
+                discountCode: leadRecord.discountCode
+            });
+
             // Log the email content for manual sending
             console.log('📧 EMAIL CONTENT FOR MANUAL SENDING:');
             console.log('To:', leadRecord.email);
-            console.log('Subject: Your 15% Discount Code is Ready! - Capital City Contractors');
-            console.log('Content:', templateParams.message);
-            return false;
+            console.log('Subject:', templateParams.subject);
+            console.log('Discount Code:', leadRecord.discountCode);
+            console.log('Expiry Date:', templateParams.expiry_date);
+
+            throw error; // Re-throw to be handled by the calling function
         }
     }
 
     async sendBusinessNotification(leadRecord) {
+        // IMPORTANT: Replace these with your actual EmailJS IDs
+        const SERVICE_ID = 'YOUR_SERVICE_ID'; // Same service ID as welcome email
+        const BUSINESS_TEMPLATE_ID = 'YOUR_BUSINESS_TEMPLATE_ID'; // Replace with your business notification template ID
+
         const businessParams = {
+            // EmailJS standard parameters
+            to_name: 'Capital City Contractors Team',
             to_email: 'info@capitalcitycontractors.ca',
+            from_name: 'Lead Generation System',
+            reply_to: 'noreply@capitalcitycontractors.ca',
+
+            // Lead information
             lead_name: leadRecord.name,
             lead_email: leadRecord.email,
             lead_phone: leadRecord.phone || 'Not provided',
             project_type: leadRecord.project || 'Not specified',
             discount_code: leadRecord.discountCode,
-            timestamp: new Date(leadRecord.timestamp).toLocaleString('en-CA'),
+
+            // Timing and source information
+            timestamp: new Date(leadRecord.timestamp).toLocaleString('en-CA', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZoneName: 'short'
+            }),
             source: leadRecord.source,
-            message: `🚨 NEW LEAD ALERT - Capital City Contractors
+            form_url: 'https://capitalcitycontractors.ca',
 
-Lead Details:
-👤 Name: ${leadRecord.name}
-📧 Email: ${leadRecord.email}
-📱 Phone: ${leadRecord.phone || 'Not provided'}
-🏠 Project: ${leadRecord.project || 'Not specified'}
-🎟️ Discount Code: ${leadRecord.discountCode}
-📅 Date: ${new Date(leadRecord.timestamp).toLocaleString('en-CA')}
-🌐 Source: ${leadRecord.source}
+            // Email subject
+            subject: `🚨 NEW LEAD ALERT - ${leadRecord.name} - ${leadRecord.project || 'General Inquiry'}`,
 
-⚡ IMMEDIATE ACTION REQUIRED:
-1. Call the lead within 5 minutes for best conversion rates
-2. Reference their discount code: ${leadRecord.discountCode}
-3. Schedule a free estimate appointment
-4. Follow up with project-specific information
+            // Priority and urgency indicators
+            priority: 'HIGH',
+            urgency: 'IMMEDIATE ACTION REQUIRED',
 
-Lead captured from: https://capitalcitycontractors.ca
-CRM Dashboard: Press Ctrl+Shift+C on website to access lead management
+            // Conversion optimization tips
+            action_items: `1. Call within 5 minutes for best conversion rates
+2. Reference discount code: ${leadRecord.discountCode}
+3. Schedule FREE estimate appointment
+4. Follow up with project-specific information`,
 
-This is an automated notification from your lead generation system.`
+            // Contact methods
+            lead_contact_methods: leadRecord.phone ?
+                `Phone: ${leadRecord.phone} | Email: ${leadRecord.email}` :
+                `Email: ${leadRecord.email} (No phone provided)`,
+
+            // System information
+            system_info: 'Automated notification from lead generation system',
+            crm_access: 'Press Ctrl+Shift+C on website to access CRM dashboard',
+
+            // Lead scoring (simple implementation)
+            lead_score: this.calculateLeadScore(leadRecord),
+
+            // Current timestamp for tracking
+            notification_timestamp: new Date().toISOString()
         };
 
         try {
-            // Send notification to business owner
-            await emailjs.send(
-                'service_demo',
-                'template_demo',
-                businessParams
-            );
+            console.log('📧 Sending business notification for lead:', leadRecord.name);
+            console.log('📋 Business notification parameters:', businessParams);
 
-            console.log('✅ Business notification sent successfully');
+            // Send notification to business owner
+            const response = await emailjs.send(SERVICE_ID, BUSINESS_TEMPLATE_ID, businessParams);
+
+            console.log('✅ Business notification sent successfully:', response);
+            console.log('📧 Notification sent for lead:', leadRecord.name);
+            console.log('🎟️ Lead discount code:', leadRecord.discountCode);
+
             return true;
         } catch (error) {
             console.error('❌ Business notification failed:', error);
+
+            // Detailed error logging for troubleshooting
+            console.log('🔍 Business notification error details:', {
+                error: error.message,
+                serviceId: SERVICE_ID,
+                templateId: BUSINESS_TEMPLATE_ID,
+                leadName: leadRecord.name,
+                leadEmail: leadRecord.email,
+                discountCode: leadRecord.discountCode
+            });
+
             // Log the notification for manual review
             console.log('📧 BUSINESS NOTIFICATION FOR MANUAL REVIEW:');
             console.log('To: info@capitalcitycontractors.ca');
-            console.log('Subject: 🚨 NEW LEAD ALERT - ' + leadRecord.name);
-            console.log('Content:', businessParams.message);
-            return false;
+            console.log('Subject:', businessParams.subject);
+            console.log('Lead Name:', leadRecord.name);
+            console.log('Lead Email:', leadRecord.email);
+            console.log('Lead Phone:', leadRecord.phone || 'Not provided');
+            console.log('Project Type:', leadRecord.project || 'Not specified');
+            console.log('Discount Code:', leadRecord.discountCode);
+            console.log('Timestamp:', businessParams.timestamp);
+
+            throw error; // Re-throw to be handled by the calling function
         }
+    }
+
+    calculateLeadScore(leadRecord) {
+        let score = 50; // Base score
+
+        // Add points for phone number (higher conversion rate)
+        if (leadRecord.phone && leadRecord.phone.trim() !== '') {
+            score += 30;
+        }
+
+        // Add points for specific project type
+        if (leadRecord.project && leadRecord.project !== 'Not specified') {
+            score += 20;
+        }
+
+        // Add points for complete information
+        if (leadRecord.name && leadRecord.email && leadRecord.phone && leadRecord.project) {
+            score += 10;
+        }
+
+        return Math.min(score, 100); // Cap at 100
     }
 
     scheduleFollowUpEmails(leadRecord) {
