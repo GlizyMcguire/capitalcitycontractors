@@ -848,6 +848,287 @@
             }
         });
     </script>
+
+    <!-- Lead Generation Section Styles -->
+    <style>
+        /* Lead Generation Section Styles */
+        .lead-generation-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a4b8c 100%);
+            color: white;
+            padding: var(--space-8) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lead-generation-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .lead-gen-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-8);
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .lead-gen-content {
+            text-align: left;
+        }
+
+        .offer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: rgba(255, 255, 255, 0.2);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+            backdrop-filter: blur(10px);
+        }
+
+        .lead-gen-title {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--space-3);
+            line-height: 1.2;
+        }
+
+        .lead-gen-subtitle {
+            font-size: var(--text-lg);
+            opacity: 0.9;
+            margin-bottom: var(--space-6);
+        }
+
+        .offer-benefits {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-3);
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: var(--text-base);
+        }
+
+        .benefit-item i {
+            color: var(--accent-color);
+            font-size: var(--text-lg);
+            width: 20px;
+            text-align: center;
+        }
+
+        .lead-gen-form-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .form-header h3 {
+            color: var(--text-primary);
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+        }
+
+        .lead-gen-form .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .lead-gen-form input,
+        .lead-gen-form select {
+            width: 100%;
+            padding: var(--space-3);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+            transition: border-color 0.3s ease;
+        }
+
+        .lead-gen-form input:focus,
+        .lead-gen-form select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .discount-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #f59e0b 100%);
+            border: none;
+            padding: var(--space-4);
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+            transition: transform 0.2s ease;
+        }
+
+        .discount-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .form-disclaimer {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .discount-success {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            text-align: center;
+        }
+
+        .discount-success.hidden {
+            display: none;
+        }
+
+        .success-content i {
+            color: var(--success-color);
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .success-content h3 {
+            color: var(--text-primary);
+            font-size: var(--text-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+        }
+
+        .discount-code-display {
+            background: var(--gray-50);
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin: var(--space-4) 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-3);
+        }
+
+        .code-label {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        .discount-code {
+            font-family: 'Courier New', monospace;
+            font-size: var(--text-xl);
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        .copy-code-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-code-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .success-message {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-6);
+        }
+
+        .success-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+        }
+
+        .lead-gen-trust {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-6);
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--text-sm);
+            opacity: 0.9;
+        }
+
+        .trust-item i {
+            color: var(--accent-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .lead-gen-container {
+                grid-template-columns: 1fr;
+                gap: var(--space-6);
+                text-align: center;
+            }
+
+            .lead-gen-title {
+                font-size: var(--text-3xl);
+            }
+
+            .offer-benefits {
+                grid-template-columns: 1fr;
+            }
+
+            .lead-gen-trust {
+                flex-wrap: wrap;
+                gap: var(--space-4);
+            }
+
+            .success-actions {
+                flex-direction: column;
+            }
+
+            .discount-code-display {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+
     <!-- Responsive CSS - Load Deferred -->
     <link rel="stylesheet" href="assets/css/responsive.css?v=20250829-PERF" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="assets/css/responsive.css?v=20250829-PERF"></noscript>
@@ -975,6 +1256,134 @@
 
 
 
+
+    <!-- Strategic Lead Generation Section -->
+    <section class="lead-generation-section" id="exclusive-offer" role="complementary">
+        <div class="container">
+            <div class="lead-gen-container">
+                <div class="lead-gen-content">
+                    <div class="offer-badge">
+                        <i class="fas fa-gift"></i>
+                        <span>EXCLUSIVE OFFER</span>
+                    </div>
+                    <h2 class="lead-gen-title">Get Your Exclusive 15% Discount Code</h2>
+                    <p class="lead-gen-subtitle">Join 500+ Ottawa homeowners who saved money on their renovation projects</p>
+
+                    <div class="offer-benefits">
+                        <div class="benefit-item">
+                            <i class="fas fa-percent"></i>
+                            <span>15% OFF your first project</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Priority scheduling</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>FREE detailed estimate</span>
+                        </div>
+                        <div class="benefit-item">
+                            <i class="fas fa-paint-brush"></i>
+                            <span>Expert renovation tips</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lead-gen-form-container">
+                    <form class="lead-gen-form" id="discountForm" novalidate>
+                        <div class="form-header">
+                            <h3>Get Your Discount Code</h3>
+                            <p>Enter your details below to receive your unique 15% discount code instantly</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discount-name" class="visually-hidden">Full Name</label>
+                            <input type="text" id="discount-name" name="name" placeholder="Your Name *" required aria-required="true">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discount-email" class="visually-hidden">Email Address</label>
+                            <input type="email" id="discount-email" name="email" placeholder="Email Address *" required aria-required="true">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discount-phone" class="visually-hidden">Phone Number</label>
+                            <input type="tel" id="discount-phone" name="phone" placeholder="Phone Number (Optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="project-type" class="visually-hidden">Project Type</label>
+                            <select id="project-type" name="project" aria-label="Select project type">
+                                <option value="">What project are you planning?</option>
+                                <option value="interior-painting">Interior Painting</option>
+                                <option value="exterior-painting">Exterior Painting</option>
+                                <option value="drywall">Drywall Installation/Repair</option>
+                                <option value="kitchen-renovation">Kitchen Renovation</option>
+                                <option value="basement-renovation">Basement Renovation</option>
+                                <option value="bathroom-renovation">Bathroom Renovation</option>
+                                <option value="multiple">Multiple Projects</option>
+                                <option value="not-sure">Not Sure Yet</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large discount-btn">
+                            <i class="fas fa-gift"></i>
+                            Get My 15% Discount Code
+                        </button>
+
+                        <p class="form-disclaimer">
+                            <i class="fas fa-shield-check"></i>
+                            Your information is secure. We never share your details and you can unsubscribe anytime.
+                        </p>
+                    </form>
+
+                    <!-- Success Message (Hidden by default) -->
+                    <div class="discount-success hidden" id="discountSuccess">
+                        <div class="success-content">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Your Discount Code is Ready!</h3>
+                            <div class="discount-code-display">
+                                <span class="code-label">Your Unique Code:</span>
+                                <span class="discount-code" id="generatedCode">CCC15-XXXX</span>
+                                <button type="button" class="copy-code-btn" id="copyCodeBtn">
+                                    <i class="fas fa-copy"></i>
+                                    Copy Code
+                                </button>
+                            </div>
+                            <p class="success-message">
+                                We've also sent this code to your email along with our renovation guide.
+                                <strong>This code expires in 30 days.</strong>
+                            </p>
+                            <div class="success-actions">
+                                <a href="#contact" class="btn btn-primary">Get Your Free Estimate</a>
+                                <a href="tel:+16133011311" class="btn btn-secondary">Call (613) 301-1311</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div class="lead-gen-trust">
+                <div class="trust-item">
+                    <i class="fas fa-users"></i>
+                    <span>500+ Happy Customers</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-star"></i>
+                    <span>5-Star Google Rating</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Fully Licensed & Insured</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-clock"></i>
+                    <span>14+ Years Experience</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Services Section -->
     <section class="services-section" id="services" role="main">
@@ -1938,6 +2347,9 @@
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/scroll-animations.js" defer></script>
     <script src="assets/js/image-enhancements.js" defer></script>
+
+    <!-- Lead Generation System -->
+    <script src="assets/js/lead-generation.js?v=20250103" defer></script>
 
     <!-- SEO Internal Links for Better Crawling -->
     <div class="seo-navigation" aria-hidden="true">
