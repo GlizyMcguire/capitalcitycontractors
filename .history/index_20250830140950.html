@@ -2501,30 +2501,10 @@
             }
         }
 
-        // Test email system function
-        function testEmailSystem() {
-            if (typeof LeadGenerationSystem !== 'undefined') {
-                return LeadGenerationSystem.testEmailSystem();
-            } else {
-                console.error('Lead Generation System not loaded');
-            }
-        }
-
-        // Run full system test
-        function runSystemTest() {
-            if (typeof LeadGenerationSystem !== 'undefined') {
-                return LeadGenerationSystem.runFullSystemTest();
-            } else {
-                console.error('Lead Generation System not loaded');
-            }
-        }
-
         // Make functions globally available
         window.showCRMDashboard = showCRMDashboard;
         window.getLeadStats = getLeadStats;
         window.exportLeads = exportLeads;
-        window.testEmailSystem = testEmailSystem;
-        window.runSystemTest = runSystemTest;
 
         // Admin access keyboard shortcut (Ctrl+Shift+C)
         document.addEventListener('keydown', function(e) {

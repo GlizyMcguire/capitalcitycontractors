@@ -57,57 +57,6 @@ showCRMDashboard()
 3. **Create Email Templates** (see templates below)
 4. **Update Configuration** in lead-generation.js
 
-### 🔧 QUICK SETUP STEPS:
-
-#### Step 1: EmailJS Account Setup
-1. Go to https://www.emailjs.com/ and create a free account
-2. Add an email service (Gmail recommended):
-   - Go to Email Services → Add New Service
-   - Choose Gmail and connect your business email
-   - Note the Service ID (e.g., 'service_abc123')
-
-#### Step 2: Create Email Templates
-1. Go to Email Templates → Create New Template
-2. Create two templates:
-   - **Welcome Template**: For customer discount codes
-   - **Business Template**: For lead notifications
-3. Note the Template IDs (e.g., 'template_xyz789')
-
-#### Step 3: Update Configuration
-Replace the demo configuration in `assets/js/lead-generation.js`:
-```javascript
-// Replace this line:
-emailjs.init("user_demo_public_key");
-
-// With your actual public key:
-emailjs.init("YOUR_ACTUAL_PUBLIC_KEY");
-
-// Replace service and template IDs:
-await emailjs.send(
-    'YOUR_SERVICE_ID',    // Replace 'service_demo'
-    'YOUR_TEMPLATE_ID',   // Replace 'template_demo'
-    templateParams
-);
-```
-
-### 🧪 TESTING THE EMAIL SYSTEM:
-
-#### Console Testing Commands:
-Open browser console (F12) and run:
-```javascript
-// Test the complete email system
-runSystemTest()
-
-// Test email functionality only
-testEmailSystem()
-
-// Test form validation
-LeadGenerationSystem.testFormValidation()
-
-// Test discount code generation
-LeadGenerationSystem.testDiscountCodeGeneration()
-```
-
 ### Email Templates Needed:
 
 #### 1. Welcome Email Template (`template_welcome`)

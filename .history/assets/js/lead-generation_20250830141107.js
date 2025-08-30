@@ -340,30 +340,15 @@ This is an automated notification from your lead generation system.`
     showSuccess(discountCode) {
         // Hide form
         this.formContainer.style.display = 'none';
-
+        
         // Update discount code in success message
         this.generatedCodeSpan.textContent = discountCode;
-
+        
         // Show success message
         this.successDiv.classList.remove('hidden');
-
-        // Add success animation
-        this.successDiv.style.opacity = '0';
-        this.successDiv.style.transform = 'translateY(20px)';
-
-        setTimeout(() => {
-            this.successDiv.style.transition = 'all 0.5s ease';
-            this.successDiv.style.opacity = '1';
-            this.successDiv.style.transform = 'translateY(0)';
-        }, 100);
-
+        
         // Scroll to success message
         this.successDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-        // Show confirmation in console for testing
-        console.log('🎉 SUCCESS! Discount code generated:', discountCode);
-        console.log('📧 Email notifications sent (or simulated)');
-        console.log('💾 Lead data saved to localStorage');
     }
 
     showError(message) {
@@ -743,106 +728,6 @@ This is an automated notification from your lead generation system.`
 document.addEventListener('DOMContentLoaded', function() {
     new LeadGenerationSystem();
 });
-
-// Testing and Verification Functions
-LeadGenerationSystem.testEmailSystem = async function() {
-    console.log('🧪 TESTING EMAIL SYSTEM...');
-
-    const testLead = {
-        name: 'Test Customer',
-        email: 'test@example.com',
-        phone: '613-555-0123',
-        project: 'Interior Painting',
-        discountCode: 'CCC15-TEST123',
-        timestamp: new Date().toISOString(),
-        codeExpiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-        source: 'Email System Test'
-    };
-
-    const system = new LeadGenerationSystem();
-
-    try {
-        console.log('📧 Testing email notification system...');
-        await system.sendEmailNotification(testLead);
-        console.log('✅ Email system test completed');
-        return true;
-    } catch (error) {
-        console.error('❌ Email system test failed:', error);
-        return false;
-    }
-};
-
-LeadGenerationSystem.testFormValidation = function() {
-    console.log('🧪 TESTING FORM VALIDATION...');
-
-    const system = new LeadGenerationSystem();
-
-    // Test email validation
-    const validEmails = ['test@example.com', 'user@domain.co.uk', 'name+tag@company.org'];
-    const invalidEmails = ['invalid-email', '@domain.com', 'user@', 'user@domain'];
-
-    console.log('✅ Valid emails:');
-    validEmails.forEach(email => {
-        const isValid = system.isValidEmail(email);
-        console.log(`  ${email}: ${isValid ? '✅' : '❌'}`);
-    });
-
-    console.log('❌ Invalid emails:');
-    invalidEmails.forEach(email => {
-        const isValid = system.isValidEmail(email);
-        console.log(`  ${email}: ${isValid ? '✅' : '❌'}`);
-    });
-
-    console.log('✅ Form validation test completed');
-    return true;
-};
-
-LeadGenerationSystem.testDiscountCodeGeneration = function() {
-    console.log('🧪 TESTING DISCOUNT CODE GENERATION...');
-
-    const system = new LeadGenerationSystem();
-    const codes = [];
-
-    // Generate 10 codes to test uniqueness
-    for (let i = 0; i < 10; i++) {
-        const code = system.generateUniqueCode();
-        codes.push(code);
-        console.log(`Code ${i + 1}: ${code}`);
-    }
-
-    // Check for duplicates
-    const uniqueCodes = [...new Set(codes)];
-    const hasDuplicates = uniqueCodes.length !== codes.length;
-
-    console.log(`Generated ${codes.length} codes, ${uniqueCodes.length} unique`);
-    console.log(`Duplicates found: ${hasDuplicates ? '❌' : '✅'}`);
-    console.log('✅ Discount code generation test completed');
-
-    return !hasDuplicates;
-};
-
-// Comprehensive system test
-LeadGenerationSystem.runFullSystemTest = async function() {
-    console.log('🚀 RUNNING COMPREHENSIVE SYSTEM TEST...');
-    console.log('='.repeat(50));
-
-    const results = {
-        formValidation: this.testFormValidation(),
-        codeGeneration: this.testDiscountCodeGeneration(),
-        emailSystem: await this.testEmailSystem()
-    };
-
-    console.log('='.repeat(50));
-    console.log('📊 TEST RESULTS:');
-    console.log(`Form Validation: ${results.formValidation ? '✅ PASS' : '❌ FAIL'}`);
-    console.log(`Code Generation: ${results.codeGeneration ? '✅ PASS' : '❌ FAIL'}`);
-    console.log(`Email System: ${results.emailSystem ? '✅ PASS' : '❌ FAIL'}`);
-
-    const allPassed = Object.values(results).every(result => result);
-    console.log(`Overall Status: ${allPassed ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}`);
-
-    return results;
-};
 
 // Export for admin access
 window.LeadGenerationSystem = LeadGenerationSystem;
