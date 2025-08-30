@@ -1192,107 +1192,6 @@
             color: var(--accent-color);
         }
 
-        /* Trust Section Styling - Fix for "Why Choose Capital City Contractors" */
-        .trust-badges {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-6);
-            margin-bottom: var(--space-12);
-        }
-
-        .trust-badge {
-            display: flex;
-            align-items: center;
-            gap: var(--space-4);
-            background: rgba(255, 255, 255, 0.1);
-            padding: var(--space-4);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .trust-badge:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .badge-icon {
-            flex-shrink: 0;
-            width: 60px;
-            height: 60px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: var(--text-xl);
-            color: white;
-        }
-
-        .badge-content {
-            flex: 1;
-        }
-
-        .badge-title {
-            font-size: var(--text-lg);
-            font-weight: 700;
-            color: white;
-            margin-bottom: var(--space-1);
-        }
-
-        .badge-subtitle {
-            font-size: var(--text-sm);
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .trust-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-8);
-        }
-
-        .trust-grid .trust-item {
-            text-align: center;
-            padding: var(--space-6);
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .trust-grid .trust-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-4px);
-        }
-
-        .trust-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto var(--space-4);
-            font-size: var(--text-2xl);
-            color: white;
-        }
-
-        .trust-title {
-            font-size: var(--text-xl);
-            font-weight: 700;
-            color: white;
-            margin-bottom: var(--space-3);
-        }
-
-        .trust-description {
-            font-size: var(--text-base);
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             .lead-gen-container {
@@ -1596,19 +1495,19 @@
 
             <!-- Trust Indicators -->
             <div class="lead-gen-trust">
-                <div class="lead-gen-trust-item">
+                <div class="trust-item">
                     <i class="fas fa-users"></i>
                     <span>500+ Happy Customers</span>
                 </div>
-                <div class="lead-gen-trust-item">
+                <div class="trust-item">
                     <i class="fas fa-star"></i>
                     <span>5-Star Google Rating</span>
                 </div>
-                <div class="lead-gen-trust-item">
+                <div class="trust-item">
                     <i class="fas fa-shield-alt"></i>
                     <span>Fully Licensed & Insured</span>
                 </div>
-                <div class="lead-gen-trust-item">
+                <div class="trust-item">
                     <i class="fas fa-clock"></i>
                     <span>14+ Years Experience</span>
                 </div>
