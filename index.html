@@ -851,9 +851,9 @@
 
     <!-- Lead Generation Section Styles -->
     <style>
-        /* Lead Generation Section Styles - PROFESSIONAL DESIGN */
+        /* Lead Generation Section Styles - FOOTER GRADIENT CONSISTENCY */
         .lead-generation-section {
-            background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
             color: white;
             padding: var(--space-8) 0;
             position: relative;
@@ -867,11 +867,22 @@
             top: 0;
             left: 0;
             right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        .lead-generation-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             bottom: 0;
             background:
                 radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
             opacity: 0.6;
+            pointer-events: none;
         }
 
         .lead-gen-container {
@@ -2490,10 +2501,30 @@
             }
         }
 
+        // Test email system function
+        function testEmailSystem() {
+            if (typeof LeadGenerationSystem !== 'undefined') {
+                return LeadGenerationSystem.testEmailSystem();
+            } else {
+                console.error('Lead Generation System not loaded');
+            }
+        }
+
+        // Run full system test
+        function runSystemTest() {
+            if (typeof LeadGenerationSystem !== 'undefined') {
+                return LeadGenerationSystem.runFullSystemTest();
+            } else {
+                console.error('Lead Generation System not loaded');
+            }
+        }
+
         // Make functions globally available
         window.showCRMDashboard = showCRMDashboard;
         window.getLeadStats = getLeadStats;
         window.exportLeads = exportLeads;
+        window.testEmailSystem = testEmailSystem;
+        window.runSystemTest = runSystemTest;
 
         // Admin access keyboard shortcut (Ctrl+Shift+C)
         document.addEventListener('keydown', function(e) {
