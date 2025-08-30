@@ -2683,20 +2683,6 @@
         window.showCRMDashboard = showCRMDashboard;
         window.getLeadStats = getLeadStats;
         window.exportLeads = exportLeads;
-
-        // Admin access keyboard shortcut (Ctrl+Shift+C)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.code === 'KeyC') {
-                e.preventDefault();
-                const adminBtn = document.getElementById('adminCrmBtn');
-                if (adminBtn) {
-                    adminBtn.style.display = adminBtn.style.display === 'none' ? 'block' : 'none';
-                    if (adminBtn.style.display === 'block') {
-                        console.log('🔧 Admin CRM Dashboard access enabled. Click the CRM button or use showCRMDashboard()');
-                    }
-                }
-            }
-        });
     </script>
 
     <!-- SEO Internal Links for Better Crawling -->

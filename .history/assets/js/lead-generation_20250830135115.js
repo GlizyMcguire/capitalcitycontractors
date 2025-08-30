@@ -368,266 +368,28 @@ class LeadGenerationSystem {
         return emailRegex.test(email);
     }
 
-    // Static method to get comprehensive lead statistics and CRM data
+    // Static method to get lead statistics (for admin use)
     static getLeadStatistics() {
         try {
             const leads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
-            const followUps = JSON.parse(localStorage.getItem('ccc_followups') || '[]');
-            const manualFollowUps = JSON.parse(localStorage.getItem('ccc_manual_followups') || '[]');
             const now = new Date();
-
+            
             return {
                 total: leads.length,
                 thisMonth: leads.filter(lead => {
                     const leadDate = new Date(lead.timestamp);
-                    return leadDate.getMonth() === now.getMonth() &&
+                    return leadDate.getMonth() === now.getMonth() && 
                            leadDate.getFullYear() === now.getFullYear();
-                }).length,
-                thisWeek: leads.filter(lead => {
-                    const leadDate = new Date(lead.timestamp);
-                    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    return leadDate >= weekAgo;
                 }).length,
                 byProject: leads.reduce((acc, lead) => {
                     acc[lead.project] = (acc[lead.project] || 0) + 1;
                     return acc;
                 }, {}),
-                recentLeads: leads.slice(-10).reverse(),
-                followUpsPending: followUps.length,
-                manualFollowUpsNeeded: manualFollowUps.length,
-                conversionRate: this.calculateConversionRate(leads),
-                emailCampaignStats: this.getEmailCampaignStats(followUps)
+                recentLeads: leads.slice(-10).reverse()
             };
         } catch (error) {
             console.error('Error getting lead statistics:', error);
-            return { total: 0, thisMonth: 0, thisWeek: 0, byProject: {}, recentLeads: [], followUpsPending: 0, manualFollowUpsNeeded: 0 };
-        }
-    }
-
-    static calculateConversionRate(leads) {
-        const totalLeads = leads.length;
-        const convertedLeads = leads.filter(lead => lead.converted || lead.used).length;
-        return totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
-    }
-
-    static getEmailCampaignStats(followUps) {
-        const totalScheduled = followUps.reduce((acc, followUp) => acc + followUp.scheduledEmails.length, 0);
-        const totalSent = followUps.reduce((acc, followUp) =>
-            acc + followUp.scheduledEmails.filter(email => email.sent).length, 0);
-
-        return {
-            totalScheduled,
-            totalSent,
-            deliveryRate: totalScheduled > 0 ? ((totalSent / totalScheduled) * 100).toFixed(1) : 0
-        };
-    }
-
-    // CRM Dashboard Methods
-    static createCRMDashboard() {
-        const stats = this.getLeadStatistics();
-        const leads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
-
-        const dashboardHTML = `
-            <div id="crmDashboard" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                z-index: 10000;
-                overflow-y: auto;
-                padding: 20px;
-                box-sizing: border-box;
-            ">
-                <div style="
-                    max-width: 1200px;
-                    margin: 0 auto;
-                    background: white;
-                    border-radius: 10px;
-                    padding: 30px;
-                    position: relative;
-                ">
-                    <button onclick="document.getElementById('crmDashboard').remove()" style="
-                        position: absolute;
-                        top: 15px;
-                        right: 15px;
-                        background: #dc2626;
-                        color: white;
-                        border: none;
-                        border-radius: 5px;
-                        padding: 10px 15px;
-                        cursor: pointer;
-                        font-size: 16px;
-                    ">✕ Close</button>
-
-                    <h1 style="color: #1e40af; margin-bottom: 30px;">Capital City Contractors - CRM Dashboard</h1>
-
-                    <!-- Statistics Overview -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h3 style="margin: 0; color: #1e40af;">Total Leads</h3>
-                            <p style="font-size: 2em; font-weight: bold; margin: 10px 0; color: #059669;">${stats.total}</p>
-                        </div>
-                        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h3 style="margin: 0; color: #1e40af;">This Month</h3>
-                            <p style="font-size: 2em; font-weight: bold; margin: 10px 0; color: #0891b2;">${stats.thisMonth}</p>
-                        </div>
-                        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h3 style="margin: 0; color: #1e40af;">This Week</h3>
-                            <p style="font-size: 2em; font-weight: bold; margin: 10px 0; color: #7c3aed;">${stats.thisWeek}</p>
-                        </div>
-                        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
-                            <h3 style="margin: 0; color: #1e40af;">Conversion Rate</h3>
-                            <p style="font-size: 2em; font-weight: bold; margin: 10px 0; color: #dc2626;">${stats.conversionRate}%</p>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div style="margin-bottom: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
-                        <button onclick="LeadGenerationSystem.exportLeadsCSV()" style="
-                            background: #059669;
-                            color: white;
-                            border: none;
-                            padding: 12px 20px;
-                            border-radius: 6px;
-                            cursor: pointer;
-                            font-size: 14px;
-                        ">📊 Export Leads CSV</button>
-                        <button onclick="LeadGenerationSystem.sendBulkEmail()" style="
-                            background: #0891b2;
-                            color: white;
-                            border: none;
-                            padding: 12px 20px;
-                            border-radius: 6px;
-                            cursor: pointer;
-                            font-size: 14px;
-                        ">📧 Send Bulk Email</button>
-                        <button onclick="LeadGenerationSystem.clearOldLeads()" style="
-                            background: #dc2626;
-                            color: white;
-                            border: none;
-                            padding: 12px 20px;
-                            border-radius: 6px;
-                            cursor: pointer;
-                            font-size: 14px;
-                        ">🗑️ Clear Old Leads</button>
-                    </div>
-
-                    <!-- Recent Leads Table -->
-                    <h2 style="color: #1e40af; margin-bottom: 20px;">Recent Leads</h2>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
-                            <thead>
-                                <tr style="background: #f3f4f6;">
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Name</th>
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Email</th>
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Phone</th>
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Project</th>
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Discount Code</th>
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Date</th>
-                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${leads.slice(-20).reverse().map(lead => `
-                                    <tr>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db;">${lead.name}</td>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db;">
-                                            <a href="mailto:${lead.email}" style="color: #0891b2;">${lead.email}</a>
-                                        </td>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db;">
-                                            ${lead.phone ? `<a href="tel:${lead.phone}" style="color: #059669;">${lead.phone}</a>` : 'N/A'}
-                                        </td>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db;">${lead.project || 'Not specified'}</td>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db; font-family: monospace; font-weight: bold;">${lead.discountCode}</td>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db;">${new Date(lead.timestamp).toLocaleDateString('en-CA')}</td>
-                                        <td style="padding: 12px; border: 1px solid #d1d5db;">
-                                            <span style="
-                                                padding: 4px 8px;
-                                                border-radius: 4px;
-                                                font-size: 12px;
-                                                font-weight: bold;
-                                                background: ${lead.used ? '#dcfce7' : '#fef3c7'};
-                                                color: ${lead.used ? '#166534' : '#92400e'};
-                                            ">${lead.used ? 'CONVERTED' : 'PENDING'}</span>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Project Breakdown -->
-                    <h2 style="color: #1e40af; margin-bottom: 20px;">Project Type Breakdown</h2>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                        ${Object.entries(stats.byProject).map(([project, count]) => `
-                            <div style="background: #f3f4f6; padding: 15px; border-radius: 6px; text-align: center;">
-                                <h4 style="margin: 0 0 10px 0; color: #374151;">${project || 'Not specified'}</h4>
-                                <p style="font-size: 1.5em; font-weight: bold; margin: 0; color: #059669;">${count}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.insertAdjacentHTML('beforeend', dashboardHTML);
-    }
-
-    static exportLeadsCSV() {
-        const leads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
-        const csvContent = [
-            ['Name', 'Email', 'Phone', 'Project', 'Discount Code', 'Date', 'Expiry', 'Used', 'Source'].join(','),
-            ...leads.map(lead => [
-                lead.name,
-                lead.email,
-                lead.phone || '',
-                lead.project || '',
-                lead.discountCode,
-                new Date(lead.timestamp).toLocaleDateString('en-CA'),
-                new Date(lead.codeExpiry).toLocaleDateString('en-CA'),
-                lead.used ? 'Yes' : 'No',
-                lead.source
-            ].join(','))
-        ].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `CCC_Leads_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    }
-
-    static async sendBulkEmail() {
-        const leads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
-        const emailList = leads.map(lead => lead.email).join(', ');
-
-        alert(`Email list copied to clipboard:\n\n${emailList}\n\nYou can now paste this into your email marketing platform (Mailchimp, Constant Contact, etc.)`);
-
-        // Copy to clipboard
-        if (navigator.clipboard) {
-            await navigator.clipboard.writeText(emailList);
-        }
-    }
-
-    static clearOldLeads() {
-        if (confirm('Are you sure you want to clear leads older than 90 days? This cannot be undone.')) {
-            const leads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
-            const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
-            const recentLeads = leads.filter(lead => new Date(lead.timestamp) > ninetyDaysAgo);
-
-            localStorage.setItem('ccc_leads', JSON.stringify(recentLeads));
-            alert(`Cleared ${leads.length - recentLeads.length} old leads. ${recentLeads.length} recent leads retained.`);
-
-            // Refresh dashboard if open
-            const dashboard = document.getElementById('crmDashboard');
-            if (dashboard) {
-                dashboard.remove();
-                this.createCRMDashboard();
-            }
+            return { total: 0, thisMonth: 0, byProject: {}, recentLeads: [] };
         }
     }
 }

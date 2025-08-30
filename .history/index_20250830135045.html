@@ -2369,28 +2369,6 @@
         </div>
     </div>
 
-    <!-- Admin CRM Access Button (Hidden by default, show with Ctrl+Shift+C) -->
-    <div class="admin-crm-btn" id="adminCrmBtn" style="display: none; position: fixed; bottom: 20px; left: 20px; z-index: 1000;">
-        <button class="admin-crm-link" type="button" onclick="showCRMDashboard()" aria-label="Access CRM Dashboard" style="
-            background: linear-gradient(135deg, #059669, #0891b2);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 15px 20px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        ">
-            <i class="fas fa-chart-bar"></i>
-            <span>CRM Dashboard</span>
-        </button>
-    </div>
-
     <!-- Local Service Areas Section -->
     <section class="local-areas-section" id="service-areas">
         <div class="container">
@@ -2641,63 +2619,8 @@
     <script src="assets/js/scroll-animations.js" defer></script>
     <script src="assets/js/image-enhancements.js" defer></script>
 
-    <!-- EmailJS for Automated Email Marketing -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
     <!-- Lead Generation System -->
     <script src="assets/js/lead-generation.js?v=20250103" defer></script>
-
-    <!-- CRM Dashboard Access (Admin Only) -->
-    <script>
-        // Admin access to CRM dashboard
-        // Type in browser console: showCRMDashboard()
-        function showCRMDashboard() {
-            if (typeof LeadGenerationSystem !== 'undefined') {
-                LeadGenerationSystem.createCRMDashboard();
-            } else {
-                console.error('Lead Generation System not loaded');
-            }
-        }
-
-        // Quick stats access
-        function getLeadStats() {
-            if (typeof LeadGenerationSystem !== 'undefined') {
-                const stats = LeadGenerationSystem.getLeadStatistics();
-                console.table(stats);
-                return stats;
-            } else {
-                console.error('Lead Generation System not loaded');
-            }
-        }
-
-        // Export leads function
-        function exportLeads() {
-            if (typeof LeadGenerationSystem !== 'undefined') {
-                LeadGenerationSystem.exportLeadsCSV();
-            } else {
-                console.error('Lead Generation System not loaded');
-            }
-        }
-
-        // Make functions globally available
-        window.showCRMDashboard = showCRMDashboard;
-        window.getLeadStats = getLeadStats;
-        window.exportLeads = exportLeads;
-
-        // Admin access keyboard shortcut (Ctrl+Shift+C)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.code === 'KeyC') {
-                e.preventDefault();
-                const adminBtn = document.getElementById('adminCrmBtn');
-                if (adminBtn) {
-                    adminBtn.style.display = adminBtn.style.display === 'none' ? 'block' : 'none';
-                    if (adminBtn.style.display === 'block') {
-                        console.log('🔧 Admin CRM Dashboard access enabled. Click the CRM button or use showCRMDashboard()');
-                    }
-                }
-            }
-        });
-    </script>
 
     <!-- SEO Internal Links for Better Crawling -->
     <div class="seo-navigation" aria-hidden="true">
