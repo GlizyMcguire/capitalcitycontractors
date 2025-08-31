@@ -16,18 +16,6 @@
     <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
     <link rel="canonical" href="https://capitalcitycontractors.ca/">
 
-    <!-- Performance Optimization - Preload Critical Resources -->
-    <link rel="preload" href="assets/css/layout.css" as="style">
-    <link rel="preload" href="assets/css/components.css" as="style">
-    <link rel="preload" href="assets/fonts/inter-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/inter-v12-latin-700.woff2" as="font" type="font/woff2" crossorigin>
-
-    <!-- DNS Prefetch for External Resources -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="//maps.googleapis.com">
-
     <!-- Enhanced Local SEO Meta Tags -->
     <meta name="author" content="Capital City Contractors Ottawa">
     <meta name="geo.region" content="CA-ON">
@@ -1588,15 +1576,6 @@
             box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
         }
 
-        /* Homepage Video Styling */
-        .homepage-video {
-            pointer-events: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
         /* STANDARDIZED SECTION HEADERS - WEBSITE-WIDE CONSISTENCY */
         .section-header {
             text-align: center;
@@ -1880,7 +1859,8 @@
                        playsinline
                        disablepictureinpicture
                        disableremoteplayback
-                       controlslist="nodownload nofullscreen noremoteplaybook">
+                       controlslist="nodownload nofullscreen noremoteplayback"
+                       style="pointer-events: none; user-select: none;">
                     <source src="assets/images/homepage-logo.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>

@@ -1588,15 +1588,6 @@
             box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
         }
 
-        /* Homepage Video Styling */
-        .homepage-video {
-            pointer-events: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
         /* STANDARDIZED SECTION HEADERS - WEBSITE-WIDE CONSISTENCY */
         .section-header {
             text-align: center;
@@ -1880,7 +1871,8 @@
                        playsinline
                        disablepictureinpicture
                        disableremoteplayback
-                       controlslist="nodownload nofullscreen noremoteplaybook">
+                       controlslist="nodownload nofullscreen noremoteplayback"
+                       style="pointer-events: none; user-select: none;">
                     <source src="assets/images/homepage-logo.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
