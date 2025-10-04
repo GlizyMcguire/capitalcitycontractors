@@ -3180,15 +3180,18 @@
     <!-- Lead Generation System -->
     <script src="assets/js/lead-generation.js?v=20250104k-email-param-fix" defer></script>
 
+    <!-- CRM Dashboard v2.0 (Professional Edition) -->
+    <script src="assets/js/crm-dashboard.js?v=20250104k-crm-v2" defer></script>
+
     <!-- CRM Dashboard Access (Admin Only) -->
     <script>
         // Admin access to CRM dashboard
-        // Type in browser console: showCRMDashboard()
+        // Type in browser console: showCRM() or showCRMDashboard()
         function showCRMDashboard() {
-            if (typeof LeadGenerationSystem !== 'undefined') {
-                LeadGenerationSystem.createCRMDashboard();
+            if (typeof showCRM !== 'undefined') {
+                showCRM();
             } else {
-                console.error('Lead Generation System not loaded');
+                console.error('CRM Dashboard not loaded yet. Please wait a moment and try again.');
             }
         }
 
