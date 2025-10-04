@@ -531,6 +531,9 @@ class LeadGenerationSystem {
     }
 
     showSuccess(discountCode) {
+        // Show confirmation popup first
+        this.showConfirmationPopup(discountCode);
+
         // Hide form
         this.formContainer.style.display = 'none';
 
@@ -557,6 +560,187 @@ class LeadGenerationSystem {
         console.log('🎉 SUCCESS! Discount code generated:', discountCode);
         console.log('📧 Email notifications sent (or simulated)');
         console.log('💾 Lead data saved to localStorage');
+    }
+
+    showConfirmationPopup(discountCode) {
+        // Create modal overlay
+        const modal = document.createElement('div');
+        modal.className = 'discount-confirmation-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        `;
+
+        // Create modal content
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = `
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: slideUp 0.4s ease;
+            position: relative;
+        `;
+
+        modalContent.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <div style="
+                    width: 80px;
+                    height: 80px;
+                    background: #10b981;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 20px;
+                    animation: scaleIn 0.5s ease;
+                ">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h2 style="
+                    color: #1e293b;
+                    font-size: 28px;
+                    font-weight: 700;
+                    margin: 0 0 15px 0;
+                    font-family: 'Roboto', sans-serif;
+                ">Success! 🎉</h2>
+                <p style="
+                    color: #64748b;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    margin: 0 0 20px 0;
+                ">Your discount code has been generated and sent to your email.</p>
+            </div>
+
+            <div style="
+                background: #f1f5f9;
+                border-radius: 8px;
+                padding: 20px;
+                margin-bottom: 25px;
+            ">
+                <p style="
+                    color: #475569;
+                    font-size: 14px;
+                    font-weight: 600;
+                    margin: 0 0 10px 0;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                ">Your Discount Code</p>
+                <p style="
+                    color: #1e293b;
+                    font-size: 24px;
+                    font-weight: 700;
+                    margin: 0;
+                    font-family: 'Courier New', monospace;
+                    letter-spacing: 2px;
+                ">${discountCode}</p>
+            </div>
+
+            <div style="
+                background: #fef3c7;
+                border-left: 4px solid #f59e0b;
+                border-radius: 6px;
+                padding: 15px;
+                margin-bottom: 25px;
+                text-align: left;
+            ">
+                <p style="
+                    color: #92400e;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    margin: 0;
+                ">
+                    <strong style="display: block; margin-bottom: 5px;">📧 Check Your Email</strong>
+                    An email with your discount code has been sent to your inbox.
+                    <strong style="display: block; margin-top: 8px;">If you don't see it within a few minutes, please check your spam/junk folder.</strong>
+                </p>
+            </div>
+
+            <button onclick="this.closest('.discount-confirmation-modal').remove()" style="
+                background: #1e40af;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 14px 32px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-family: 'Roboto', sans-serif;
+                width: 100%;
+            " onmouseover="this.style.background='#1e3a8a'" onmouseout="this.style.background='#1e40af'">
+                Got It!
+            </button>
+        `;
+
+        // Add animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            @keyframes scaleIn {
+                from {
+                    transform: scale(0);
+                }
+                to {
+                    transform: scale(1);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        modal.appendChild(modalContent);
+        document.body.appendChild(modal);
+
+        // Close on overlay click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+
+        // Auto-close after 10 seconds
+        setTimeout(() => {
+            if (document.body.contains(modal)) {
+                modal.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => modal.remove(), 300);
+            }
+        }, 10000);
     }
 
     showError(message) {
