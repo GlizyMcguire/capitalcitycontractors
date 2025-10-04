@@ -1,881 +1,525 @@
 /**
- * Capital City Contractors - Professional CRM Dashboard
- * Version: 2.0
- * 
- * A comprehensive Customer Relationship Management dashboard for tracking,
- * managing, and analyzing lead data with modern UI and advanced features.
- * 
- * Features:
- * - Real-time analytics and metrics
- * - Advanced filtering and search
- * - Sortable data tables
- * - Data visualization (charts)
- * - Export to CSV/Excel
- * - Print reports
- * - Inline editing
- * - Bulk operations
- * - Responsive design
- * 
- * Access: Type `showCRM()` in browser console
+ * Capital City Contractors - Lean CRM Dashboard
+ * Version: 3.0 - Construction Edition
+ * Phase 1: Core Foundation & Dashboard
  */
+
+// ==================== DATA MODELS ====================
+
+class Contact {
+    constructor(data = {}) {
+        this.id = data.id || 'contact_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.name = data.name || '';
+        this.email = data.email || '';
+        this.phone = data.phone || '';
+        this.address = data.address || '';
+        this.city = data.city || '';
+        this.tags = data.tags || [];
+        this.emailConsent = data.emailConsent || false;
+        this.smsConsent = data.smsConsent || false;
+        this.consentDate = data.consentDate || null;
+        this.notes = data.notes || '';
+        this.createdAt = data.createdAt || new Date().toISOString();
+    }
+}
+
+class Lead {
+    constructor(data = {}) {
+        this.id = data.id || 'lead_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.contactId = data.contactId || null;
+        this.jobType = data.jobType || '';
+        this.propertyAddress = data.propertyAddress || '';
+        this.city = data.city || '';
+        this.estimatedValue = data.estimatedValue || 0;
+        this.leadSource = data.leadSource || '';
+        this.status = data.status || 'new'; // new, qualified, estimate-sent, negotiation, won, lost
+        this.nextAction = data.nextAction || '';
+        this.nextActionDate = data.nextActionDate || null;
+        this.notes = data.notes || '';
+        this.createdAt = data.createdAt || new Date().toISOString();
+        this.lastActivity = data.lastActivity || new Date().toISOString();
+    }
+}
+
+class Project {
+    constructor(data = {}) {
+        this.id = data.id || 'project_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.leadId = data.leadId || null;
+        this.contactId = data.contactId || null;
+        this.name = data.name || '';
+        this.jobType = data.jobType || '';
+        this.address = data.address || '';
+        this.value = data.value || 0;
+        this.startDate = data.startDate || null;
+        this.progress = data.progress || 0;
+        this.status = data.status || 'active'; // active, at-risk, closed
+        this.notes = data.notes || '';
+        this.createdAt = data.createdAt || new Date().toISOString();
+    }
+}
+
+class Task {
+    constructor(data = {}) {
+        this.id = data.id || 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.title = data.title || '';
+        this.type = data.type || 'follow-up'; // call, email, sms, follow-up, estimate
+        this.relatedTo = data.relatedTo || null; // {type: 'lead'|'project', id: '...'}
+        this.dueDate = data.dueDate || null;
+        this.completed = data.completed || false;
+        this.createdAt = data.createdAt || new Date().toISOString();
+    }
+}
+
+// ==================== MAIN CRM CLASS ====================
 
 class CRMDashboard {
     constructor() {
-        console.log('🚀 Initializing CRM Dashboard v2.0...');
+        console.log('🚀 Initializing CRM v3.0 - Phase 1...');
         
-        this.storageKey = 'ccc_leads';
-        this.leads = this.loadLeads();
-        this.filteredLeads = [...this.leads];
-        this.sortColumn = 'timestamp';
-        this.sortDirection = 'desc';
-        this.selectedLeads = new Set();
+        // Storage
+        this.contacts = this.load('ccc_contacts', []);
+        this.leads = this.load('ccc_leads', []);
+        this.projects = this.load('ccc_projects', []);
+        this.tasks = this.load('ccc_tasks', []);
         
-        // Filter state
-        this.filters = {
-            status: 'all',
-            projectType: 'all',
-            dateRange: 'all',
-            codeStatus: 'all',
-            searchQuery: ''
-        };
+        // Settings
+        this.settings = this.load('ccc_settings', {
+            jobTypes: ['Interior Painting', 'Exterior Painting', 'Kitchen Reno', 'Bathroom Reno', 'Basement Reno', 'Drywall', 'Roofing', 'Deck', 'General'],
+            leadSources: ['Google Ads', 'Website', 'Referral', 'Instagram', 'Facebook', 'Yard Sign', 'Walk-in', 'Repeat'],
+            stages: [
+                { id: 'new', name: 'New', color: '#3b82f6' },
+                { id: 'qualified', name: 'Qualified', color: '#8b5cf6' },
+                { id: 'estimate-sent', name: 'Estimate Sent', color: '#f59e0b' },
+                { id: 'negotiation', name: 'Negotiation', color: '#10b981' },
+                { id: 'won', name: 'Won', color: '#22c55e' },
+                { id: 'lost', name: 'Lost', color: '#ef4444' }
+            ]
+        });
         
-        console.log(`✅ Loaded ${this.leads.length} leads from storage`);
+        // Migrate old data
+        this.migrateOldData();
+        
+        // Create seed data if empty
+        if (this.leads.length === 0) {
+            this.createSeedData();
+        }
+        
+        console.log(`✅ Loaded: ${this.contacts.length} contacts, ${this.leads.length} leads, ${this.projects.length} projects`);
     }
     
-    // ==================== DATA MANAGEMENT ====================
+    // ==================== STORAGE ====================
     
-    loadLeads() {
+    load(key, defaultValue) {
         try {
-            const data = localStorage.getItem(this.storageKey);
-            if (!data) return [];
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : defaultValue;
+        } catch (e) {
+            return defaultValue;
+        }
+    }
+    
+    save(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    }
+    
+    migrateOldData() {
+        const oldLeads = this.load('ccc_leads', []);
+        if (oldLeads.length > 0 && this.leads.length === 0) {
+            console.log('🔄 Migrating old data...');
+            oldLeads.forEach(old => {
+                const contact = new Contact({
+                    name: old.name,
+                    email: old.email,
+                    phone: old.phone || '',
+                    address: old.address || '',
+                    emailConsent: true,
+                    tags: ['migrated'],
+                    createdAt: old.timestamp
+                });
+                this.contacts.push(contact);
+                
+                const lead = new Lead({
+                    contactId: contact.id,
+                    jobType: old.project || 'General',
+                    propertyAddress: old.address || '',
+                    leadSource: 'Website',
+                    status: 'new',
+                    createdAt: old.timestamp
+                });
+                this.leads.push(lead);
+            });
+            this.save('ccc_contacts', this.contacts);
+            this.save('ccc_leads', this.leads);
+        }
+    }
+    
+    createSeedData() {
+        console.log('🌱 Creating seed data...');
+        
+        // Sample contacts
+        const sampleContacts = [
+            { name: 'John Smith', email: 'john@example.com', phone: '613-555-0101', city: 'Ottawa', emailConsent: true },
+            { name: 'Sarah Johnson', email: 'sarah@example.com', phone: '613-555-0102', city: 'Kanata', emailConsent: true, smsConsent: true },
+            { name: 'Mike Brown', email: 'mike@example.com', phone: '613-555-0103', city: 'Nepean', emailConsent: true }
+        ];
+        
+        sampleContacts.forEach(data => {
+            const contact = new Contact(data);
+            this.contacts.push(contact);
             
-            const leads = JSON.parse(data);
-            
-            // Enhance legacy leads with new fields
-            return leads.map(lead => ({
-                ...lead,
-                status: lead.status || 'new',
-                notes: lead.notes || '',
-                contactedDate: lead.contactedDate || null,
-                convertedDate: lead.convertedDate || null,
-                lastModified: lead.lastModified || lead.timestamp,
-                tags: lead.tags || []
-            }));
-        } catch (error) {
-            console.error('❌ Error loading leads:', error);
-            return [];
+            // Create a lead for each
+            const lead = new Lead({
+                contactId: contact.id,
+                jobType: ['Kitchen Reno', 'Bathroom Reno', 'Interior Painting'][Math.floor(Math.random() * 3)],
+                propertyAddress: contact.address || '123 Main St',
+                city: contact.city,
+                estimatedValue: Math.floor(Math.random() * 20000) + 5000,
+                leadSource: ['Google Ads', 'Referral', 'Website'][Math.floor(Math.random() * 3)],
+                status: ['new', 'qualified', 'estimate-sent'][Math.floor(Math.random() * 3)],
+                nextAction: 'Follow up call',
+                nextActionDate: new Date(Date.now() + Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString()
+            });
+            this.leads.push(lead);
+        });
+        
+        this.save('ccc_contacts', this.contacts);
+        this.save('ccc_leads', this.leads);
+    }
+    
+    // ==================== CRUD ====================
+    
+    addContact(data) {
+        const contact = new Contact(data);
+        this.contacts.push(contact);
+        this.save('ccc_contacts', this.contacts);
+        return contact;
+    }
+    
+    addLead(data) {
+        const lead = new Lead(data);
+        this.leads.push(lead);
+        this.save('ccc_leads', this.leads);
+        return lead;
+    }
+    
+    updateLead(id, updates) {
+        const lead = this.leads.find(l => l.id === id);
+        if (lead) {
+            Object.assign(lead, updates);
+            lead.lastActivity = new Date().toISOString();
+            this.save('ccc_leads', this.leads);
         }
     }
     
-    saveLeads() {
-        try {
-            localStorage.setItem(this.storageKey, JSON.stringify(this.leads));
-            console.log('✅ Leads saved to storage');
-            return true;
-        } catch (error) {
-            console.error('❌ Error saving leads:', error);
-            return false;
+    addTask(data) {
+        const task = new Task(data);
+        this.tasks.push(task);
+        this.save('ccc_tasks', this.tasks);
+        return task;
+    }
+    
+    completeTask(id) {
+        const task = this.tasks.find(t => t.id === id);
+        if (task) {
+            task.completed = true;
+            this.save('ccc_tasks', this.tasks);
         }
     }
     
-    updateLead(discountCode, updates) {
-        const index = this.leads.findIndex(l => l.discountCode === discountCode);
-        if (index === -1) return false;
+    convertToProject(leadId) {
+        const lead = this.leads.find(l => l.id === leadId);
+        if (!lead) return;
         
-        this.leads[index] = {
-            ...this.leads[index],
-            ...updates,
-            lastModified: new Date().toISOString()
-        };
+        const contact = this.contacts.find(c => c.id === lead.contactId);
+        const project = new Project({
+            leadId: lead.id,
+            contactId: lead.contactId,
+            name: `${contact?.name || 'Client'} - ${lead.jobType}`,
+            jobType: lead.jobType,
+            address: lead.propertyAddress,
+            value: lead.estimatedValue
+        });
         
-        this.saveLeads();
-        return true;
-    }
-    
-    deleteLead(discountCode) {
-        this.leads = this.leads.filter(l => l.discountCode !== discountCode);
-        this.saveLeads();
-    }
-    
-    deleteSelectedLeads() {
-        if (this.selectedLeads.size === 0) return;
+        this.projects.push(project);
+        this.updateLead(leadId, { status: 'won' });
+        this.save('ccc_projects', this.projects);
         
-        if (!confirm(`Delete ${this.selectedLeads.size} selected leads? This cannot be undone.`)) {
-            return;
-        }
-        
-        this.leads = this.leads.filter(l => !this.selectedLeads.has(l.discountCode));
-        this.selectedLeads.clear();
-        this.saveLeads();
-        this.applyFilters();
+        alert(`✅ Converted to project: ${project.name}`);
         this.render();
     }
     
-    // ==================== FILTERING & SEARCH ====================
-    
-    applyFilters() {
-        let filtered = [...this.leads];
-        
-        // Status filter
-        if (this.filters.status !== 'all') {
-            filtered = filtered.filter(l => l.status === this.filters.status);
-        }
-        
-        // Project type filter
-        if (this.filters.projectType !== 'all') {
-            filtered = filtered.filter(l => l.project === this.filters.projectType);
-        }
-        
-        // Code status filter
-        if (this.filters.codeStatus !== 'all') {
-            const now = new Date();
-            filtered = filtered.filter(l => {
-                const isExpired = new Date(l.codeExpiry) < now;
-                if (this.filters.codeStatus === 'used') return l.used;
-                if (this.filters.codeStatus === 'unused') return !l.used && !isExpired;
-                if (this.filters.codeStatus === 'expired') return isExpired;
-                return true;
-            });
-        }
-        
-        // Date range filter
-        if (this.filters.dateRange !== 'all') {
-            const now = new Date();
-            const ranges = {
-                'today': 1,
-                'week': 7,
-                'month': 30,
-                '3months': 90
-            };
-            
-            const days = ranges[this.filters.dateRange];
-            if (days) {
-                const cutoff = new Date(now - days * 24 * 60 * 60 * 1000);
-                filtered = filtered.filter(l => new Date(l.timestamp) >= cutoff);
-            }
-        }
-        
-        // Search query
-        if (this.filters.searchQuery) {
-            const query = this.filters.searchQuery.toLowerCase();
-            filtered = filtered.filter(l => 
-                l.name.toLowerCase().includes(query) ||
-                l.email.toLowerCase().includes(query) ||
-                l.address.toLowerCase().includes(query) ||
-                l.discountCode.toLowerCase().includes(query) ||
-                (l.phone && l.phone.toLowerCase().includes(query)) ||
-                (l.notes && l.notes.toLowerCase().includes(query))
-            );
-        }
-        
-        this.filteredLeads = filtered;
-        this.sortLeads();
-    }
-    
-    sortLeads() {
-        this.filteredLeads.sort((a, b) => {
-            let aVal = a[this.sortColumn];
-            let bVal = b[this.sortColumn];
-            
-            // Handle dates
-            if (this.sortColumn === 'timestamp' || this.sortColumn === 'lastModified') {
-                aVal = new Date(aVal).getTime();
-                bVal = new Date(bVal).getTime();
-            }
-            
-            // Handle strings
-            if (typeof aVal === 'string') {
-                aVal = aVal.toLowerCase();
-                bVal = bVal.toLowerCase();
-            }
-            
-            if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
-            if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
-            return 0;
-        });
-    }
-    
-    setSortColumn(column) {
-        if (this.sortColumn === column) {
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            this.sortColumn = column;
-            this.sortDirection = 'asc';
-        }
-        this.sortLeads();
-        this.renderTable();
-    }
-    
-    // ==================== ANALYTICS ====================
+    // ==================== METRICS ====================
     
     getMetrics() {
         const now = new Date();
         const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
-        const monthAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
         
-        const leadsThisWeek = this.leads.filter(l => new Date(l.timestamp) >= weekAgo).length;
-        const leadsThisMonth = this.leads.filter(l => new Date(l.timestamp) >= monthAgo).length;
-        const convertedLeads = this.leads.filter(l => l.status === 'converted').length;
-        const conversionRate = this.leads.length > 0 
-            ? ((convertedLeads / this.leads.length) * 100).toFixed(1)
-            : 0;
+        const newLeadsThisWeek = this.leads.filter(l => new Date(l.createdAt) >= weekAgo).length;
+        const overdueTasks = this.tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < now).length;
+        const pipelineValue = this.leads.filter(l => !['won', 'lost'].includes(l.status))
+            .reduce((sum, l) => sum + (l.estimatedValue || 0), 0);
+        const wonThisMonth = this.leads.filter(l => {
+            if (l.status !== 'won') return false;
+            const created = new Date(l.createdAt);
+            return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
+        }).length;
+        const listGrowth = this.contacts.filter(c => c.emailConsent || c.smsConsent).length;
         
-        const projectTypes = {};
-        this.leads.forEach(l => {
-            const type = l.project || 'Not specified';
-            projectTypes[type] = (projectTypes[type] || 0) + 1;
-        });
-        
-        const codesUsed = this.leads.filter(l => l.used).length;
-        const codesUnused = this.leads.filter(l => !l.used && new Date(l.codeExpiry) >= now).length;
-        
-        return {
-            totalLeads: this.leads.length,
-            leadsThisWeek,
-            leadsThisMonth,
-            convertedLeads,
-            conversionRate,
-            projectTypes,
-            codesUsed,
-            codesUnused,
-            filteredCount: this.filteredLeads.length
-        };
-    }
-    
-    getLeadsByDate() {
-        const leadsByDate = {};
-        this.leads.forEach(lead => {
-            const date = new Date(lead.timestamp).toLocaleDateString('en-CA');
-            leadsByDate[date] = (leadsByDate[date] || 0) + 1;
-        });
-        
-        // Get last 30 days
-        const dates = [];
-        const now = new Date();
-        for (let i = 29; i >= 0; i--) {
-            const date = new Date(now - i * 24 * 60 * 60 * 1000);
-            const dateStr = date.toLocaleDateString('en-CA');
-            dates.push({
-                date: dateStr,
-                count: leadsByDate[dateStr] || 0
-            });
-        }
-        
-        return dates;
-    }
-    
-    // ==================== EXPORT ====================
-    
-    exportToCSV() {
-        const headers = ['Date', 'Name', 'Email', 'Phone', 'Address', 'Project', 'Discount Code', 'Status', 'Used', 'Expiry', 'Notes'];
-        const rows = this.filteredLeads.map(lead => [
-            new Date(lead.timestamp).toLocaleString(),
-            lead.name,
-            lead.email,
-            lead.phone || '',
-            lead.address,
-            lead.project || 'Not specified',
-            lead.discountCode,
-            lead.status,
-            lead.used ? 'Yes' : 'No',
-            new Date(lead.codeExpiry).toLocaleDateString(),
-            (lead.notes || '').replace(/"/g, '""')
-        ]);
-        
-        const csv = [
-            headers.join(','),
-            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-        ].join('\n');
-        
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `CCC_Leads_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-        
-        console.log('✅ Exported', this.filteredLeads.length, 'leads to CSV');
-    }
-    
-    printReport() {
-        window.print();
+        return { newLeadsThisWeek, overdueTasks, pipelineValue, wonThisMonth, listGrowth };
     }
 
-    // ==================== UI RENDERING ====================
+    // ==================== RENDER ====================
 
     render() {
-        // Remove existing dashboard
-        const existing = document.getElementById('crm-dashboard-overlay');
+        const existing = document.getElementById('crm-overlay');
         if (existing) existing.remove();
 
-        // Create overlay
         const overlay = document.createElement('div');
-        overlay.id = 'crm-dashboard-overlay';
+        overlay.id = 'crm-overlay';
         overlay.innerHTML = this.getHTML();
         document.body.appendChild(overlay);
 
-        // Add styles
         this.injectStyles();
-
-        // Attach event listeners
-        this.attachEventListeners();
-
-        // Initial render
-        this.applyFilters();
-        this.renderMetrics();
-        this.renderTable();
-        this.renderCharts();
-
-        console.log('✅ CRM Dashboard rendered');
+        console.log('✅ CRM rendered');
     }
 
     getHTML() {
+        const metrics = this.getMetrics();
+        const todayTasks = this.tasks.filter(t => {
+            if (t.completed || !t.dueDate) return false;
+            return new Date(t.dueDate).toDateString() === new Date().toDateString();
+        });
+
         return `
-            <div class="crm-dashboard">
+            <div class="crm-container">
                 <div class="crm-header">
-                    <div class="crm-header-left">
-                        <img src="assets/images/logo.png" alt="CCC" class="crm-logo" onerror="this.style.display='none'">
-                        <div>
-                            <h1>CRM Dashboard</h1>
-                            <p>Capital City Contractors Lead Management</p>
-                        </div>
+                    <h1>🏗️ CCC CRM</h1>
+                    <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
+                </div>
+
+                <!-- Metrics Cards -->
+                <div class="crm-metrics">
+                    <div class="crm-card">
+                        <div class="crm-card-value">${metrics.newLeadsThisWeek}</div>
+                        <div class="crm-card-label">New Leads This Week</div>
                     </div>
-                    <div class="crm-header-right">
-                        <button class="crm-btn crm-btn-secondary" onclick="window.crmDashboard.exportToCSV()">
-                            <span>📊</span> Export CSV
-                        </button>
-                        <button class="crm-btn crm-btn-secondary" onclick="window.crmDashboard.printReport()">
-                            <span>🖨️</span> Print
-                        </button>
-                        <button class="crm-btn crm-btn-danger" onclick="window.crmDashboard.close()">
-                            <span>✕</span> Close
-                        </button>
+                    <div class="crm-card">
+                        <div class="crm-card-value ${metrics.overdueTasks > 0 ? 'text-danger' : ''}">${metrics.overdueTasks}</div>
+                        <div class="crm-card-label">Overdue Follow-ups</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">$${this.formatMoney(metrics.pipelineValue)}</div>
+                        <div class="crm-card-label">Pipeline Value</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${metrics.wonThisMonth}</div>
+                        <div class="crm-card-label">Won This Month</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${metrics.listGrowth}</div>
+                        <div class="crm-card-label">List Growth</div>
                     </div>
                 </div>
 
-                <div class="crm-metrics" id="crm-metrics"></div>
-
-                <div class="crm-filters">
-                    <div class="crm-filter-group">
-                        <label>Status:</label>
-                        <select id="filter-status" class="crm-select">
-                            <option value="all">All Status</option>
-                            <option value="new">New</option>
-                            <option value="contacted">Contacted</option>
-                            <option value="qualified">Qualified</option>
-                            <option value="converted">Converted</option>
-                            <option value="lost">Lost</option>
-                        </select>
+                <!-- Mini Pipeline Board -->
+                <div class="crm-section">
+                    <h2>Pipeline</h2>
+                    <div class="crm-pipeline-mini">
+                        ${this.settings.stages.map(stage => {
+                            const count = this.leads.filter(l => l.status === stage.id).length;
+                            return `
+                                <div class="crm-stage" style="border-top: 3px solid ${stage.color};">
+                                    <div class="crm-stage-header">
+                                        <span>${stage.name}</span>
+                                        <span class="crm-stage-count">${count}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
-
-                    <div class="crm-filter-group">
-                        <label>Project:</label>
-                        <select id="filter-project" class="crm-select">
-                            <option value="all">All Projects</option>
-                            <option value="interior-painting">Interior Painting</option>
-                            <option value="exterior-painting">Exterior Painting</option>
-                            <option value="drywall-installation-repair">Drywall</option>
-                            <option value="kitchen-renovation">Kitchen Renovation</option>
-                            <option value="basement-renovation">Basement Renovation</option>
-                            <option value="bathroom-renovation">Bathroom Renovation</option>
-                        </select>
-                    </div>
-
-                    <div class="crm-filter-group">
-                        <label>Date:</label>
-                        <select id="filter-date" class="crm-select">
-                            <option value="all">All Time</option>
-                            <option value="today">Today</option>
-                            <option value="week">Last 7 Days</option>
-                            <option value="month">Last 30 Days</option>
-                            <option value="3months">Last 3 Months</option>
-                        </select>
-                    </div>
-
-                    <div class="crm-filter-group">
-                        <label>Code Status:</label>
-                        <select id="filter-code" class="crm-select">
-                            <option value="all">All Codes</option>
-                            <option value="unused">Unused</option>
-                            <option value="used">Used</option>
-                            <option value="expired">Expired</option>
-                        </select>
-                    </div>
-
-                    <div class="crm-filter-group crm-search-group">
-                        <label>Search:</label>
-                        <input type="text" id="filter-search" class="crm-input" placeholder="Name, email, address, code...">
-                    </div>
-
-                    <button class="crm-btn crm-btn-secondary" onclick="window.crmDashboard.resetFilters()">
-                        Reset Filters
-                    </button>
                 </div>
 
-                <div class="crm-bulk-actions">
-                    <button class="crm-btn crm-btn-sm" onclick="window.crmDashboard.selectAll()">Select All</button>
-                    <button class="crm-btn crm-btn-sm" onclick="window.crmDashboard.deselectAll()">Deselect All</button>
-                    <button class="crm-btn crm-btn-danger crm-btn-sm" onclick="window.crmDashboard.deleteSelectedLeads()">
-                        Delete Selected (<span id="selected-count">0</span>)
-                    </button>
+                <!-- Today Panel -->
+                <div class="crm-section">
+                    <h2>Today</h2>
+                    <div class="crm-today">
+                        ${todayTasks.length > 0 ? todayTasks.map(task => {
+                            const related = this.getRelatedName(task.relatedTo);
+                            return `
+                                <div class="crm-task-item">
+                                    <input type="checkbox" onchange="window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();">
+                                    <span>${task.title} ${related ? `- ${related}` : ''}</span>
+                                </div>
+                            `;
+                        }).join('') : '<p class="crm-empty">No tasks due today</p>'}
+                    </div>
                 </div>
 
-                <div class="crm-table-container" id="crm-table-container"></div>
-
-                <div class="crm-charts">
-                    <div class="crm-chart-container">
-                        <h3>Leads by Project Type</h3>
-                        <canvas id="chart-projects" width="400" height="300"></canvas>
-                    </div>
-                    <div class="crm-chart-container">
-                        <h3>Leads Over Time (Last 30 Days)</h3>
-                        <canvas id="chart-timeline" width="400" height="300"></canvas>
+                <!-- Quick Add -->
+                <div class="crm-section">
+                    <h2>Quick Add</h2>
+                    <div class="crm-quick-add">
+                        <button class="crm-btn" onclick="window.crmDashboard.showQuickAdd('lead')">+ New Lead</button>
+                        <button class="crm-btn" onclick="window.crmDashboard.showQuickAdd('contact')">+ New Contact</button>
+                        <button class="crm-btn" onclick="window.crmDashboard.showQuickAdd('task')">+ New Task</button>
                     </div>
                 </div>
             </div>
         `;
     }
 
-    renderMetrics() {
-        const metrics = this.getMetrics();
-        const container = document.getElementById('crm-metrics');
-
-        container.innerHTML = `
-            <div class="crm-metric-card">
-                <div class="crm-metric-icon">📊</div>
-                <div class="crm-metric-content">
-                    <div class="crm-metric-value">${metrics.totalLeads}</div>
-                    <div class="crm-metric-label">Total Leads</div>
-                </div>
-            </div>
-
-            <div class="crm-metric-card">
-                <div class="crm-metric-icon">📅</div>
-                <div class="crm-metric-content">
-                    <div class="crm-metric-value">${metrics.leadsThisWeek}</div>
-                    <div class="crm-metric-label">This Week</div>
-                </div>
-            </div>
-
-            <div class="crm-metric-card">
-                <div class="crm-metric-icon">📈</div>
-                <div class="crm-metric-content">
-                    <div class="crm-metric-value">${metrics.conversionRate}%</div>
-                    <div class="crm-metric-label">Conversion Rate</div>
-                </div>
-            </div>
-
-            <div class="crm-metric-card">
-                <div class="crm-metric-icon">✅</div>
-                <div class="crm-metric-content">
-                    <div class="crm-metric-value">${metrics.convertedLeads}</div>
-                    <div class="crm-metric-label">Converted</div>
-                </div>
-            </div>
-
-            <div class="crm-metric-card">
-                <div class="crm-metric-icon">🎟️</div>
-                <div class="crm-metric-content">
-                    <div class="crm-metric-value">${metrics.codesUsed}/${metrics.codesUsed + metrics.codesUnused}</div>
-                    <div class="crm-metric-label">Codes Used</div>
-                </div>
-            </div>
-
-            <div class="crm-metric-card">
-                <div class="crm-metric-icon">🔍</div>
-                <div class="crm-metric-content">
-                    <div class="crm-metric-value">${metrics.filteredCount}</div>
-                    <div class="crm-metric-label">Filtered Results</div>
+    showQuickAdd(type) {
+        const modal = document.createElement('div');
+        modal.className = 'crm-modal';
+        modal.innerHTML = `
+            <div class="crm-modal-content">
+                <h3>Add ${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                ${this.getQuickAddForm(type)}
+                <div class="crm-modal-actions">
+                    <button class="crm-btn" onclick="window.crmDashboard.submitQuickAdd('${type}')">Save</button>
+                    <button class="crm-btn-secondary" onclick="this.closest('.crm-modal').remove()">Cancel</button>
                 </div>
             </div>
         `;
+        document.body.appendChild(modal);
     }
 
-    renderTable() {
-        const container = document.getElementById('crm-table-container');
-
-        if (this.filteredLeads.length === 0) {
-            container.innerHTML = `
-                <div class="crm-empty-state">
-                    <div class="crm-empty-icon">📭</div>
-                    <h3>No leads found</h3>
-                    <p>Try adjusting your filters or search query</p>
-                </div>
-            `;
-            return;
-        }
-
-        const getSortIcon = (column) => {
-            if (this.sortColumn !== column) return '⇅';
-            return this.sortDirection === 'asc' ? '↑' : '↓';
-        };
-
-        const getStatusBadge = (status) => {
-            const badges = {
-                'new': '<span class="crm-badge crm-badge-new">New</span>',
-                'contacted': '<span class="crm-badge crm-badge-contacted">Contacted</span>',
-                'qualified': '<span class="crm-badge crm-badge-qualified">Qualified</span>',
-                'converted': '<span class="crm-badge crm-badge-converted">Converted</span>',
-                'lost': '<span class="crm-badge crm-badge-lost">Lost</span>'
-            };
-            return badges[status] || badges['new'];
-        };
-
-        const rows = this.filteredLeads.map(lead => {
-            const isExpired = new Date(lead.codeExpiry) < new Date();
-            const isChecked = this.selectedLeads.has(lead.discountCode);
-
+    getQuickAddForm(type) {
+        if (type === 'lead') {
             return `
-                <tr class="crm-table-row" data-code="${lead.discountCode}">
-                    <td>
-                        <input type="checkbox" class="crm-checkbox"
-                               ${isChecked ? 'checked' : ''}
-                               onchange="window.crmDashboard.toggleSelect('${lead.discountCode}')">
-                    </td>
-                    <td>${new Date(lead.timestamp).toLocaleDateString()}</td>
-                    <td><strong>${lead.name}</strong></td>
-                    <td>${lead.email}</td>
-                    <td>${lead.phone || '-'}</td>
-                    <td>${lead.project || 'Not specified'}</td>
-                    <td><code>${lead.discountCode}</code></td>
-                    <td>
-                        <select class="crm-status-select" onchange="window.crmDashboard.updateStatus('${lead.discountCode}', this.value)">
-                            <option value="new" ${lead.status === 'new' ? 'selected' : ''}>New</option>
-                            <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>Contacted</option>
-                            <option value="qualified" ${lead.status === 'qualified' ? 'selected' : ''}>Qualified</option>
-                            <option value="converted" ${lead.status === 'converted' ? 'selected' : ''}>Converted</option>
-                            <option value="lost" ${lead.status === 'lost' ? 'selected' : ''}>Lost</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button class="crm-btn-icon" onclick="window.crmDashboard.toggleRow('${lead.discountCode}')" title="View Details">
-                            👁️
-                        </button>
-                        <button class="crm-btn-icon" onclick="window.crmDashboard.editNotes('${lead.discountCode}')" title="Edit Notes">
-                            📝
-                        </button>
-                        <button class="crm-btn-icon" onclick="window.crmDashboard.deleteLead('${lead.discountCode}')" title="Delete">
-                            🗑️
-                        </button>
-                    </td>
-                </tr>
-                <tr class="crm-details-row" id="details-${lead.discountCode}" style="display: none;">
-                    <td colspan="9">
-                        <div class="crm-details-content">
-                            <div class="crm-details-grid">
-                                <div class="crm-detail-item">
-                                    <strong>Address:</strong>
-                                    <span>${lead.address}</span>
-                                </div>
-                                <div class="crm-detail-item">
-                                    <strong>Code Expiry:</strong>
-                                    <span>${new Date(lead.codeExpiry).toLocaleDateString()} ${isExpired ? '(Expired)' : ''}</span>
-                                </div>
-                                <div class="crm-detail-item">
-                                    <strong>Code Used:</strong>
-                                    <span>${lead.used ? 'Yes' : 'No'}</span>
-                                </div>
-                                <div class="crm-detail-item">
-                                    <strong>Last Modified:</strong>
-                                    <span>${new Date(lead.lastModified).toLocaleString()}</span>
-                                </div>
-                            </div>
-                            <div class="crm-notes-section">
-                                <strong>Notes:</strong>
-                                <p>${lead.notes || '<em>No notes</em>'}</p>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                <input type="text" id="qa-name" placeholder="Contact Name *" class="crm-input">
+                <input type="email" id="qa-email" placeholder="Email *" class="crm-input">
+                <input type="tel" id="qa-phone" placeholder="Phone *" class="crm-input">
+                <input type="text" id="qa-address" placeholder="Property Address" class="crm-input">
+                <select id="qa-jobtype" class="crm-input">
+                    <option value="">Job Type *</option>
+                    ${this.settings.jobTypes.map(jt => `<option value="${jt}">${jt}</option>`).join('')}
+                </select>
+                <input type="number" id="qa-value" placeholder="Est. Value" class="crm-input">
+                <select id="qa-source" class="crm-input">
+                    <option value="">Lead Source *</option>
+                    ${this.settings.leadSources.map(ls => `<option value="${ls}">${ls}</option>`).join('')}
+                </select>
             `;
-        }).join('');
-
-        container.innerHTML = `
-            <table class="crm-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;"></th>
-                        <th onclick="window.crmDashboard.setSortColumn('timestamp')" style="cursor: pointer;">
-                            Date ${getSortIcon('timestamp')}
-                        </th>
-                        <th onclick="window.crmDashboard.setSortColumn('name')" style="cursor: pointer;">
-                            Name ${getSortIcon('name')}
-                        </th>
-                        <th onclick="window.crmDashboard.setSortColumn('email')" style="cursor: pointer;">
-                            Email ${getSortIcon('email')}
-                        </th>
-                        <th>Phone</th>
-                        <th onclick="window.crmDashboard.setSortColumn('project')" style="cursor: pointer;">
-                            Project ${getSortIcon('project')}
-                        </th>
-                        <th>Code</th>
-                        <th onclick="window.crmDashboard.setSortColumn('status')" style="cursor: pointer;">
-                            Status ${getSortIcon('status')}
-                        </th>
-                        <th style="width: 120px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${rows}
-                </tbody>
-            </table>
-        `;
-    }
-
-    toggleRow(discountCode) {
-        const row = document.getElementById(`details-${discountCode}`);
-        if (row) {
-            row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+        } else if (type === 'contact') {
+            return `
+                <input type="text" id="qa-name" placeholder="Name *" class="crm-input">
+                <input type="email" id="qa-email" placeholder="Email" class="crm-input">
+                <input type="tel" id="qa-phone" placeholder="Phone" class="crm-input">
+                <input type="text" id="qa-address" placeholder="Address" class="crm-input">
+                <label><input type="checkbox" id="qa-email-consent"> Email consent</label>
+                <label><input type="checkbox" id="qa-sms-consent"> SMS consent</label>
+            `;
+        } else if (type === 'task') {
+            return `
+                <input type="text" id="qa-title" placeholder="Task Title *" class="crm-input">
+                <select id="qa-type" class="crm-input">
+                    <option value="call">Call</option>
+                    <option value="email">Email</option>
+                    <option value="sms">SMS</option>
+                    <option value="follow-up">Follow-up</option>
+                </select>
+                <input type="date" id="qa-due" class="crm-input">
+            `;
         }
     }
 
-    updateStatus(discountCode, newStatus) {
-        const updates = { status: newStatus };
+    submitQuickAdd(type) {
+        if (type === 'lead') {
+            const name = document.getElementById('qa-name').value;
+            const email = document.getElementById('qa-email').value;
+            const phone = document.getElementById('qa-phone').value;
+            const jobType = document.getElementById('qa-jobtype').value;
+            const source = document.getElementById('qa-source').value;
 
-        if (newStatus === 'contacted' && !this.leads.find(l => l.discountCode === discountCode).contactedDate) {
-            updates.contactedDate = new Date().toISOString();
-        }
-
-        if (newStatus === 'converted' && !this.leads.find(l => l.discountCode === discountCode).convertedDate) {
-            updates.convertedDate = new Date().toISOString();
-        }
-
-        this.updateLead(discountCode, updates);
-        this.applyFilters();
-        this.renderMetrics();
-        this.renderTable();
-
-        console.log(`✅ Updated lead ${discountCode} status to ${newStatus}`);
-    }
-
-    editNotes(discountCode) {
-        const lead = this.leads.find(l => l.discountCode === discountCode);
-        if (!lead) return;
-
-        const notes = prompt('Edit notes for ' + lead.name + ':', lead.notes || '');
-        if (notes !== null) {
-            this.updateLead(discountCode, { notes });
-            this.renderTable();
-            console.log(`✅ Updated notes for ${discountCode}`);
-        }
-    }
-
-    toggleSelect(discountCode) {
-        if (this.selectedLeads.has(discountCode)) {
-            this.selectedLeads.delete(discountCode);
-        } else {
-            this.selectedLeads.add(discountCode);
-        }
-        this.updateSelectedCount();
-    }
-
-    selectAll() {
-        this.filteredLeads.forEach(lead => this.selectedLeads.add(lead.discountCode));
-        this.renderTable();
-        this.updateSelectedCount();
-    }
-
-    deselectAll() {
-        this.selectedLeads.clear();
-        this.renderTable();
-        this.updateSelectedCount();
-    }
-
-    updateSelectedCount() {
-        const countEl = document.getElementById('selected-count');
-        if (countEl) countEl.textContent = this.selectedLeads.size;
-    }
-
-    // ==================== CHARTS ====================
-
-    renderCharts() {
-        this.renderProjectsChart();
-        this.renderTimelineChart();
-    }
-
-    renderProjectsChart() {
-        const canvas = document.getElementById('chart-projects');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const metrics = this.getMetrics();
-        const projectTypes = metrics.projectTypes;
-
-        // Prepare data
-        const labels = Object.keys(projectTypes);
-        const values = Object.values(projectTypes);
-        const maxValue = Math.max(...values, 1);
-
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw bar chart
-        const barWidth = canvas.width / labels.length - 20;
-        const chartHeight = canvas.height - 60;
-
-        labels.forEach((label, index) => {
-            const value = values[index];
-            const barHeight = (value / maxValue) * chartHeight;
-            const x = index * (barWidth + 20) + 10;
-            const y = canvas.height - barHeight - 40;
-
-            // Draw bar
-            ctx.fillStyle = '#1e40af';
-            ctx.fillRect(x, y, barWidth, barHeight);
-
-            // Draw value
-            ctx.fillStyle = '#1e293b';
-            ctx.font = '12px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(value, x + barWidth / 2, y - 5);
-
-            // Draw label
-            ctx.save();
-            ctx.translate(x + barWidth / 2, canvas.height - 10);
-            ctx.rotate(-Math.PI / 4);
-            ctx.textAlign = 'right';
-            ctx.fillText(label.substring(0, 15), 0, 0);
-            ctx.restore();
-        });
-    }
-
-    renderTimelineChart() {
-        const canvas = document.getElementById('chart-timeline');
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        const data = this.getLeadsByDate();
-
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const maxValue = Math.max(...data.map(d => d.count), 1);
-        const chartHeight = canvas.height - 60;
-        const chartWidth = canvas.width - 40;
-        const pointSpacing = chartWidth / (data.length - 1);
-
-        // Draw axes
-        ctx.strokeStyle = '#cbd5e1';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(30, 10);
-        ctx.lineTo(30, canvas.height - 40);
-        ctx.lineTo(canvas.width - 10, canvas.height - 40);
-        ctx.stroke();
-
-        // Draw line
-        ctx.strokeStyle = '#10b981';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-
-        data.forEach((point, index) => {
-            const x = 30 + index * pointSpacing;
-            const y = canvas.height - 40 - (point.count / maxValue) * chartHeight;
-
-            if (index === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
+            if (!name || !email || !phone || !jobType || !source) {
+                alert('Please fill required fields');
+                return;
             }
 
-            // Draw point
-            ctx.fillStyle = '#10b981';
-            ctx.beginPath();
-            ctx.arc(x, y, 3, 0, Math.PI * 2);
-            ctx.fill();
-        });
+            const contact = this.addContact({ name, email, phone, emailConsent: true });
+            this.addLead({
+                contactId: contact.id,
+                jobType,
+                propertyAddress: document.getElementById('qa-address').value,
+                estimatedValue: parseInt(document.getElementById('qa-value').value) || 0,
+                leadSource: source,
+                nextAction: 'Initial contact',
+                nextActionDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+            });
 
-        ctx.stroke();
+            // Auto-create task
+            this.addTask({
+                title: `Call ${name} - ${jobType}`,
+                type: 'call',
+                relatedTo: { type: 'lead', id: contact.id },
+                dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+            });
 
-        // Draw labels (every 5 days)
-        ctx.fillStyle = '#64748b';
-        ctx.font = '10px Arial';
-        ctx.textAlign = 'center';
-        data.forEach((point, index) => {
-            if (index % 5 === 0) {
-                const x = 30 + index * pointSpacing;
-                const date = new Date(point.date);
-                ctx.fillText(`${date.getMonth() + 1}/${date.getDate()}`, x, canvas.height - 25);
+            alert('✅ Lead added!');
+        } else if (type === 'contact') {
+            const name = document.getElementById('qa-name').value;
+            if (!name) {
+                alert('Name is required');
+                return;
             }
-        });
+            this.addContact({
+                name,
+                email: document.getElementById('qa-email').value,
+                phone: document.getElementById('qa-phone').value,
+                address: document.getElementById('qa-address').value,
+                emailConsent: document.getElementById('qa-email-consent').checked,
+                smsConsent: document.getElementById('qa-sms-consent').checked,
+                consentDate: new Date().toISOString()
+            });
+            alert('✅ Contact added!');
+        } else if (type === 'task') {
+            const title = document.getElementById('qa-title').value;
+            if (!title) {
+                alert('Title is required');
+                return;
+            }
+            this.addTask({
+                title,
+                type: document.getElementById('qa-type').value,
+                dueDate: document.getElementById('qa-due').value || null
+            });
+            alert('✅ Task added!');
+        }
+
+        document.querySelector('.crm-modal').remove();
+        this.render();
     }
 
-    // ==================== EVENT HANDLERS ====================
-
-    attachEventListeners() {
-        // Filter listeners
-        document.getElementById('filter-status').addEventListener('change', (e) => {
-            this.filters.status = e.target.value;
-            this.applyFilters();
-            this.renderMetrics();
-            this.renderTable();
-        });
-
-        document.getElementById('filter-project').addEventListener('change', (e) => {
-            this.filters.projectType = e.target.value;
-            this.applyFilters();
-            this.renderMetrics();
-            this.renderTable();
-        });
-
-        document.getElementById('filter-date').addEventListener('change', (e) => {
-            this.filters.dateRange = e.target.value;
-            this.applyFilters();
-            this.renderMetrics();
-            this.renderTable();
-        });
-
-        document.getElementById('filter-code').addEventListener('change', (e) => {
-            this.filters.codeStatus = e.target.value;
-            this.applyFilters();
-            this.renderMetrics();
-            this.renderTable();
-        });
-
-        document.getElementById('filter-search').addEventListener('input', (e) => {
-            this.filters.searchQuery = e.target.value;
-            this.applyFilters();
-            this.renderMetrics();
-            this.renderTable();
-        });
+    getRelatedName(relatedTo) {
+        if (!relatedTo) return '';
+        if (relatedTo.type === 'lead') {
+            const lead = this.leads.find(l => l.id === relatedTo.id);
+            if (lead) {
+                const contact = this.contacts.find(c => c.id === lead.contactId);
+                return contact?.name || 'Unknown';
+            }
+        }
+        return '';
     }
 
-    resetFilters() {
-        this.filters = {
-            status: 'all',
-            projectType: 'all',
-            dateRange: 'all',
-            codeStatus: 'all',
-            searchQuery: ''
-        };
-
-        document.getElementById('filter-status').value = 'all';
-        document.getElementById('filter-project').value = 'all';
-        document.getElementById('filter-date').value = 'all';
-        document.getElementById('filter-code').value = 'all';
-        document.getElementById('filter-search').value = '';
-
-        this.applyFilters();
-        this.renderMetrics();
-        this.renderTable();
+    formatMoney(value) {
+        return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
     close() {
-        const overlay = document.getElementById('crm-dashboard-overlay');
-        if (overlay) overlay.remove();
-        console.log('✅ CRM Dashboard closed');
+        document.getElementById('crm-overlay')?.remove();
     }
 
     // ==================== STYLES ====================
 
     injectStyles() {
-        if (document.getElementById('crm-dashboard-styles')) return;
+        if (document.getElementById('crm-styles')) return;
 
         const style = document.createElement('style');
-        style.id = 'crm-dashboard-styles';
+        style.id = 'crm-styles';
         style.textContent = `
-            #crm-dashboard-overlay {
+            #crm-overlay {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -885,352 +529,210 @@ class CRMDashboard {
                 z-index: 999999;
                 overflow-y: auto;
                 padding: 20px;
-                animation: fadeIn 0.3s ease;
             }
 
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-
-            .crm-dashboard {
-                max-width: 1400px;
+            .crm-container {
+                max-width: 1200px;
                 margin: 0 auto;
-                background: #ffffff;
+                background: #fff;
                 border-radius: 12px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                overflow: hidden;
+                padding: 24px;
             }
 
             .crm-header {
-                background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-                color: white;
-                padding: 24px 32px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-            }
-
-            .crm-header-left {
-                display: flex;
-                align-items: center;
-                gap: 16px;
-            }
-
-            .crm-logo {
-                width: 50px;
-                height: 50px;
-                border-radius: 8px;
-                background: white;
-                padding: 4px;
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 2px solid #e5e7eb;
             }
 
             .crm-header h1 {
                 margin: 0;
-                font-size: 28px;
-                font-weight: 700;
+                font-size: 24px;
+                color: #1f2937;
             }
 
-            .crm-header p {
-                margin: 4px 0 0 0;
-                opacity: 0.9;
-                font-size: 14px;
-            }
-
-            .crm-header-right {
-                display: flex;
-                gap: 12px;
-            }
-
-            .crm-btn {
-                padding: 10px 20px;
+            .crm-btn-close {
+                background: #ef4444;
+                color: white;
                 border: none;
+                width: 32px;
+                height: 32px;
                 border-radius: 6px;
-                font-size: 14px;
-                font-weight: 600;
                 cursor: pointer;
-                transition: all 0.2s;
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .crm-btn-secondary {
-                background: rgba(255, 255, 255, 0.2);
-                color: white;
-            }
-
-            .crm-btn-secondary:hover {
-                background: rgba(255, 255, 255, 0.3);
-            }
-
-            .crm-btn-danger {
-                background: #dc2626;
-                color: white;
-            }
-
-            .crm-btn-danger:hover {
-                background: #b91c1c;
-            }
-
-            .crm-btn-sm {
-                padding: 6px 12px;
-                font-size: 12px;
+                font-size: 18px;
             }
 
             .crm-metrics {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 16px;
-                padding: 24px 32px;
-                background: #f8fafc;
-                border-bottom: 1px solid #e2e8f0;
+                margin-bottom: 24px;
             }
 
-            .crm-metric-card {
-                background: white;
+            .crm-card {
+                background: #f9fafb;
                 padding: 20px;
                 border-radius: 8px;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-                gap: 16px;
+                border-left: 4px solid #3b82f6;
             }
 
-            .crm-metric-icon {
+            .crm-card-value {
                 font-size: 32px;
-                width: 60px;
-                height: 60px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #eff6ff;
-                border-radius: 8px;
+                font-weight: bold;
+                color: #1f2937;
+                margin-bottom: 4px;
             }
 
-            .crm-metric-value {
-                font-size: 28px;
-                font-weight: 700;
-                color: #1e293b;
-            }
-
-            .crm-metric-label {
-                font-size: 13px;
-                color: #64748b;
-                margin-top: 4px;
-            }
-
-            .crm-filters {
-                padding: 20px 32px;
-                background: white;
-                border-bottom: 1px solid #e2e8f0;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 16px;
-                align-items: flex-end;
-            }
-
-            .crm-filter-group {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
-            }
-
-            .crm-filter-group label {
-                font-size: 12px;
-                font-weight: 600;
-                color: #475569;
-                text-transform: uppercase;
-            }
-
-            .crm-select, .crm-input {
-                padding: 8px 12px;
-                border: 1px solid #cbd5e1;
-                border-radius: 6px;
+            .crm-card-label {
                 font-size: 14px;
-                min-width: 150px;
+                color: #6b7280;
             }
 
-            .crm-search-group {
-                flex: 1;
-                min-width: 250px;
+            .text-danger {
+                color: #ef4444 !important;
             }
 
-            .crm-bulk-actions {
-                padding: 12px 32px;
-                background: #f1f5f9;
-                border-bottom: 1px solid #e2e8f0;
-                display: flex;
+            .crm-section {
+                margin-bottom: 24px;
+            }
+
+            .crm-section h2 {
+                font-size: 18px;
+                color: #1f2937;
+                margin-bottom: 12px;
+            }
+
+            .crm-pipeline-mini {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
                 gap: 12px;
             }
 
-            .crm-table-container {
-                padding: 24px 32px;
-                overflow-x: auto;
+            .crm-stage {
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 12px;
             }
 
-            .crm-table {
-                width: 100%;
-                border-collapse: collapse;
+            .crm-stage-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 font-size: 14px;
             }
 
-            .crm-table thead {
-                background: #f8fafc;
-                border-bottom: 2px solid #e2e8f0;
+            .crm-stage-count {
+                background: #e5e7eb;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-weight: bold;
             }
 
-            .crm-table th {
-                padding: 12px;
-                text-align: left;
-                font-weight: 600;
-                color: #475569;
-                white-space: nowrap;
-            }
-
-            .crm-table td {
-                padding: 12px;
-                border-bottom: 1px solid #f1f5f9;
-            }
-
-            .crm-table-row:hover {
-                background: #f8fafc;
-            }
-
-            .crm-details-row {
-                background: #fefce8 !important;
-            }
-
-            .crm-details-content {
+            .crm-today {
+                background: #fef3c7;
                 padding: 16px;
-            }
-
-            .crm-details-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 16px;
-                margin-bottom: 16px;
-            }
-
-            .crm-detail-item {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
-
-            .crm-detail-item strong {
-                color: #64748b;
-                font-size: 12px;
-            }
-
-            .crm-notes-section {
-                padding: 12px;
-                background: white;
-                border-radius: 6px;
-                border: 1px solid #e2e8f0;
-            }
-
-            .crm-notes-section strong {
-                display: block;
-                margin-bottom: 8px;
-                color: #475569;
-            }
-
-            .crm-status-select {
-                padding: 4px 8px;
-                border: 1px solid #cbd5e1;
-                border-radius: 4px;
-                font-size: 13px;
-            }
-
-            .crm-btn-icon {
-                background: none;
-                border: none;
-                font-size: 18px;
-                cursor: pointer;
-                padding: 4px;
-                opacity: 0.7;
-                transition: opacity 0.2s;
-            }
-
-            .crm-btn-icon:hover {
-                opacity: 1;
-            }
-
-            .crm-checkbox {
-                width: 18px;
-                height: 18px;
-                cursor: pointer;
-            }
-
-            .crm-empty-state {
-                text-align: center;
-                padding: 60px 20px;
-                color: #64748b;
-            }
-
-            .crm-empty-icon {
-                font-size: 64px;
-                margin-bottom: 16px;
-            }
-
-            .crm-charts {
-                padding: 24px 32px;
-                background: #f8fafc;
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-                gap: 24px;
-            }
-
-            .crm-chart-container {
-                background: white;
-                padding: 20px;
                 border-radius: 8px;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             }
 
-            .crm-chart-container h3 {
+            .crm-task-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 0;
+                border-bottom: 1px solid #fde68a;
+            }
+
+            .crm-task-item:last-child {
+                border-bottom: none;
+            }
+
+            .crm-empty {
+                color: #6b7280;
+                font-style: italic;
+            }
+
+            .crm-quick-add {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .crm-btn {
+                background: #3b82f6;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+            }
+
+            .crm-btn:hover {
+                background: #2563eb;
+            }
+
+            .crm-btn-secondary {
+                background: #6b7280;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+            .crm-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999999;
+            }
+
+            .crm-modal-content {
+                background: white;
+                padding: 24px;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+            }
+
+            .crm-modal-content h3 {
                 margin: 0 0 16px 0;
-                font-size: 16px;
-                color: #1e293b;
             }
 
-            @media print {
-                #crm-dashboard-overlay {
-                    position: static;
-                    background: white;
-                    padding: 0;
-                }
+            .crm-input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #d1d5db;
+                border-radius: 6px;
+                margin-bottom: 12px;
+                font-size: 14px;
+            }
 
-                .crm-header-right,
-                .crm-filters,
-                .crm-bulk-actions,
-                .crm-btn-icon,
-                .crm-checkbox {
-                    display: none !important;
-                }
-
-                .crm-dashboard {
-                    box-shadow: none;
-                }
+            .crm-modal-actions {
+                display: flex;
+                gap: 12px;
+                margin-top: 16px;
             }
 
             @media (max-width: 768px) {
-                .crm-header {
-                    flex-direction: column;
-                    gap: 16px;
-                }
-
                 .crm-metrics {
                     grid-template-columns: 1fr;
                 }
 
-                .crm-filters {
-                    flex-direction: column;
-                }
-
-                .crm-charts {
-                    grid-template-columns: 1fr;
+                .crm-pipeline-mini {
+                    grid-template-columns: repeat(2, 1fr);
                 }
             }
         `;
@@ -1239,9 +741,8 @@ class CRMDashboard {
     }
 }
 
-// ==================== GLOBAL INITIALIZATION ====================
+// ==================== GLOBAL INIT ====================
 
-// Initialize and expose globally
 window.showCRM = function() {
     if (!window.crmDashboard) {
         window.crmDashboard = new CRMDashboard();
@@ -1249,9 +750,7 @@ window.showCRM = function() {
     window.crmDashboard.render();
 };
 
-// Legacy support
 window.showCRMDashboard = window.showCRM;
 
-console.log('✅ CRM Dashboard v2.0 loaded. Type showCRM() to open.');
-
+console.log('✅ CRM v3.0 Phase 1 loaded. Type showCRM() to open.');
 
