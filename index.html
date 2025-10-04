@@ -169,6 +169,15 @@
 
     <!-- EmailJS for form submission (loaded once) -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS globally once
+        (function() {
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init('Ej7_wQOBOKJhHgJhJ');
+                console.log('✅ EmailJS initialized globally');
+            }
+        })();
+    </script>
 
     <!-- Google Places API for Address Autocomplete - DISABLED due to input field conflicts -->
     <!-- The autocomplete feature is causing the address field to lock up after typing -->

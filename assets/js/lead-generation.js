@@ -318,39 +318,18 @@ class LeadGenerationSystem {
                 throw new Error('EmailJS library not loaded');
             }
 
-            // Initialize EmailJS with your existing public key
-            const PUBLIC_KEY = 'Ej7_wQOBOKJhHgJhJ'; // Your actual EmailJS public key
-            emailjs.init(PUBLIC_KEY);
+            console.log('🔧 Sending customer email...');
 
-            console.log('🔧 EmailJS initialized, sending emails...');
+            // Only send customer welcome email (business notification removed for now)
+            const response = await this.sendWelcomeEmail(leadRecord);
 
-            // Send emails in sequence with proper error handling
-            const emailResults = await Promise.allSettled([
-                this.sendWelcomeEmail(leadRecord),
-                this.sendBusinessNotification(leadRecord)
-            ]);
-
-            // Check results and handle any failures
-            let successCount = 0;
-            let failureCount = 0;
-
-            emailResults.forEach((result, index) => {
-                if (result.status === 'fulfilled') {
-                    successCount++;
-                    console.log(`✅ Email ${index + 1} sent successfully`);
-                } else {
-                    failureCount++;
-                    console.error(`❌ Email ${index + 1} failed:`, result.reason);
-                }
-            });
-
-            if (successCount > 0) {
-                console.log(`✅ Email system: ${successCount} emails sent, ${failureCount} failed`);
-                // Schedule follow-up emails only if at least one email succeeded
+            if (response) {
+                console.log(`✅ Email sent successfully to customer`);
+                // Schedule follow-up emails
                 this.scheduleFollowUpEmails(leadRecord);
                 return true;
             } else {
-                throw new Error('All email deliveries failed');
+                throw new Error('Email delivery failed');
             }
 
         } catch (error) {
@@ -359,7 +338,7 @@ class LeadGenerationSystem {
             this.storeForManualFollowUp(leadRecord);
             // Show user-friendly error message
             this.showEmailError(error.message);
-            return false;
+            throw error; // Re-throw so popup doesn't show
         }
     }
 
@@ -777,46 +756,42 @@ class LeadGenerationSystem {
             </div>
 
             <div style="
-                background: #f1f5f9;
+                background: #dcfce7;
+                border-left: 4px solid #10b981;
                 border-radius: 8px;
                 padding: 20px;
                 margin-bottom: 25px;
+                text-align: left;
             ">
                 <p style="
-                    color: #475569;
-                    font-size: 14px;
-                    font-weight: 600;
-                    margin: 0 0 10px 0;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                ">Your Discount Code</p>
-                <p style="
-                    color: #1e293b;
-                    font-size: 24px;
-                    font-weight: 700;
+                    color: #166534;
+                    font-size: 16px;
+                    line-height: 1.6;
                     margin: 0;
-                    font-family: 'Courier New', monospace;
-                    letter-spacing: 2px;
-                ">${discountCode}</p>
+                ">
+                    <strong style="display: block; margin-bottom: 10px; font-size: 18px;">📧 Check Your Email!</strong>
+                    Your unique 15% discount code has been sent to your email address.
+                    <strong style="display: block; margin-top: 12px;">Please check your inbox (and spam/junk folder) for your discount code.</strong>
+                </p>
             </div>
 
             <div style="
-                background: #fef3c7;
-                border-left: 4px solid #f59e0b;
-                border-radius: 6px;
+                background: #f1f5f9;
+                border-radius: 8px;
                 padding: 15px;
                 margin-bottom: 25px;
                 text-align: left;
             ">
                 <p style="
-                    color: #92400e;
+                    color: #475569;
                     font-size: 14px;
                     line-height: 1.6;
                     margin: 0;
                 ">
-                    <strong style="display: block; margin-bottom: 5px;">📧 Check Your Email</strong>
-                    An email with your discount code has been sent to your inbox.
-                    <strong style="display: block; margin-top: 8px;">If you don't see it within a few minutes, please check your spam/junk folder.</strong>
+                    <strong style="display: block; margin-bottom: 8px;">📞 Next Steps:</strong>
+                    1. Check your email for your discount code<br>
+                    2. Call us at (613) 301-1311<br>
+                    3. Mention your code to save 15%
                 </p>
             </div>
 
