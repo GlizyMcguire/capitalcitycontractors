@@ -63,6 +63,28 @@ class LeadGenerationSystem {
                 this.form.addEventListener('submit', this.handleFormSubmit.bind(this));
                 console.log('✅ Submit event listener attached successfully');
 
+                // Extra safety: attach click handler directly to submit button
+                const submitBtn = this.form.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    console.log('✅ Attaching click listener to submit button');
+                    submitBtn.addEventListener('click', (e) => {
+                        console.log('🖱️ Submit button clicked');
+                        e.preventDefault();
+                        this.handleFormSubmit(e);
+                    });
+                } else {
+                    console.warn('⚠️ Submit button not found inside discountForm');
+                }
+
+                // Global capture as last-resort fallback (mirrors quote form reliability)
+                document.addEventListener('submit', (e) => {
+                    if (e && e.target === this.form) {
+                        console.log('🛡️ Global capture: discountForm submit detected');
+                        e.preventDefault();
+                        this.handleFormSubmit(e);
+                    }
+                }, true);
+
                 // Test if event listener is working
                 console.log('🧪 Testing event listener attachment...');
                 const testListener = () => console.log('✅ Event listener test: Working!');
