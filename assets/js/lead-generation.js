@@ -25,7 +25,13 @@ class LeadGenerationSystem {
     }
 
     async handleFormSubmit(e) {
+        console.log('🎯 FORM SUBMITTED! handleFormSubmit called');
+        console.log('📝 Event:', e);
+
         e.preventDefault();
+
+        console.log('✅ Default form submission prevented');
+        console.log('🔄 Starting discount code generation process...');
 
         const formData = new FormData(this.form);
 
@@ -1121,7 +1127,32 @@ class LeadGenerationSystem {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    new LeadGenerationSystem();
+    console.log('🚀 Lead Generation System: Initializing...');
+    console.log('🔍 Looking for form with ID: discountForm');
+
+    const form = document.getElementById('discountForm');
+    if (form) {
+        console.log('✅ Discount form found!');
+        console.log('📋 Form element:', form);
+    } else {
+        console.error('❌ ERROR: Discount form NOT found! Check if ID="discountForm" exists in HTML');
+    }
+
+    console.log('🔧 Checking EmailJS availability...');
+    if (typeof emailjs !== 'undefined') {
+        console.log('✅ EmailJS library loaded successfully');
+        console.log('📦 EmailJS object:', emailjs);
+    } else {
+        console.error('❌ ERROR: EmailJS library NOT loaded!');
+    }
+
+    try {
+        const system = new LeadGenerationSystem();
+        console.log('✅ Lead Generation System initialized successfully');
+        console.log('📊 System object:', system);
+    } catch (error) {
+        console.error('❌ ERROR initializing Lead Generation System:', error);
+    }
 });
 
 // Testing and Verification Functions
