@@ -394,7 +394,7 @@ class LeadGenerationSystem {
 
     async sendWelcomeEmail(leadRecord) {
         // Using your existing EmailJS service
-        const SERVICE_ID = 'service_8h9k2lm'; // Your EmailJS service ID
+        const SERVICE_ID = 'service_l2m9z4m'; // Your EmailJS service ID (Outlook)
         const TEMPLATE_ID = 'template_lr9bhr9'; // Your actual EmailJS template ID for customer welcome email
 
         const templateParams = {
@@ -481,7 +481,7 @@ class LeadGenerationSystem {
 
     async sendBusinessNotification(leadRecord) {
         // Using your existing EmailJS service
-        const SERVICE_ID = 'service_8h9k2lm'; // Same service ID as welcome email
+        const SERVICE_ID = 'service_l2m9z4m'; // Same service ID as welcome email (Outlook)
         const BUSINESS_TEMPLATE_ID = 'template_discount_business'; // Template you'll create in EmailJS
 
         const businessParams = {
