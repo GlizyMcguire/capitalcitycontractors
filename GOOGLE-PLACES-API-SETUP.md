@@ -16,7 +16,7 @@ Your discount code form now includes **address autocomplete** functionality that
 ### Step 1: Get Google API Key
 
 1. **Go to Google Cloud Console**
-   - Visit: https://console.cloud.google.com/
+   - Visit: htorm tps://console.cloud.google.com/
 
 2. **Create or Select a Project**
    - Click "Select a project" at the top

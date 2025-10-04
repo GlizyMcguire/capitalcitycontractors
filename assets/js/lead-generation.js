@@ -1,80 +1,179 @@
 /**
  * Lead Generation System with Unique Discount Code Generation
  * Capital City Contractors - Strategic Lead Capture
+ * Version: 2.0 - Enhanced Debugging & Error Handling
  */
+
+// Global error handler for debugging
+window.addEventListener('error', function(e) {
+    console.error('🚨 GLOBAL ERROR:', e.message, 'at', e.filename, 'line', e.lineno);
+});
+
+console.log('📦 lead-generation.js: Script file loaded successfully');
+console.log('🕐 Timestamp:', new Date().toISOString());
 
 class LeadGenerationSystem {
     constructor() {
-        this.form = document.getElementById('discountForm');
-        this.successDiv = document.getElementById('discountSuccess');
-        this.formContainer = document.querySelector('.lead-gen-form-container');
-        this.generatedCodeSpan = document.getElementById('generatedCode');
-        this.copyCodeBtn = document.getElementById('copyCodeBtn');
-        
-        this.init();
+        console.log('🏗️ LeadGenerationSystem: Constructor called');
+
+        try {
+            // Find form elements with detailed logging
+            console.log('🔍 Searching for form element with ID: discountForm');
+            this.form = document.getElementById('discountForm');
+
+            if (this.form) {
+                console.log('✅ Form found:', this.form);
+                console.log('📋 Form attributes:', {
+                    id: this.form.id,
+                    className: this.form.className,
+                    action: this.form.action,
+                    method: this.form.method
+                });
+            } else {
+                console.error('❌ CRITICAL: Form with ID "discountForm" NOT FOUND in DOM');
+                console.log('🔍 Available forms on page:', document.querySelectorAll('form'));
+            }
+
+            this.successDiv = document.getElementById('discountSuccess');
+            this.formContainer = document.querySelector('.lead-gen-form-container');
+            this.generatedCodeSpan = document.getElementById('generatedCode');
+            this.copyCodeBtn = document.getElementById('copyCodeBtn');
+
+            console.log('📊 Element status:', {
+                form: !!this.form,
+                successDiv: !!this.successDiv,
+                formContainer: !!this.formContainer,
+                generatedCodeSpan: !!this.generatedCodeSpan,
+                copyCodeBtn: !!this.copyCodeBtn
+            });
+
+            this.init();
+        } catch (error) {
+            console.error('❌ ERROR in constructor:', error);
+            console.error('Stack trace:', error.stack);
+        }
     }
 
     init() {
-        if (this.form) {
-            this.form.addEventListener('submit', this.handleFormSubmit.bind(this));
-        }
-        
-        if (this.copyCodeBtn) {
-            this.copyCodeBtn.addEventListener('click', this.copyDiscountCode.bind(this));
+        console.log('🔧 Initializing Lead Generation System...');
+
+        try {
+            if (this.form) {
+                console.log('✅ Attaching submit event listener to form');
+                this.form.addEventListener('submit', this.handleFormSubmit.bind(this));
+                console.log('✅ Submit event listener attached successfully');
+
+                // Test if event listener is working
+                console.log('🧪 Testing event listener attachment...');
+                const testListener = () => console.log('✅ Event listener test: Working!');
+                this.form.addEventListener('test', testListener);
+                this.form.dispatchEvent(new Event('test'));
+                this.form.removeEventListener('test', testListener);
+            } else {
+                console.error('❌ Cannot attach event listener: form is null');
+            }
+
+            if (this.copyCodeBtn) {
+                console.log('✅ Attaching click event listener to copy button');
+                this.copyCodeBtn.addEventListener('click', this.copyDiscountCode.bind(this));
+            }
+
+            console.log('✅ Lead Generation System initialized successfully');
+        } catch (error) {
+            console.error('❌ ERROR in init():', error);
+            console.error('Stack trace:', error.stack);
         }
     }
 
     async handleFormSubmit(e) {
+        console.log('═══════════════════════════════════════════════════');
         console.log('🎯 FORM SUBMITTED! handleFormSubmit called');
+        console.log('🕐 Timestamp:', new Date().toISOString());
         console.log('📝 Event:', e);
-
-        e.preventDefault();
-
-        console.log('✅ Default form submission prevented');
-        console.log('🔄 Starting discount code generation process...');
-
-        const formData = new FormData(this.form);
-
-        // Get validated address if available (from Google Places Autocomplete)
-        const validatedAddressData = typeof window.getValidatedAddress === 'function'
-            ? window.getValidatedAddress()
-            : null;
-
-        const leadData = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            phone: formData.get('phone') || '',
-            address: formData.get('address') || '',
-            addressValidated: validatedAddressData || null, // Store full validated address data
-            project: formData.get('project') || 'Not specified',
-            timestamp: new Date().toISOString(),
-            source: 'Homepage Discount Form'
-        };
-
-        // Validate required fields
-        if (!leadData.name || !leadData.email || !leadData.address) {
-            this.showError('Please fill in all required fields (Name, Email, and Address).');
-            return;
-        }
-
-        // Validate email format
-        if (!this.isValidEmail(leadData.email)) {
-            this.showError('Please enter a valid email address.');
-            return;
-        }
-
-        // Check for duplicate address (fraud prevention - 1 code per household)
-        if (this.isDuplicateAddress(leadData.address)) {
-            this.showError('This address has already received a discount code. Limit: 1 code per household.');
-            return;
-        }
+        console.log('📝 Event type:', e.type);
+        console.log('📝 Event target:', e.target);
+        console.log('═══════════════════════════════════════════════════');
 
         try {
+            e.preventDefault();
+            console.log('✅ Default form submission prevented');
+
+            // Check EmailJS availability
+            console.log('🔍 Checking EmailJS availability...');
+            if (typeof emailjs === 'undefined') {
+                console.error('❌ CRITICAL: EmailJS library is NOT loaded!');
+                console.error('💡 Solution: Check if EmailJS script tag is in HTML');
+                alert('Error: Email service not loaded. Please refresh the page and try again.');
+                return;
+            }
+            console.log('✅ EmailJS library is available');
+
+            console.log('🔄 Starting discount code generation process...');
+
+            const formData = new FormData(this.form);
+            console.log('📋 Form data created');
+
+            // Log all form fields
+            console.log('📝 Form fields:');
+            for (let [key, value] of formData.entries()) {
+                console.log(`  - ${key}: ${value}`);
+            }
+
+            // Get validated address if available (from Google Places Autocomplete)
+            console.log('🔍 Checking for validated address data...');
+            const validatedAddressData = typeof window.getValidatedAddress === 'function'
+                ? window.getValidatedAddress()
+                : null;
+            console.log('📍 Validated address data:', validatedAddressData || 'None');
+
+            const leadData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone') || '',
+                address: formData.get('address') || '',
+                addressValidated: validatedAddressData || null,
+                project: formData.get('project') || 'Not specified',
+                timestamp: new Date().toISOString(),
+                source: 'Homepage Discount Form'
+            };
+
+            console.log('📊 Lead data compiled:', leadData);
+
+            // Validate required fields
+            console.log('✅ Validating required fields...');
+            if (!leadData.name || !leadData.email || !leadData.address) {
+                console.error('❌ Validation failed: Missing required fields');
+                this.showError('Please fill in all required fields (Name, Email, and Address).');
+                return;
+            }
+            console.log('✅ All required fields present');
+
+            // Validate email format
+            console.log('✅ Validating email format...');
+            if (!this.isValidEmail(leadData.email)) {
+                console.error('❌ Validation failed: Invalid email format');
+                this.showError('Please enter a valid email address.');
+                return;
+            }
+            console.log('✅ Email format valid');
+
+            // Check for duplicate address (fraud prevention - 1 code per household)
+            console.log('🔍 Checking for duplicate address...');
+            if (this.isDuplicateAddress(leadData.address)) {
+                console.warn('⚠️ Duplicate address detected:', leadData.address);
+                this.showError('This address has already received a discount code. Limit: 1 code per household.');
+                return;
+            }
+            console.log('✅ No duplicate address found');
+
             // Show loading state
+            console.log('⏳ Setting form to loading state...');
             this.setFormLoading(true);
 
             // Generate unique discount code
+            console.log('🎲 Generating unique discount code...');
             const discountCode = this.generateUniqueCode();
+            console.log('✅ Discount code generated:', discountCode);
 
             // Store lead data with discount code
             const leadRecord = {
@@ -83,24 +182,57 @@ class LeadGenerationSystem {
                 codeExpiry: this.getExpiryDate(30), // 30 days from now
                 used: false
             };
+            console.log('📦 Lead record created:', leadRecord);
 
             // Save to localStorage for tracking
+            console.log('💾 Saving lead record to localStorage...');
             this.saveLeadRecord(leadRecord);
+            console.log('✅ Lead record saved');
 
             // Send email notification (using EmailJS if configured)
+            console.log('📧 Sending email notification...');
             await this.sendEmailNotification(leadRecord);
+            console.log('✅ Email notification sent');
 
             // Show success message
+            console.log('🎉 Showing success message...');
             this.showSuccess(discountCode);
+            console.log('✅ Success message displayed');
 
             // Track conversion event
+            console.log('📊 Tracking conversion event...');
             this.trackConversion(leadRecord);
+            console.log('✅ Conversion tracked');
 
         } catch (error) {
-            console.error('Lead generation error:', error);
+            console.error('═══════════════════════════════════════════════════');
+            console.error('❌ CRITICAL ERROR in handleFormSubmit');
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+            console.error('Error object:', error);
+            console.error('═══════════════════════════════════════════════════');
+
+            // Show user-friendly error
             this.showError('Something went wrong. Please try again or call us directly at (613) 301-1311.');
+
+            // Alert for debugging (remove in production)
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                alert('DEBUG ERROR: ' + error.message + '\nCheck console for details.');
+            }
         } finally {
+            console.log('🔄 Resetting form loading state...');
             this.setFormLoading(false);
+            console.log('✅ Form loading state reset');
+        }
+
+        } catch (outerError) {
+            console.error('═══════════════════════════════════════════════════');
+            console.error('❌ OUTER CATCH: Critical error in handleFormSubmit');
+            console.error('This error occurred outside the main try-catch block');
+            console.error('Error:', outerError);
+            console.error('Stack:', outerError.stack);
+            console.error('═══════════════════════════════════════════════════');
+            alert('Critical error: ' + outerError.message);
         }
     }
 
@@ -1126,7 +1258,15 @@ class LeadGenerationSystem {
 }
 
 // Initialize when DOM is loaded
+console.log('📝 Registering DOMContentLoaded event listener...');
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('═══════════════════════════════════════════════════');
+    console.log('🚀 DOMContentLoaded event fired!');
+    console.log('🕐 Timestamp:', new Date().toISOString());
+    console.log('📍 Location:', window.location.href);
+    console.log('═══════════════════════════════════════════════════');
+
     console.log('🚀 Lead Generation System: Initializing...');
     console.log('🔍 Looking for form with ID: discountForm');
 
@@ -1134,26 +1274,68 @@ document.addEventListener('DOMContentLoaded', function() {
     if (form) {
         console.log('✅ Discount form found!');
         console.log('📋 Form element:', form);
+        console.log('📋 Form ID:', form.id);
+        console.log('📋 Form class:', form.className);
+        console.log('📋 Form parent:', form.parentElement);
     } else {
         console.error('❌ ERROR: Discount form NOT found! Check if ID="discountForm" exists in HTML');
+        console.log('🔍 All forms on page:', document.querySelectorAll('form'));
+        console.log('🔍 All elements with "discount" in ID:',
+            Array.from(document.querySelectorAll('[id*="discount"]')).map(el => ({
+                id: el.id,
+                tag: el.tagName,
+                class: el.className
+            }))
+        );
     }
 
     console.log('🔧 Checking EmailJS availability...');
     if (typeof emailjs !== 'undefined') {
         console.log('✅ EmailJS library loaded successfully');
         console.log('📦 EmailJS object:', emailjs);
+        console.log('📦 EmailJS methods:', Object.keys(emailjs));
     } else {
         console.error('❌ ERROR: EmailJS library NOT loaded!');
+        console.error('💡 Check if script tag exists: <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>');
+        console.error('💡 Check browser console for script loading errors');
+        console.error('💡 Check network tab for failed requests');
     }
 
+    console.log('🔧 Checking window.emailjs:', window.emailjs);
+    console.log('🔧 Checking global emailjs:', typeof window['emailjs']);
+
     try {
+        console.log('🏗️ Creating LeadGenerationSystem instance...');
         const system = new LeadGenerationSystem();
         console.log('✅ Lead Generation System initialized successfully');
         console.log('📊 System object:', system);
+        console.log('📊 System has form:', !!system.form);
+        console.log('📊 System form ID:', system.form ? system.form.id : 'N/A');
+
+        // Make system globally accessible for debugging
+        window.leadGenSystem = system;
+        console.log('✅ System available globally as window.leadGenSystem');
+
     } catch (error) {
-        console.error('❌ ERROR initializing Lead Generation System:', error);
+        console.error('═══════════════════════════════════════════════════');
+        console.error('❌ CRITICAL ERROR initializing Lead Generation System');
+        console.error('Error message:', error.message);
+        console.error('Error stack:', error.stack);
+        console.error('Error object:', error);
+        console.error('═══════════════════════════════════════════════════');
+
+        // Show alert for critical errors
+        alert('CRITICAL ERROR: Lead Generation System failed to initialize.\n\n' +
+              'Error: ' + error.message + '\n\n' +
+              'Please check the browser console (F12) for details.');
     }
+
+    console.log('═══════════════════════════════════════════════════');
+    console.log('✅ DOMContentLoaded initialization complete');
+    console.log('═══════════════════════════════════════════════════');
 });
+
+console.log('✅ DOMContentLoaded event listener registered');
 
 // Testing and Verification Functions
 LeadGenerationSystem.testEmailSystem = async function() {
