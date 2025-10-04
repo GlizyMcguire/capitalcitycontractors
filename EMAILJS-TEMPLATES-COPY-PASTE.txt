@@ -1,0 +1,205 @@
+================================================================================
+EMAILJS TEMPLATE #1: CUSTOMER WELCOME EMAIL
+================================================================================
+
+Template Name: Discount Code - Customer Welcome
+Template ID: template_discount_welcome
+To Email: {{to_email}}
+
+--------------------------------------------------------------------------------
+SUBJECT LINE:
+--------------------------------------------------------------------------------
+🎁 Your 15% Discount Code is Ready! - Capital City Contractors
+
+--------------------------------------------------------------------------------
+EMAIL BODY (Copy everything below):
+--------------------------------------------------------------------------------
+
+Hi {{to_name}},
+
+Thank you for your interest in Capital City Contractors! We're excited to help you with your {{project_type}} project.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎟️  YOUR EXCLUSIVE DISCOUNT CODE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    {{discount_code}}
+
+💰 Save {{discount_percentage}} on your first project!
+📅 Valid until: {{expiry_date}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HOW TO USE YOUR CODE:
+
+1. Call us at {{company_phone}} to discuss your project
+2. Mention your discount code: {{discount_code}}
+3. Schedule your FREE estimate
+4. Save {{discount_percentage}} on your renovation project!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHY CHOOSE CAPITAL CITY CONTRACTORS?
+
+✅ {{experience_years}} years of experience in Ottawa
+✅ Fully licensed and insured
+✅ {{customer_count}} satisfied customers
+✅ {{rating}}
+✅ 100% Satisfaction Guaranteed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+READY TO GET STARTED?
+
+📞 Call: {{company_phone}}
+📧 Email: {{company_email}}
+🌐 Website: {{website}}
+
+We look forward to transforming your space!
+
+Best regards,
+The Capital City Contractors Team
+
+---
+This is an automated message. Your discount code is unique and can only be used once.
+
+
+================================================================================
+EMAILJS TEMPLATE #2: BUSINESS NOTIFICATION EMAIL
+================================================================================
+
+Template Name: Discount Code - Business Alert
+Template ID: template_discount_business
+To Email: info@capitalcitycontractors.ca
+
+--------------------------------------------------------------------------------
+SUBJECT LINE:
+--------------------------------------------------------------------------------
+{{subject}}
+
+--------------------------------------------------------------------------------
+EMAIL BODY (Copy everything below):
+--------------------------------------------------------------------------------
+
+🚨 NEW LEAD ALERT - DISCOUNT CODE REQUESTED
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 LEAD INFORMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Name: {{lead_name}}
+Email: {{lead_email}}
+Phone: {{lead_phone}}
+Address: {{lead_address}}
+Project Type: {{project_type}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎟️  DISCOUNT CODE ISSUED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Code: {{discount_code}}
+Timestamp: {{timestamp}}
+Source: {{source}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ ACTION REQUIRED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Priority: {{priority}}
+Lead Score: {{lead_score}}/100
+
+RECOMMENDED ACTIONS:
+{{action_items}}
+
+Contact Methods:
+{{lead_contact_methods}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 CRM ACCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{{crm_access}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This is an automated notification from your lead generation system.
+Form URL: {{form_url}}
+System: {{system_info}}
+
+
+================================================================================
+STEP-BY-STEP INSTRUCTIONS
+================================================================================
+
+1. Go to: https://dashboard.emailjs.com/
+2. Log in to your account
+3. Click "Email Templates" in the left sidebar
+4. Click "Create New Template"
+
+FOR TEMPLATE #1 (Customer Welcome):
+5. Template Name: Discount Code - Customer Welcome
+6. Template ID: template_discount_welcome
+7. To Email: {{to_email}}
+8. Copy the SUBJECT LINE above
+9. Copy the EMAIL BODY above
+10. Click "Save"
+
+FOR TEMPLATE #2 (Business Notification):
+11. Click "Create New Template" again
+12. Template Name: Discount Code - Business Alert
+13. Template ID: template_discount_business
+14. To Email: info@capitalcitycontractors.ca
+15. Copy the SUBJECT LINE above
+16. Copy the EMAIL BODY above
+17. Click "Save"
+
+DONE! Your templates are ready.
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+- Template IDs MUST match exactly (case-sensitive)
+- Don't modify the {{variable}} placeholders - EmailJS will replace them
+- The system automatically fills in all variables when sending emails
+- Test by submitting the discount form on your website
+
+================================================================================
+VARIABLES USED (For Reference)
+================================================================================
+
+Customer Email Variables:
+- {{to_name}} - Customer's name
+- {{to_email}} - Customer's email
+- {{discount_code}} - Generated discount code
+- {{project_type}} - Selected project type
+- {{expiry_date}} - Code expiration date
+- {{discount_percentage}} - "15%"
+- {{company_phone}} - "(613) 301-1311"
+- {{company_email}} - "info@capitalcitycontractors.ca"
+- {{website}} - "https://capitalcitycontractors.ca"
+- {{experience_years}} - "14+"
+- {{customer_count}} - "500+"
+- {{rating}} - "5-star Google rating"
+
+Business Email Variables:
+- {{subject}} - Dynamic subject line
+- {{lead_name}} - Customer's name
+- {{lead_email}} - Customer's email
+- {{lead_phone}} - Customer's phone
+- {{lead_address}} - Customer's address
+- {{project_type}} - Selected project type
+- {{discount_code}} - Generated discount code
+- {{timestamp}} - Submission timestamp
+- {{source}} - "Homepage Discount Form"
+- {{priority}} - "HIGH"
+- {{lead_score}} - Calculated score (0-100)
+- {{action_items}} - Recommended actions
+- {{lead_contact_methods}} - Contact info summary
+- {{crm_access}} - Dashboard access instructions
+- {{form_url}} - Website URL
+- {{system_info}} - System information
+
+================================================================================
+END OF TEMPLATE CONTENT
+================================================================================

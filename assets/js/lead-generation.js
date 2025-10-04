@@ -26,20 +26,21 @@ class LeadGenerationSystem {
 
     async handleFormSubmit(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(this.form);
         const leadData = {
             name: formData.get('name'),
             email: formData.get('email'),
             phone: formData.get('phone') || '',
+            address: formData.get('address') || '',
             project: formData.get('project') || 'Not specified',
             timestamp: new Date().toISOString(),
             source: 'Homepage Discount Form'
         };
 
         // Validate required fields
-        if (!leadData.name || !leadData.email) {
-            this.showError('Please fill in all required fields.');
+        if (!leadData.name || !leadData.email || !leadData.address) {
+            this.showError('Please fill in all required fields (Name, Email, and Address).');
             return;
         }
 
@@ -49,13 +50,19 @@ class LeadGenerationSystem {
             return;
         }
 
+        // Check for duplicate address (fraud prevention - 1 code per household)
+        if (this.isDuplicateAddress(leadData.address)) {
+            this.showError('This address has already received a discount code. Limit: 1 code per household.');
+            return;
+        }
+
         try {
             // Show loading state
             this.setFormLoading(true);
 
             // Generate unique discount code
             const discountCode = this.generateUniqueCode();
-            
+
             // Store lead data with discount code
             const leadRecord = {
                 ...leadData,
@@ -97,25 +104,51 @@ class LeadGenerationSystem {
         return date.toISOString();
     }
 
+    isDuplicateAddress(address) {
+        try {
+            // Normalize address for comparison (remove spaces, lowercase, remove punctuation)
+            const normalizedAddress = address.toLowerCase()
+                .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+                .replace(/\s+/g, '');
+
+            // Get existing leads
+            const existingLeads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
+
+            // Check if any existing lead has the same normalized address
+            return existingLeads.some(lead => {
+                if (!lead.address) return false;
+
+                const existingNormalizedAddress = lead.address.toLowerCase()
+                    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+                    .replace(/\s+/g, '');
+
+                return existingNormalizedAddress === normalizedAddress;
+            });
+        } catch (error) {
+            console.error('Error checking duplicate address:', error);
+            return false; // Allow submission if check fails
+        }
+    }
+
     saveLeadRecord(leadRecord) {
         try {
             // Get existing leads
             const existingLeads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
-            
+
             // Add new lead
             existingLeads.push(leadRecord);
-            
+
             // Keep only last 100 leads to prevent storage bloat
             if (existingLeads.length > 100) {
                 existingLeads.splice(0, existingLeads.length - 100);
             }
-            
+
             // Save back to localStorage
             localStorage.setItem('ccc_leads', JSON.stringify(existingLeads));
-            
+
             // Also save individual record for easy access
             localStorage.setItem(`ccc_lead_${leadRecord.discountCode}`, JSON.stringify(leadRecord));
-            
+
         } catch (error) {
             console.error('Error saving lead record:', error);
         }
@@ -128,9 +161,8 @@ class LeadGenerationSystem {
                 throw new Error('EmailJS library not loaded');
             }
 
-            // Initialize EmailJS with public key
-            // IMPORTANT: Replace with your actual EmailJS public key
-            const PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY'; // Replace this
+            // Initialize EmailJS with your existing public key
+            const PUBLIC_KEY = 'Ej7_wQOBOKJhHgJhJ'; // Your actual EmailJS public key
             emailjs.init(PUBLIC_KEY);
 
             console.log('🔧 EmailJS initialized, sending emails...');
@@ -225,9 +257,9 @@ class LeadGenerationSystem {
     }
 
     async sendWelcomeEmail(leadRecord) {
-        // IMPORTANT: Replace these with your actual EmailJS IDs
-        const SERVICE_ID = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-        const TEMPLATE_ID = 'YOUR_WELCOME_TEMPLATE_ID'; // Replace with your welcome template ID
+        // Using your existing EmailJS service
+        const SERVICE_ID = 'service_8h9k2lm'; // Your EmailJS service ID
+        const TEMPLATE_ID = 'template_discount_welcome'; // Template you'll create in EmailJS
 
         const templateParams = {
             // Standard EmailJS parameters
@@ -240,6 +272,7 @@ class LeadGenerationSystem {
             discount_code: leadRecord.discountCode,
             project_type: leadRecord.project || 'Not specified',
             customer_phone: leadRecord.phone || 'Not provided',
+            customer_address: leadRecord.address || 'Not provided',
             expiry_date: new Date(leadRecord.codeExpiry).toLocaleDateString('en-CA', {
                 year: 'numeric',
                 month: 'long',
@@ -311,9 +344,9 @@ class LeadGenerationSystem {
     }
 
     async sendBusinessNotification(leadRecord) {
-        // IMPORTANT: Replace these with your actual EmailJS IDs
-        const SERVICE_ID = 'YOUR_SERVICE_ID'; // Same service ID as welcome email
-        const BUSINESS_TEMPLATE_ID = 'YOUR_BUSINESS_TEMPLATE_ID'; // Replace with your business notification template ID
+        // Using your existing EmailJS service
+        const SERVICE_ID = 'service_8h9k2lm'; // Same service ID as welcome email
+        const BUSINESS_TEMPLATE_ID = 'template_discount_business'; // Template you'll create in EmailJS
 
         const businessParams = {
             // EmailJS standard parameters
@@ -326,6 +359,7 @@ class LeadGenerationSystem {
             lead_name: leadRecord.name,
             lead_email: leadRecord.email,
             lead_phone: leadRecord.phone || 'Not provided',
+            lead_address: leadRecord.address || 'Not provided',
             project_type: leadRecord.project || 'Not specified',
             discount_code: leadRecord.discountCode,
 
@@ -356,12 +390,12 @@ class LeadGenerationSystem {
 
             // Contact methods
             lead_contact_methods: leadRecord.phone ?
-                `Phone: ${leadRecord.phone} | Email: ${leadRecord.email}` :
-                `Email: ${leadRecord.email} (No phone provided)`,
+                `Phone: ${leadRecord.phone} | Email: ${leadRecord.email} | Address: ${leadRecord.address}` :
+                `Email: ${leadRecord.email} | Address: ${leadRecord.address} (No phone provided)`,
 
             // System information
             system_info: 'Automated notification from lead generation system',
-            crm_access: 'Press Ctrl+Shift+C on website to access CRM dashboard',
+            crm_access: 'Type LeadGenerationSystem.createCRMDashboard() in browser console to access CRM',
 
             // Lead scoring (simple implementation)
             lead_score: this.calculateLeadScore(leadRecord),
@@ -782,6 +816,7 @@ class LeadGenerationSystem {
                                     <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Name</th>
                                     <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Email</th>
                                     <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Phone</th>
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Address</th>
                                     <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Project</th>
                                     <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Discount Code</th>
                                     <th style="padding: 12px; text-align: left; border: 1px solid #d1d5db;">Date</th>
@@ -798,6 +833,7 @@ class LeadGenerationSystem {
                                         <td style="padding: 12px; border: 1px solid #d1d5db;">
                                             ${lead.phone ? `<a href="tel:${lead.phone}" style="color: #059669;">${lead.phone}</a>` : 'N/A'}
                                         </td>
+                                        <td style="padding: 12px; border: 1px solid #d1d5db; font-size: 12px;">${lead.address || 'N/A'}</td>
                                         <td style="padding: 12px; border: 1px solid #d1d5db;">${lead.project || 'Not specified'}</td>
                                         <td style="padding: 12px; border: 1px solid #d1d5db; font-family: monospace; font-weight: bold;">${lead.discountCode}</td>
                                         <td style="padding: 12px; border: 1px solid #d1d5db;">${new Date(lead.timestamp).toLocaleDateString('en-CA')}</td>
@@ -837,11 +873,12 @@ class LeadGenerationSystem {
     static exportLeadsCSV() {
         const leads = JSON.parse(localStorage.getItem('ccc_leads') || '[]');
         const csvContent = [
-            ['Name', 'Email', 'Phone', 'Project', 'Discount Code', 'Date', 'Expiry', 'Used', 'Source'].join(','),
+            ['Name', 'Email', 'Phone', 'Address', 'Project', 'Discount Code', 'Date', 'Expiry', 'Used', 'Source'].join(','),
             ...leads.map(lead => [
                 lead.name,
                 lead.email,
                 lead.phone || '',
+                lead.address || '',
                 lead.project || '',
                 lead.discountCode,
                 new Date(lead.timestamp).toLocaleDateString('en-CA'),
