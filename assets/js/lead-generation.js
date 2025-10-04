@@ -28,11 +28,18 @@ class LeadGenerationSystem {
         e.preventDefault();
 
         const formData = new FormData(this.form);
+
+        // Get validated address if available (from Google Places Autocomplete)
+        const validatedAddressData = typeof window.getValidatedAddress === 'function'
+            ? window.getValidatedAddress()
+            : null;
+
         const leadData = {
             name: formData.get('name'),
             email: formData.get('email'),
             phone: formData.get('phone') || '',
             address: formData.get('address') || '',
+            addressValidated: validatedAddressData || null, // Store full validated address data
             project: formData.get('project') || 'Not specified',
             timestamp: new Date().toISOString(),
             source: 'Homepage Discount Form'
