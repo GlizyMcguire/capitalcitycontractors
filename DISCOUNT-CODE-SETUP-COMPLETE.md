@@ -7,24 +7,53 @@ Your discount code system is now **production-ready**! Here's what was implement
 ### ✅ **Fixed Issues:**
 1. **EmailJS Configuration** - Now using your existing EmailJS credentials
 2. **Fraud Prevention** - Added address field with duplicate checking (1 code per household)
-3. **User Feedback** - Clear messaging about limits and better error handling
-4. **Admin Dashboard** - Already exists! (see access instructions below)
-5. **Email Tracking** - All codes are tracked with recipient details
+3. **Address Autocomplete** - Google Places API integration for address validation
+4. **User Feedback** - Clear messaging about limits and better error handling
+5. **Admin Dashboard** - Already exists! (see access instructions below)
+6. **Email Tracking** - All codes are tracked with recipient details
 
 ---
 
-## 🚀 IMMEDIATE ACTION REQUIRED: Create EmailJS Templates
+## 📋 Setup Steps Overview
+
+**Step 1**: Set up Google Places API (15 min) - See `GOOGLE-PLACES-API-SETUP.md` *(Optional but recommended)*
+**Step 2**: Create EmailJS templates (15 min) - Instructions below
+**Step 3**: Test the system (10 min) - Instructions below
+
+**Total Time**: ~40 minutes
+
+---
+
+## 🚀 STEP 1 (OPTIONAL): Google Places API Setup
+
+For **address autocomplete** functionality (validates real addresses as users type):
+
+📄 **See detailed guide**: `GOOGLE-PLACES-API-SETUP.md`
+
+**Quick summary:**
+1. Get Google API key from https://console.cloud.google.com
+2. Enable Places API
+3. Add API key to `index.html` (line 168)
+4. Test address autocomplete on your form
+
+**Benefits**: Better fraud prevention, validated addresses, improved UX
+
+**Note**: System works without this, but address validation is manual.
+
+---
+
+## 🚀 STEP 2: Create EmailJS Templates
 
 You need to create **2 email templates** in your EmailJS dashboard. Follow these steps:
 
-### Step 1: Log into EmailJS
+### EmailJS Step 1: Log into EmailJS
 1. Go to https://dashboard.emailjs.com/
 2. Log in with your account
 3. Click on **"Email Templates"** in the left sidebar
 
 ---
 
-### Step 2: Create Customer Welcome Email Template
+### EmailJS Step 2: Create Customer Welcome Email Template
 
 1. Click **"Create New Template"**
 2. **Template Name**: `Discount Code - Customer Welcome`

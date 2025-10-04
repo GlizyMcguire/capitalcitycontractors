@@ -162,6 +162,11 @@
 
     <!-- EmailJS for form submission (loaded once) -->
 
+    <!-- Google Places API for Address Autocomplete -->
+    <!-- IMPORTANT: Replace YOUR_GOOGLE_API_KEY with your actual Google API key -->
+    <!-- Enable Places API in Google Cloud Console: https://console.cloud.google.com -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places&callback=initAddressAutocomplete" async defer></script>
+
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
     {
@@ -3152,8 +3157,11 @@
 
     <!-- EmailJS already loaded above -->
 
+    <!-- Address Autocomplete System -->
+    <script src="assets/js/address-autocomplete.js" defer></script>
+
     <!-- Lead Generation System -->
-    <script src="assets/js/lead-generation.js?v=20250104" defer></script>
+    <script src="assets/js/lead-generation.js?v=20250104b" defer></script>
 
     <!-- CRM Dashboard Access (Admin Only) -->
     <script>
