@@ -398,9 +398,9 @@ class LeadGenerationSystem {
         const TEMPLATE_ID = 'template_lr9bhr9'; // Your actual EmailJS template ID for customer welcome email
 
         const templateParams = {
-            // Standard EmailJS parameters
+            // EmailJS template parameters - must match template variables
+            email: leadRecord.email, // {{email}} in template - recipient address
             to_name: leadRecord.name,
-            to_email: leadRecord.email,
             from_name: 'Capital City Contractors',
             reply_to: 'info@capitalcitycontractors.ca',
 
