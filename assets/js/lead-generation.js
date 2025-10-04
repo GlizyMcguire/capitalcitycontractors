@@ -266,7 +266,7 @@ class LeadGenerationSystem {
     async sendWelcomeEmail(leadRecord) {
         // Using your existing EmailJS service
         const SERVICE_ID = 'service_8h9k2lm'; // Your EmailJS service ID
-        const TEMPLATE_ID = 'template_discount_welcome'; // Template you'll create in EmailJS
+        const TEMPLATE_ID = 'template_lr9bhr9'; // Your actual EmailJS template ID for customer welcome email
 
         const templateParams = {
             // Standard EmailJS parameters
