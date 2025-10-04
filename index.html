@@ -169,8 +169,10 @@
 
     <!-- EmailJS for form submission (loaded once) -->
 
-    <!-- Google Places API for Address Autocomplete -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8&libraries=places&callback=initAddressAutocomplete" async defer></script>
+    <!-- Google Places API for Address Autocomplete - DISABLED due to input field conflicts -->
+    <!-- The autocomplete feature is causing the address field to lock up after typing -->
+    <!-- Address field will work as normal text input until this issue is resolved -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoYgZoPvlBxiR2ud7OuWJxF5ChnG5_Dr8&libraries=places&callback=initAddressAutocomplete" async defer></script> -->
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">
@@ -3162,11 +3164,11 @@
 
     <!-- EmailJS already loaded above -->
 
-    <!-- Address Autocomplete System -->
-    <script src="assets/js/address-autocomplete.js" defer></script>
+    <!-- Address Autocomplete System - DISABLED (causing input field to lock up) -->
+    <!-- <script src="assets/js/address-autocomplete.js" defer></script> -->
 
     <!-- Lead Generation System -->
-    <script src="assets/js/lead-generation.js?v=20250104f" defer></script>
+    <script src="assets/js/lead-generation.js?v=20250104g" defer></script>
 
     <!-- CRM Dashboard Access (Admin Only) -->
     <script>
