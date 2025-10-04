@@ -415,10 +415,19 @@ class CRMDashboard {
     
     getMetrics() {
         const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
         const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
-        
+
         const newLeadsThisWeek = this.leads.filter(l => new Date(l.createdAt) >= weekAgo).length;
-        const overdueTasks = this.tasks.filter(t => !t.completed && t.dueDate && new Date(t.dueDate) < now).length;
+
+        // Task is overdue only if due date is BEFORE today (not including today)
+        const overdueTasks = this.tasks.filter(t => {
+            if (t.completed || !t.dueDate) return false;
+            const dueDate = new Date(t.dueDate);
+            const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+            return dueDateOnly < today;
+        }).length;
+
         const pipelineValue = this.leads.filter(l => !['won', 'lost'].includes(l.status))
             .reduce((sum, l) => sum + (l.estimatedValue || 0), 0);
         const wonThisMonth = this.leads.filter(l => {
@@ -427,7 +436,7 @@ class CRMDashboard {
             return created.getMonth() === now.getMonth() && created.getFullYear() === now.getFullYear();
         }).length;
         const listGrowth = this.contacts.filter(c => c.emailConsent || c.smsConsent).length;
-        
+
         return { newLeadsThisWeek, overdueTasks, pipelineValue, wonThisMonth, listGrowth };
     }
 
@@ -475,10 +484,17 @@ class CRMDashboard {
 
     renderDashboard() {
         const metrics = this.getMetrics();
-        const todayTasks = this.tasks.filter(t => {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        // Get tasks due today or overdue
+        const todayAndOverdueTasks = this.tasks.filter(t => {
             if (t.completed || !t.dueDate) return false;
-            return new Date(t.dueDate).toDateString() === new Date().toDateString();
-        });
+            const dueDate = new Date(t.dueDate);
+            const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+            // Include today and any past dates
+            return dueDateOnly <= today;
+        }).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
         return `
 
@@ -526,14 +542,22 @@ class CRMDashboard {
 
             <!-- Today Panel -->
             <div class="crm-section">
-                <h2>Today</h2>
+                <h2>Today & Overdue Tasks</h2>
                 <div class="crm-today">
-                    ${todayTasks.length > 0 ? todayTasks.map(task => {
+                    ${todayAndOverdueTasks.length > 0 ? todayAndOverdueTasks.map(task => {
                         const related = this.getRelatedName(task.relatedTo);
+                        const dueDate = new Date(task.dueDate);
+                        const dueDateOnly = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+                        const isOverdue = dueDateOnly < today;
+                        const isToday = dueDateOnly.getTime() === today.getTime();
+
                         return `
-                            <div class="crm-task-item">
+                            <div class="crm-task-item ${isOverdue ? 'overdue' : ''}">
                                 <input type="checkbox" onchange="window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();">
-                                <span>${task.title} ${related ? `- ${related}` : ''}</span>
+                                <span>
+                                    ${isOverdue ? '⚠️ ' : ''}${task.title} ${related ? `- ${related}` : ''}
+                                    <small class="crm-task-date">${isToday ? 'Today' : dueDate.toLocaleDateString()}</small>
+                                </span>
                             </div>
                         `;
                     }).join('') : '<p class="crm-empty">No tasks due today</p>'}
@@ -988,6 +1012,24 @@ class CRMDashboard {
 
             .crm-task-item:last-child {
                 border-bottom: none;
+            }
+
+            .crm-task-item.overdue {
+                background: #fee2e2;
+                padding: 8px;
+                border-radius: 4px;
+                border-bottom: 1px solid #fecaca;
+            }
+
+            .crm-task-date {
+                color: #6b7280;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+
+            .crm-task-item.overdue .crm-task-date {
+                color: #991b1b;
+                font-weight: 600;
             }
 
             .crm-empty {
