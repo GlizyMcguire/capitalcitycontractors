@@ -219,21 +219,6 @@ class LeadGenerationSystem {
             if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                 alert('DEBUG ERROR: ' + error.message + '\nCheck console for details.');
             }
-        } catch (error) {
-            console.error('═══════════════════════════════════════════════════');
-            console.error('❌ CRITICAL ERROR in handleFormSubmit');
-            console.error('Error message:', error.message);
-            console.error('Error stack:', error.stack);
-            console.error('Error object:', error);
-            console.error('═══════════════════════════════════════════════════');
-
-            // Show user-friendly error
-            this.showError('Something went wrong. Please try again or call us directly at (613) 301-1311.');
-
-            // Alert for debugging (remove in production)
-            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                alert('DEBUG ERROR: ' + error.message + '\nCheck console for details.');
-            }
         } finally {
             console.log('🔄 Resetting form loading state...');
             this.setFormLoading(false);
