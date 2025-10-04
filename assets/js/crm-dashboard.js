@@ -1,7 +1,7 @@
 /**
  * Capital City Contractors - Lean CRM Dashboard
  * Version: 3.0 - Construction Edition
- * Phase 2: Full Pipeline Board with Drag-and-Drop
+ * Phase 3: Contacts & Projects Views
  */
 
 // ==================== DATA MODELS ====================
@@ -465,15 +465,29 @@ class CRMDashboard {
                                 onclick="window.crmDashboard.switchView('dashboard')">📊 Dashboard</button>
                         <button class="crm-nav-btn ${this.currentView === 'pipeline' ? 'active' : ''}"
                                 onclick="window.crmDashboard.switchView('pipeline')">🎯 Pipeline</button>
+                        <button class="crm-nav-btn ${this.currentView === 'contacts' ? 'active' : ''}"
+                                onclick="window.crmDashboard.switchView('contacts')">👥 Contacts</button>
+                        <button class="crm-nav-btn ${this.currentView === 'projects' ? 'active' : ''}"
+                                onclick="window.crmDashboard.switchView('projects')">🏗️ Projects</button>
                     </div>
                     <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
                 </div>
 
                 <div class="crm-content">
-                    ${this.currentView === 'dashboard' ? this.renderDashboard() : this.renderPipeline()}
+                    ${this.renderCurrentView()}
                 </div>
             </div>
         `;
+    }
+
+    renderCurrentView() {
+        switch(this.currentView) {
+            case 'dashboard': return this.renderDashboard();
+            case 'pipeline': return this.renderPipeline();
+            case 'contacts': return this.renderContacts();
+            case 'projects': return this.renderProjects();
+            default: return this.renderDashboard();
+        }
     }
 
     switchView(view) {
@@ -826,6 +840,325 @@ class CRMDashboard {
 
         document.querySelector('.crm-modal').remove();
         this.render();
+    }
+
+    renderContacts() {
+        return `
+            <div class="crm-view-header">
+                <h2>👥 Contacts</h2>
+                <div class="crm-view-actions">
+                    <button class="crm-btn" onclick="window.crmDashboard.showQuickAdd('contact')">+ New Contact</button>
+                </div>
+            </div>
+
+            <div class="crm-filters-bar">
+                <button class="crm-filter-btn ${!this.contactFilter ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterContacts(null)">All (${this.contacts.length})</button>
+                <button class="crm-filter-btn ${this.contactFilter === 'email' ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterContacts('email')">Has Email (${this.contacts.filter(c => c.email).length})</button>
+                <button class="crm-filter-btn ${this.contactFilter === 'phone' ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterContacts('phone')">Has Phone (${this.contacts.filter(c => c.phone).length})</button>
+                <button class="crm-filter-btn ${this.contactFilter === 'consent' ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterContacts('consent')">Marketing Consent (${this.contacts.filter(c => c.emailConsent || c.smsConsent).length})</button>
+            </div>
+
+            <div class="crm-contacts-list">
+                ${this.getFilteredContacts().map(contact => {
+                    const contactLeads = this.leads.filter(l => l.contactId === contact.id);
+                    const contactProjects = this.projects.filter(p => p.contactId === contact.id);
+
+                    return `
+                        <div class="crm-contact-card" onclick="window.crmDashboard.selectContact('${contact.id}')">
+                            <div class="crm-contact-avatar">${contact.name.charAt(0).toUpperCase()}</div>
+                            <div class="crm-contact-info">
+                                <div class="crm-contact-name">${contact.name}</div>
+                                <div class="crm-contact-details">
+                                    ${contact.email ? `📧 ${contact.email}` : ''}
+                                    ${contact.phone ? `📞 ${contact.phone}` : ''}
+                                </div>
+                                <div class="crm-contact-meta">
+                                    ${contactLeads.length > 0 ? `<span class="crm-badge">🎯 ${contactLeads.length} leads</span>` : ''}
+                                    ${contactProjects.length > 0 ? `<span class="crm-badge">🏗️ ${contactProjects.length} projects</span>` : ''}
+                                    ${contact.emailConsent ? '<span class="crm-badge-success">✓ Email</span>' : ''}
+                                    ${contact.smsConsent ? '<span class="crm-badge-success">✓ SMS</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+
+            ${this.selectedContact ? this.renderContactDetail() : ''}
+        `;
+    }
+
+    getFilteredContacts() {
+        if (!this.contactFilter) return this.contacts;
+
+        switch(this.contactFilter) {
+            case 'email': return this.contacts.filter(c => c.email);
+            case 'phone': return this.contacts.filter(c => c.phone);
+            case 'consent': return this.contacts.filter(c => c.emailConsent || c.smsConsent);
+            default: return this.contacts;
+        }
+    }
+
+    filterContacts(filter) {
+        this.contactFilter = filter;
+        this.render();
+    }
+
+    selectContact(contactId) {
+        this.selectedContact = contactId;
+        this.render();
+    }
+
+    renderContactDetail() {
+        const contact = this.contacts.find(c => c.id === this.selectedContact);
+        if (!contact) return '';
+
+        const contactLeads = this.leads.filter(l => l.contactId === contact.id);
+        const contactProjects = this.projects.filter(p => p.contactId === contact.id);
+
+        return `
+            <div class="crm-detail-panel">
+                <div class="crm-detail-header">
+                    <h3>${contact.name}</h3>
+                    <button class="crm-btn-close" onclick="window.crmDashboard.selectedContact = null; window.crmDashboard.render();">✕</button>
+                </div>
+                <div class="crm-detail-body">
+                    <div class="crm-detail-section">
+                        <strong>Contact Info</strong>
+                        <p>📧 ${contact.email || 'No email'}</p>
+                        <p>📞 ${contact.phone || 'No phone'}</p>
+                        <p>📍 ${contact.address || 'No address'}</p>
+                    </div>
+
+                    <div class="crm-detail-section">
+                        <strong>Marketing Consent</strong>
+                        <p>${contact.emailConsent ? '✅ Email consent' : '❌ No email consent'}</p>
+                        <p>${contact.smsConsent ? '✅ SMS consent' : '❌ No SMS consent'}</p>
+                        ${contact.consentDate ? `<p><small>Consent date: ${new Date(contact.consentDate).toLocaleDateString()}</small></p>` : ''}
+                    </div>
+
+                    ${contactLeads.length > 0 ? `
+                        <div class="crm-detail-section">
+                            <strong>Leads (${contactLeads.length})</strong>
+                            ${contactLeads.map(lead => `
+                                <div class="crm-detail-item">
+                                    <span>${lead.jobType}</span>
+                                    <span class="crm-badge">${lead.status}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${contactProjects.length > 0 ? `
+                        <div class="crm-detail-section">
+                            <strong>Projects (${contactProjects.length})</strong>
+                            ${contactProjects.map(project => `
+                                <div class="crm-detail-item">
+                                    <span>${project.name}</span>
+                                    <span class="crm-badge">${project.status}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${contact.notes ? `
+                        <div class="crm-detail-section">
+                            <strong>Notes</strong>
+                            <p>${contact.notes}</p>
+                        </div>
+                    ` : ''}
+
+                    <div class="crm-detail-actions">
+                        <button class="crm-btn" onclick="window.crmDashboard.quickContactAction('${contact.id}', 'call')">📞 Call</button>
+                        <button class="crm-btn" onclick="window.crmDashboard.quickContactAction('${contact.id}', 'email')">📧 Email</button>
+                        ${contact.phone ? `<button class="crm-btn" onclick="window.crmDashboard.quickContactAction('${contact.id}', 'sms')">💬 SMS</button>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    quickContactAction(contactId, action) {
+        const contact = this.contacts.find(c => c.id === contactId);
+        if (!contact) return;
+
+        if (action === 'call' && contact.phone) {
+            window.open(`tel:${contact.phone}`);
+        } else if (action === 'email' && contact.email) {
+            window.open(`mailto:${contact.email}`);
+        } else if (action === 'sms' && contact.phone) {
+            window.open(`sms:${contact.phone}`);
+        }
+    }
+
+    renderProjects() {
+        const activeProjects = this.projects.filter(p => p.status === 'active');
+        const completedProjects = this.projects.filter(p => p.status === 'closed');
+
+        return `
+            <div class="crm-view-header">
+                <h2>🏗️ Projects</h2>
+                <div class="crm-view-actions">
+                    <span class="crm-stat-badge">Active: ${activeProjects.length}</span>
+                    <span class="crm-stat-badge">Completed: ${completedProjects.length}</span>
+                </div>
+            </div>
+
+            ${activeProjects.length > 0 ? `
+                <div class="crm-section">
+                    <h3>Active Projects</h3>
+                    <div class="crm-projects-grid">
+                        ${activeProjects.map(project => this.renderProjectCard(project)).join('')}
+                    </div>
+                </div>
+            ` : '<p class="crm-empty">No active projects</p>'}
+
+            ${completedProjects.length > 0 ? `
+                <div class="crm-section">
+                    <h3>Completed Projects</h3>
+                    <div class="crm-projects-grid">
+                        ${completedProjects.map(project => this.renderProjectCard(project)).join('')}
+                    </div>
+                </div>
+            ` : ''}
+
+            ${this.selectedProject ? this.renderProjectDetail() : ''}
+        `;
+    }
+
+    renderProjectCard(project) {
+        const contact = this.contacts.find(c => c.id === project.contactId);
+        const statusColor = project.status === 'active' ? '#10b981' : project.status === 'at-risk' ? '#f59e0b' : '#6b7280';
+
+        return `
+            <div class="crm-project-card" onclick="window.crmDashboard.selectProject('${project.id}')">
+                <div class="crm-project-header">
+                    <h4>${project.name}</h4>
+                    <span class="crm-badge" style="background: ${statusColor}; color: white;">${project.status}</span>
+                </div>
+                <div class="crm-project-body">
+                    <p>👤 ${contact?.name || 'Unknown'}</p>
+                    <p>🏠 ${project.jobType}</p>
+                    <p>📍 ${project.address}</p>
+                    <p>💰 $${this.formatMoney(project.value)}</p>
+                </div>
+                <div class="crm-project-progress">
+                    <div class="crm-progress-bar">
+                        <div class="crm-progress-fill" style="width: ${project.progress}%; background: ${statusColor};"></div>
+                    </div>
+                    <span class="crm-progress-text">${project.progress}% Complete</span>
+                </div>
+            </div>
+        `;
+    }
+
+    selectProject(projectId) {
+        this.selectedProject = projectId;
+        this.render();
+    }
+
+    renderProjectDetail() {
+        const project = this.projects.find(p => p.id === this.selectedProject);
+        if (!project) return '';
+
+        const contact = this.contacts.find(c => c.id === project.contactId);
+        const projectTasks = this.tasks.filter(t => t.relatedTo?.type === 'project' && t.relatedTo?.id === project.id);
+
+        return `
+            <div class="crm-detail-panel">
+                <div class="crm-detail-header">
+                    <h3>${project.name}</h3>
+                    <button class="crm-btn-close" onclick="window.crmDashboard.selectedProject = null; window.crmDashboard.render();">✕</button>
+                </div>
+                <div class="crm-detail-body">
+                    <div class="crm-detail-section">
+                        <strong>Project Info</strong>
+                        <p>👤 Client: ${contact?.name || 'Unknown'}</p>
+                        <p>🏠 Job Type: ${project.jobType}</p>
+                        <p>📍 Address: ${project.address}</p>
+                        <p>💰 Value: $${this.formatMoney(project.value)}</p>
+                        <p>📅 Started: ${project.startDate ? new Date(project.startDate).toLocaleDateString() : 'Not started'}</p>
+                    </div>
+
+                    <div class="crm-detail-section">
+                        <strong>Progress</strong>
+                        <div class="crm-progress-bar" style="margin: 8px 0;">
+                            <div class="crm-progress-fill" style="width: ${project.progress}%;"></div>
+                        </div>
+                        <p>${project.progress}% Complete</p>
+                        <button class="crm-btn-secondary" onclick="window.crmDashboard.updateProjectProgress('${project.id}')">Update Progress</button>
+                    </div>
+
+                    ${projectTasks.length > 0 ? `
+                        <div class="crm-detail-section">
+                            <strong>Tasks (${projectTasks.filter(t => !t.completed).length} open)</strong>
+                            ${projectTasks.map(task => `
+                                <div class="crm-detail-item">
+                                    <input type="checkbox" ${task.completed ? 'checked' : ''}
+                                           onchange="window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();">
+                                    <span>${task.title}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${project.notes ? `
+                        <div class="crm-detail-section">
+                            <strong>Notes</strong>
+                            <p>${project.notes}</p>
+                        </div>
+                    ` : ''}
+
+                    <div class="crm-detail-actions">
+                        <button class="crm-btn" onclick="window.crmDashboard.addProjectTask('${project.id}')">+ Add Task</button>
+                        <button class="crm-btn-secondary" onclick="window.crmDashboard.markProjectComplete('${project.id}')">Mark Complete</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    updateProjectProgress(projectId) {
+        const newProgress = prompt('Enter progress percentage (0-100):');
+        if (newProgress !== null) {
+            const progress = Math.min(100, Math.max(0, parseInt(newProgress) || 0));
+            const project = this.projects.find(p => p.id === projectId);
+            if (project) {
+                project.progress = progress;
+                this.save('ccc_projects', this.projects);
+                this.render();
+            }
+        }
+    }
+
+    addProjectTask(projectId) {
+        const title = prompt('Task title:');
+        if (title) {
+            this.addTask({
+                title,
+                type: 'follow-up',
+                relatedTo: { type: 'project', id: projectId },
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+            });
+            this.render();
+        }
+    }
+
+    markProjectComplete(projectId) {
+        if (confirm('Mark this project as complete?')) {
+            const project = this.projects.find(p => p.id === projectId);
+            if (project) {
+                project.status = 'closed';
+                project.progress = 100;
+                this.save('ccc_projects', this.projects);
+                this.selectedProject = null;
+                this.render();
+            }
+        }
     }
 
     getRelatedName(relatedTo) {
@@ -1274,6 +1607,202 @@ class CRMDashboard {
                 gap: 12px;
             }
 
+            /* Contacts View */
+            .crm-view-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .crm-view-actions {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+
+            .crm-stat-badge {
+                background: #f3f4f6;
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 14px;
+                color: #6b7280;
+            }
+
+            .crm-filters-bar {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+
+            .crm-filter-btn {
+                background: #f3f4f6;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 14px;
+                color: #6b7280;
+            }
+
+            .crm-filter-btn.active {
+                background: #3b82f6;
+                color: white;
+            }
+
+            .crm-contacts-list {
+                display: grid;
+                gap: 12px;
+            }
+
+            .crm-contact-card {
+                display: flex;
+                gap: 16px;
+                padding: 16px;
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .crm-contact-card:hover {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                transform: translateY(-1px);
+            }
+
+            .crm-contact-avatar {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: #3b82f6;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                font-weight: bold;
+                flex-shrink: 0;
+            }
+
+            .crm-contact-info {
+                flex: 1;
+            }
+
+            .crm-contact-name {
+                font-weight: bold;
+                font-size: 16px;
+                margin-bottom: 4px;
+            }
+
+            .crm-contact-details {
+                font-size: 14px;
+                color: #6b7280;
+                margin-bottom: 8px;
+            }
+
+            .crm-contact-meta {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .crm-badge {
+                background: #e5e7eb;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                color: #6b7280;
+            }
+
+            .crm-badge-success {
+                background: #d1fae5;
+                color: #065f46;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+            }
+
+            /* Projects View */
+            .crm-projects-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 16px;
+            }
+
+            .crm-project-card {
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                padding: 16px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .crm-project-card:hover {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transform: translateY(-2px);
+            }
+
+            .crm-project-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+                margin-bottom: 12px;
+            }
+
+            .crm-project-header h4 {
+                margin: 0;
+                font-size: 16px;
+            }
+
+            .crm-project-body {
+                font-size: 14px;
+                color: #6b7280;
+                margin-bottom: 12px;
+            }
+
+            .crm-project-body p {
+                margin: 4px 0;
+            }
+
+            .crm-project-progress {
+                margin-top: 12px;
+            }
+
+            .crm-progress-bar {
+                width: 100%;
+                height: 8px;
+                background: #e5e7eb;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-bottom: 4px;
+            }
+
+            .crm-progress-fill {
+                height: 100%;
+                background: #3b82f6;
+                transition: width 0.3s;
+            }
+
+            .crm-progress-text {
+                font-size: 12px;
+                color: #6b7280;
+            }
+
+            .crm-detail-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .crm-detail-item:last-child {
+                border-bottom: none;
+            }
+
             @media (max-width: 768px) {
                 .crm-metrics {
                     grid-template-columns: 1fr;
@@ -1289,6 +1818,10 @@ class CRMDashboard {
 
                 .crm-detail-panel {
                     width: 100%;
+                }
+
+                .crm-projects-grid {
+                    grid-template-columns: 1fr;
                 }
             }
         `;
@@ -1308,5 +1841,5 @@ window.showCRM = function() {
 
 window.showCRMDashboard = window.showCRM;
 
-console.log('✅ CRM v3.0 Phase 2 loaded. Type showCRM() to open.');
+console.log('✅ CRM v3.0 Phase 3 loaded. Type showCRM() to open.');
 
