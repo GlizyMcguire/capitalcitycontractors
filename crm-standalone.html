@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital City Contractors - CRM Dashboard</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        h1 {
+            font-size: 32px;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+            margin: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 64, 175, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .info {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 32px;
+            text-align: left;
+        }
+        
+        .info h3 {
+            color: #1e293b;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        
+        .info ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .info li {
+            color: #475569;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .info li:last-child {
+            border-bottom: none;
+        }
+        
+        .info li::before {
+            content: "✓";
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .version {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 24px;
+        }
+        
+        #status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: none;
+        }
+        
+        #status.success {
+            background: #dcfce7;
+            color: #166534;
+            display: block;
+        }
+        
+        #status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🏗️</div>
+        <h1>CRM Dashboard</h1>
+        <p class="subtitle">Capital City Contractors Lead Management System</p>
+        
+        <button class="btn" onclick="openCRM()">
+            🚀 Launch CRM Dashboard
+        </button>
+        
+        <button class="btn" onclick="exportData()">
+            📊 Export All Data
+        </button>
+        
+        <div id="status"></div>
+        
+        <div class="info">
+            <h3>Features</h3>
+            <ul>
+                <li>Real-time lead tracking and analytics</li>
+                <li>Advanced filtering and search</li>
+                <li>Status management and notes</li>
+                <li>Data visualization with charts</li>
+                <li>CSV export and print reports</li>
+                <li>Bulk operations and sorting</li>
+            </ul>
+        </div>
+        
+        <div class="version">
+            Version 2.0 | Standalone Desktop Application
+        </div>
+    </div>
+    
+    <!-- Load CRM Dashboard Script -->
+    <script src="assets/js/crm-dashboard.js"></script>
+    
+    <script>
+        function openCRM() {
+            const status = document.getElementById('status');
+            
+            try {
+                if (typeof showCRM === 'function') {
+                    showCRM();
+                    status.className = 'success';
+                    status.textContent = '✓ CRM Dashboard opened successfully!';
+                } else {
+                    throw new Error('CRM Dashboard not loaded');
+                }
+            } catch (error) {
+                status.className = 'error';
+                status.textContent = '✗ Error: ' + error.message;
+                console.error('Error opening CRM:', error);
+            }
+        }
+        
+        function exportData() {
+            const status = document.getElementById('status');
+            
+            try {
+                if (!window.crmDashboard) {
+                    window.crmDashboard = new CRMDashboard();
+                }
+                
+                window.crmDashboard.exportToCSV();
+                status.className = 'success';
+                status.textContent = '✓ Data exported successfully!';
+            } catch (error) {
+                status.className = 'error';
+                status.textContent = '✗ Error: ' + error.message;
+                console.error('Error exporting data:', error);
+            }
+        }
+        
+        // Auto-open CRM on startup (optional)
+        // Uncomment the line below to automatically open CRM when app starts
+        // window.addEventListener('load', () => setTimeout(openCRM, 1000));
+    </script>
+</body>
+</html>
+
