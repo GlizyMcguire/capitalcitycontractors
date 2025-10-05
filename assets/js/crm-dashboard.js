@@ -2,6 +2,7 @@
  * Capital City Contractors - Lean CRM Dashboard
  * Version: 3.0 - Construction Edition
  * Phase 4: Tasks & Marketing
+ * Build: 2025-01-05
  */
 
 // ==================== DATA MODELS ====================
