@@ -572,6 +572,12 @@ class CRMDashboard {
         `;
     }
 
+    openLead(leadId) {
+        this.currentView = 'pipeline';
+        this.selectedLead = leadId;
+        this.render();
+    }
+
     renderCurrentView() {
         switch(this.currentView) {
             case 'dashboard': return this.renderDashboard();
@@ -759,6 +765,7 @@ class CRMDashboard {
         const contact = this.contacts.find(c => c.id === lead.contactId);
         const daysOld = Math.floor((new Date() - new Date(lead.lastActivity)) / (1000 * 60 * 60 * 24));
         const isStale = daysOld >= 3;
+        const fromWeb = !!lead.fromForm || (lead.leadSource && lead.leadSource.toLowerCase().includes('website'));
 
         return `
             <div class="crm-lead-card ${isStale ? 'stale' : ''}"
@@ -768,14 +775,17 @@ class CRMDashboard {
                  onclick="window.crmDashboard.selectLead('${lead.id}')">
                 <div class="crm-card-header">
                     <strong>${contact?.name || 'Unknown'}</strong>
-                    ${isStale ? '<span class="crm-badge-warning">⚠️ 3+ days</span>' : ''}
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        ${fromWeb ? '<span class="crm-badge crm-badge-info">WEB</span>' : ''}
+                        ${isStale ? '<span class="crm-badge-warning">⚠️ 3+ days</span>' : ''}
+                    </div>
                 </div>
                 <div class="crm-card-body">
                     <div class="crm-card-row">🏠 ${lead.jobType}</div>
                     <div class="crm-card-row">📍 ${lead.city || lead.propertyAddress}</div>
                     <div class="crm-card-row">💰 $${this.formatMoney(lead.estimatedValue)}</div>
                     <div class="crm-card-row">📊 ${lead.leadSource}</div>
-                    ${lead.nextAction ? `<div class="crm-card-row">📌 ${lead.nextAction}</div>` : ''}
+                    ${lead.nextAction ? `<div class=\"crm-card-row\">📌 ${lead.nextAction}</div>` : ''}
                 </div>
                 <div class="crm-card-actions">
                     <button class="crm-icon-btn" onclick="event.stopPropagation(); window.crmDashboard.quickAction('${lead.id}', 'call');" title="Call">📞</button>
@@ -1665,10 +1675,10 @@ class CRMDashboard {
                                     <div>${s.email || '-'}</div>
                                     <div>${s.phone || '-'}</div>
                                     <div>${new Date(s.submittedAt).toLocaleString()}</div>
-                                    <div>${s.formType}</div>
+                                    <div>${s.formType} ${s.leadId ? '<span class=\"crm-badge-success\">Lead</span>' : ''}</div>
                                     <div>
                                         <button class="crm-btn-sm" onclick="window.crmDashboard.viewSubmission('${s.id}')">View</button>
-                                        <button class="crm-btn-sm" onclick="window.crmDashboard.createLeadFromSubmission('${s.id}')">Create Lead</button>
+                                        ${s.leadId ? `<button class="crm-btn-sm" onclick="window.crmDashboard.openLead('${s.leadId}')">View Lead</button>` : `<button class="crm-btn-sm" onclick="window.crmDashboard.createLeadFromSubmission('${s.id}')">Create Lead</button>`}
                                     </div>
                                 </div>
                             `).join('')}
@@ -1712,18 +1722,20 @@ class CRMDashboard {
     }
 
     // Public API to log a form submission from the website
+    // payload is expected to optionally include: { address, city, jobType, estimatedValue, notes }
     logFormSubmission({ name, email, phone, formType = 'contact', payload = {}, submittedAt = null }) {
         const contact = this.findOrCreateContactByEmailOrPhone(name, email, phone);
         const sub = new FormSubmission({ name, email, phone, formType, payload, submittedAt: submittedAt || new Date().toISOString(), contactId: contact?.id || null });
         this.submissions.push(sub);
         this.save('ccc_submissions', this.submissions);
-        // Optional: auto-create a follow-up task
-        this.addTask({
-            title: `Follow up: ${formType} form - ${name || email || phone}`,
-            type: 'follow-up',
-            relatedTo: contact ? null : null,
-            dueDate: new Date().toISOString()
-        });
+
+        // Auto lead upsert from submission (create or update existing)
+        const lead = this.upsertLeadFromSubmission(sub, contact);
+        if (lead) {
+            sub.leadId = lead.id;
+            this.save('ccc_submissions', this.submissions);
+        }
+        // No alerts here; keep UX quiet. Views reflect automatically on next render.
         this.render();
         return sub.id;
     }
@@ -1738,19 +1750,89 @@ class CRMDashboard {
         const s = this.submissions.find(x => x.id === id);
         if (!s) return;
         const contact = this.findOrCreateContactByEmailOrPhone(s.name, s.email, s.phone);
+        const lead = this.upsertLeadFromSubmission(s, contact, { forceNewIfNoAddress: false });
+        if (lead) {
+            s.leadId = lead.id;
+            s.contactId = contact?.id || null;
+            this.save('ccc_submissions', this.submissions);
+            alert('✅ Lead created/updated from submission');
+            this.openLead(lead.id);
+        }
+    }
+
+    // Normalize addresses for comparison (lowercase, remove non-alphanumerics)
+    normalizeAddress(str) {
+        return (str || '').toString().toLowerCase().replace(/[^a-z0-9]/g, '').trim();
+    }
+
+    // Create or update a lead from a website form submission
+    upsertLeadFromSubmission(submission, contact, opts = {}) {
+        const payload = submission.payload || {};
+        const addr = payload.address || payload.propertyAddress || contact?.address || '';
+        const addrNorm = this.normalizeAddress(addr);
+        const type = (submission.formType || '').toLowerCase();
+        const sourceLabel = type.includes('discount') ? 'Website - Discount Form' : (type.includes('quote') ? 'Website - Quote Form' : 'Website - Form');
+
+        // Find existing candidate
+        let existing = null;
+        if (addrNorm) {
+            existing = this.leads.find(l => this.normalizeAddress(l.propertyAddress) === addrNorm);
+        }
+        if (!existing && contact?.id) {
+            existing = this.leads.find(l => l.contactId === contact.id && !['won','lost'].includes(l.status));
+        }
+
+        const nowIso = new Date().toISOString();
+        if (existing) {
+            // Update with any new info
+            if (addr && !existing.propertyAddress) existing.propertyAddress = addr;
+            if (payload.city && !existing.city) existing.city = payload.city;
+            if (payload.jobType && !existing.jobType) existing.jobType = payload.jobType;
+            if (payload.estimatedValue && !existing.estimatedValue) existing.estimatedValue = parseInt(payload.estimatedValue) || 0;
+            if (!existing.leadSource || existing.leadSource.indexOf('Website') === -1) existing.leadSource = sourceLabel;
+            existing.lastActivity = nowIso;
+            existing.notes = (existing.notes ? existing.notes + '\n' : '') + `[${nowIso.slice(0,10)}] Form submission received (${submission.formType}); lead updated.`;
+            existing.fromForm = true;
+            this.save('ccc_leads', this.leads);
+
+            // If stale (3+ days), add a follow-up task
+            const daysOld = Math.floor((new Date() - new Date(existing.lastActivity)) / (1000 * 60 * 60 * 24));
+            if (daysOld >= 3) {
+                this.addTask({
+                    title: `Follow up: website ${type} form - ${contact?.name || contact?.email || contact?.phone || ''}`,
+                    type: 'follow-up',
+                    relatedTo: { type: 'lead', id: existing.id },
+                    dueDate: new Date(Date.now() + 24*60*60*1000).toISOString()
+                });
+            }
+            return existing;
+        }
+
+        // Create new lead
         const lead = this.addLead({
             contactId: contact?.id || null,
-            jobType: 'General',
-            city: contact?.city || '',
-            estimatedValue: 0,
-            source: 'Website',
+            jobType: payload.jobType || 'General',
+            propertyAddress: addr || '',
+            city: payload.city || '',
+            estimatedValue: parseInt(payload.estimatedValue) || 0,
+            leadSource: sourceLabel,
+            status: 'new',
+            nextAction: 'Review website submission',
+            nextActionDate: new Date(Date.now() + 24*60*60*1000).toISOString(),
+            lastActivity: nowIso
         });
-        s.leadId = lead.id;
-        s.contactId = contact?.id || null;
-        this.save('ccc_submissions', this.submissions);
-        alert('✅ Lead created from submission');
-        this.switchView('pipeline');
+        lead.fromForm = true;
+        // Initial follow-up task for new lead
+        this.addTask({
+            title: `Call ${contact?.name || contact?.email || contact?.phone || 'lead'} - website ${type || 'form'}`,
+            type: 'call',
+            relatedTo: { type: 'lead', id: lead.id },
+            dueDate: new Date(Date.now() + 24*60*60*1000).toISOString()
+        });
+        this.save('ccc_leads', this.leads);
+        return lead;
     }
+
 
     addDiscountCode() {
         const code = prompt('Code:');
@@ -2496,6 +2578,7 @@ class CRMDashboard {
                 font-size: 12px;
                 color: #6b7280;
             }
+            .crm-badge-info { background: #dbeafe; color: #1d4ed8; }
 
             .crm-badge-success {
                 background: #d1fae5;
