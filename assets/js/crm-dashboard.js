@@ -66,6 +66,8 @@ class Task {
         this.relatedTo = data.relatedTo || null; // {type: 'lead'|'project', id: '...'}
         this.dueDate = data.dueDate || null;
         this.completed = data.completed || false;
+        this.completedAt = data.completedAt || null;
+        this.archived = data.archived || false;
         this.createdAt = data.createdAt || new Date().toISOString();
     }
 }
@@ -226,8 +228,22 @@ class CRMDashboard {
         const task = this.tasks.find(t => t.id === id);
         if (task) {
             task.completed = true;
+            task.completedAt = new Date().toISOString();
             this.save('ccc_tasks', this.tasks);
         }
+    }
+
+    archiveTask(id) {
+        const task = this.tasks.find(t => t.id === id);
+        if (task) {
+            task.archived = true;
+            this.save('ccc_tasks', this.tasks);
+        }
+    }
+
+    deleteTask(id) {
+        this.tasks = this.tasks.filter(t => t.id !== id);
+        this.save('ccc_tasks', this.tasks);
     }
     
     convertToProject(leadId) {
@@ -469,6 +485,8 @@ class CRMDashboard {
                                 onclick="window.crmDashboard.switchView('contacts')">👥 Contacts</button>
                         <button class="crm-nav-btn ${this.currentView === 'projects' ? 'active' : ''}"
                                 onclick="window.crmDashboard.switchView('projects')">🏗️ Projects</button>
+                        <button class="crm-nav-btn ${this.currentView === 'tasks' ? 'active' : ''}"
+                                onclick="window.crmDashboard.switchView('tasks')">✅ Tasks</button>
                     </div>
                     <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
                 </div>
@@ -486,6 +504,7 @@ class CRMDashboard {
             case 'pipeline': return this.renderPipeline();
             case 'contacts': return this.renderContacts();
             case 'projects': return this.renderProjects();
+            case 'tasks': return this.renderTasks();
             default: return this.renderDashboard();
         }
     }
@@ -1161,6 +1180,129 @@ class CRMDashboard {
         }
     }
 
+    renderTasks() {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        // Categorize tasks
+        const ongoingTasks = this.tasks.filter(t => !t.completed && !t.archived);
+        const completedTasks = this.tasks.filter(t => t.completed && !t.archived);
+        const archivedTasks = this.tasks.filter(t => t.archived);
+
+        // Sort ongoing by due date
+        ongoingTasks.sort((a, b) => {
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        });
+
+        // Sort completed by completion date (most recent first)
+        completedTasks.sort((a, b) => new Date(b.completedAt || b.createdAt) - new Date(a.completedAt || a.createdAt));
+
+        return `
+            <div class="crm-view-header">
+                <h2>✅ Tasks</h2>
+                <div class="crm-view-actions">
+                    <button class="crm-btn" onclick="window.crmDashboard.showQuickAdd('task')">+ New Task</button>
+                </div>
+            </div>
+
+            <div class="crm-filters-bar">
+                <button class="crm-filter-btn ${!this.taskFilter ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterTasks(null)">Ongoing (${ongoingTasks.length})</button>
+                <button class="crm-filter-btn ${this.taskFilter === 'completed' ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterTasks('completed')">Completed (${completedTasks.length})</button>
+                <button class="crm-filter-btn ${this.taskFilter === 'archived' ? 'active' : ''}"
+                        onclick="window.crmDashboard.filterTasks('archived')">Archived (${archivedTasks.length})</button>
+            </div>
+
+            ${this.renderTaskList()}
+        `;
+    }
+
+    renderTaskList() {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        let tasks = [];
+        let emptyMessage = '';
+
+        if (!this.taskFilter) {
+            // Ongoing tasks
+            tasks = this.tasks.filter(t => !t.completed && !t.archived);
+            emptyMessage = 'No ongoing tasks';
+        } else if (this.taskFilter === 'completed') {
+            // Completed tasks
+            tasks = this.tasks.filter(t => t.completed && !t.archived);
+            tasks.sort((a, b) => new Date(b.completedAt || b.createdAt) - new Date(a.completedAt || a.createdAt));
+            emptyMessage = 'No completed tasks';
+        } else if (this.taskFilter === 'archived') {
+            // Archived tasks
+            tasks = this.tasks.filter(t => t.archived);
+            tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            emptyMessage = 'No archived tasks';
+        }
+
+        if (tasks.length === 0) {
+            return `<p class="crm-empty">${emptyMessage}</p>`;
+        }
+
+        return `
+            <div class="crm-tasks-list">
+                ${tasks.map(task => {
+                    const related = this.getRelatedName(task.relatedTo);
+                    const dueDate = task.dueDate ? new Date(task.dueDate) : null;
+                    const dueDateOnly = dueDate ? new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
+                    const isOverdue = dueDateOnly && dueDateOnly < today && !task.completed;
+                    const isToday = dueDateOnly && dueDateOnly.getTime() === today.getTime();
+
+                    return `
+                        <div class="crm-task-row ${isOverdue ? 'overdue' : ''} ${task.completed ? 'completed' : ''}">
+                            <div class="crm-task-checkbox">
+                                ${!task.archived ? `
+                                    <input type="checkbox" ${task.completed ? 'checked' : ''}
+                                           onchange="window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();">
+                                ` : ''}
+                            </div>
+                            <div class="crm-task-content">
+                                <div class="crm-task-title">
+                                    ${isOverdue ? '⚠️ ' : ''}${task.title}
+                                    ${related ? `<span class="crm-task-related">- ${related}</span>` : ''}
+                                </div>
+                                <div class="crm-task-meta">
+                                    <span class="crm-task-type">${task.type}</span>
+                                    ${task.dueDate ? `
+                                        <span class="crm-task-due ${isOverdue ? 'overdue' : ''}">
+                                            ${isToday ? 'Today' : dueDate.toLocaleDateString()}
+                                        </span>
+                                    ` : ''}
+                                    ${task.completedAt ? `
+                                        <span class="crm-task-completed">
+                                            ✓ ${new Date(task.completedAt).toLocaleDateString()}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            <div class="crm-task-actions">
+                                ${!task.archived && task.completed ? `
+                                    <button class="crm-icon-btn" onclick="window.crmDashboard.archiveTask('${task.id}'); window.crmDashboard.render();" title="Archive">📦</button>
+                                ` : ''}
+                                ${!task.archived ? `
+                                    <button class="crm-icon-btn" onclick="if(confirm('Delete this task?')) { window.crmDashboard.deleteTask('${task.id}'); window.crmDashboard.render(); }" title="Delete">🗑️</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    }
+
+    filterTasks(filter) {
+        this.taskFilter = filter;
+        this.render();
+    }
+
     getRelatedName(relatedTo) {
         if (!relatedTo) return '';
         if (relatedTo.type === 'lead') {
@@ -1169,6 +1311,9 @@ class CRMDashboard {
                 const contact = this.contacts.find(c => c.id === lead.contactId);
                 return contact?.name || 'Unknown';
             }
+        } else if (relatedTo.type === 'project') {
+            const project = this.projects.find(p => p.id === relatedTo.id);
+            return project?.name || 'Unknown Project';
         }
         return '';
     }
@@ -1801,6 +1946,104 @@ class CRMDashboard {
 
             .crm-detail-item:last-child {
                 border-bottom: none;
+            }
+
+            /* Tasks View */
+            .crm-tasks-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .crm-task-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 16px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                transition: all 0.2s;
+            }
+
+            .crm-task-row:hover {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .crm-task-row.overdue {
+                border-left: 4px solid #ef4444;
+                background: #fef2f2;
+            }
+
+            .crm-task-row.completed {
+                opacity: 0.7;
+                background: #f9fafb;
+            }
+
+            .crm-task-checkbox {
+                flex-shrink: 0;
+            }
+
+            .crm-task-checkbox input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+            }
+
+            .crm-task-content {
+                flex: 1;
+            }
+
+            .crm-task-title {
+                font-size: 15px;
+                font-weight: 500;
+                color: #1f2937;
+                margin-bottom: 4px;
+            }
+
+            .crm-task-row.completed .crm-task-title {
+                text-decoration: line-through;
+                color: #6b7280;
+            }
+
+            .crm-task-related {
+                color: #6b7280;
+                font-weight: normal;
+                font-size: 14px;
+            }
+
+            .crm-task-meta {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                font-size: 13px;
+            }
+
+            .crm-task-type {
+                background: #e5e7eb;
+                padding: 2px 8px;
+                border-radius: 4px;
+                color: #6b7280;
+                text-transform: capitalize;
+            }
+
+            .crm-task-due {
+                color: #6b7280;
+            }
+
+            .crm-task-due.overdue {
+                color: #dc2626;
+                font-weight: 600;
+            }
+
+            .crm-task-completed {
+                color: #059669;
+            }
+
+            .crm-task-actions {
+                display: flex;
+                gap: 8px;
+                flex-shrink: 0;
             }
 
             @media (max-width: 768px) {
