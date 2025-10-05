@@ -72,6 +72,49 @@ class Task {
     }
 }
 
+class Campaign {
+    constructor(data = {}) {
+        this.id = data.id || 'campaign_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.name = data.name || '';
+        this.type = data.type || 'email'; // 'email' | 'sms'
+        this.subject = data.subject || '';
+        this.status = data.status || 'draft'; // 'draft' | 'scheduled' | 'sent'
+        this.recipients = data.recipients || [];
+        this.stats = data.stats || { sent: 0, opened: 0, replied: 0 };
+        this.createdAt = data.createdAt || new Date().toISOString();
+        this.sentAt = data.sentAt || null;
+    }
+}
+
+class FormSubmission {
+    constructor(data = {}) {
+        this.id = data.id || 'sub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.name = data.name || '';
+        this.email = data.email || '';
+        this.phone = data.phone || '';
+        this.formType = data.formType || 'contact'; // 'contact' | 'quote' | 'discount'
+        this.payload = data.payload || {};
+        this.submittedAt = data.submittedAt || new Date().toISOString();
+        this.contactId = data.contactId || null; // linked after processing
+        this.leadId = data.leadId || null; // set if a lead is created
+    }
+}
+
+class DiscountCode {
+    constructor(data = {}) {
+        this.id = data.id || 'code_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        this.code = data.code || '';
+        this.value = data.value || '';
+        this.contactId = data.contactId || null;
+        this.contactEmail = data.contactEmail || '';
+        this.sentAt = data.sentAt || new Date().toISOString();
+        this.expiresAt = data.expiresAt || null;
+        this.status = data.status || 'pending'; // 'pending' | 'applied' | 'expired'
+        this.redeemedAt = data.redeemedAt || null;
+        this.notes = data.notes || '';
+    }
+}
+
 // ==================== MAIN CRM CLASS ====================
 
 class CRMDashboard {
@@ -83,7 +126,10 @@ class CRMDashboard {
         this.leads = this.load('ccc_leads', []);
         this.projects = this.load('ccc_projects', []);
         this.tasks = this.load('ccc_tasks', []);
-        
+        this.campaigns = this.load('ccc_campaigns', []);
+        this.submissions = this.load('ccc_submissions', []);
+        this.discountCodes = this.load('ccc_discount_codes', []);
+
         // Settings
         this.settings = this.load('ccc_settings', {
             jobTypes: ['Interior Painting', 'Exterior Painting', 'Kitchen Reno', 'Bathroom Reno', 'Basement Reno', 'Drywall', 'Roofing', 'Deck', 'General'],
@@ -489,6 +535,8 @@ class CRMDashboard {
                                 onclick="window.crmDashboard.switchView('tasks')">✅ Tasks</button>
                         <button class="crm-nav-btn ${this.currentView === 'marketing' ? 'active' : ''}"
                                 onclick="window.crmDashboard.switchView('marketing')">📧 Marketing</button>
+                        <button class="crm-nav-btn ${this.currentView === 'forms-codes' ? 'active' : ''}"
+                                onclick="window.crmDashboard.switchView('forms-codes')">📋 Forms & Codes</button>
                     </div>
                     <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
                 </div>
@@ -508,6 +556,7 @@ class CRMDashboard {
             case 'projects': return this.renderProjects();
             case 'tasks': return this.renderTasks();
             case 'marketing': return this.renderMarketing();
+            case 'forms-codes': return this.renderFormsAndCodes();
             default: return this.renderDashboard();
         }
     }
@@ -1510,6 +1559,184 @@ class CRMDashboard {
         this.render();
     }
 
+    // ============== Forms & Codes View ==============
+    renderFormsAndCodes() {
+        const totalCodes = this.discountCodes.length;
+        const usedCodes = this.discountCodes.filter(c => c.status === 'applied').length;
+        const convRate = totalCodes > 0 ? Math.round((usedCodes / totalCodes) * 100) : 0;
+
+        // Derive expired statuses for display
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const displayCodes = this.discountCodes.map(c => {
+            const ex = c.expiresAt ? new Date(c.expiresAt) : null;
+            const isExpired = ex && new Date(ex.getFullYear(), ex.getMonth(), ex.getDate()) < today && c.status !== 'applied';
+            return { ...c, derivedStatus: isExpired ? 'expired' : c.status };
+        });
+
+        return `
+            <div class="crm-view-header">
+                <h2>📋 Forms & Codes</h2>
+                <div class="crm-view-actions">
+                    <button class="crm-btn" onclick="window.crmDashboard.addDiscountCode()">+ Add Code</button>
+                </div>
+            </div>
+
+            <div class="crm-forms-codes-grid">
+                <div class="crm-marketing-section">
+                    <h3>📝 Form Submissions</h3>
+                    <p class="crm-help-text">Website contact/quote/discount submissions</p>
+
+                    ${this.submissions.length === 0 ? `<p class="crm-empty">No submissions yet.</p>` : `
+                        <div class="crm-table">
+                            <div class="crm-table-head">
+                                <div>Name</div><div>Email</div><div>Phone</div><div>Date</div><div>Type</div><div>Actions</div>
+                            </div>
+                            ${this.submissions
+                                .slice()
+                                .sort((a,b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+                                .map(s => `
+                                <div class="crm-table-row">
+                                    <div>${s.name || '-'}</div>
+                                    <div>${s.email || '-'}</div>
+                                    <div>${s.phone || '-'}</div>
+                                    <div>${new Date(s.submittedAt).toLocaleString()}</div>
+                                    <div>${s.formType}</div>
+                                    <div>
+                                        <button class="crm-btn-sm" onclick="window.crmDashboard.viewSubmission('${s.id}')">View</button>
+                                        <button class="crm-btn-sm" onclick="window.crmDashboard.createLeadFromSubmission('${s.id}')">Create Lead</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+
+                <div class="crm-marketing-section">
+                    <h3>🏷️ Discount Codes</h3>
+                    <p class="crm-help-text">Conversion: ${usedCodes}/${totalCodes} used (${convRate}%)</p>
+
+                    ${displayCodes.length === 0 ? `<p class="crm-empty">No discount codes yet.</p>` : `
+                        <div class="crm-table">
+                            <div class="crm-table-head">
+                                <div>Code</div><div>Value</div><div>Contact</div><div>Sent</div><div>Expires</div><div>Status</div><div>Actions</div>
+                            </div>
+                            ${displayCodes
+                                .slice()
+                                .sort((a,b) => new Date(b.sentAt) - new Date(a.sentAt))
+                                .map(c => {
+                                    const contact = c.contactId ? this.contacts.find(x => x.id === c.contactId) : null;
+                                    return `
+                                    <div class="crm-table-row">
+                                        <div>${c.code}</div>
+                                        <div>${c.value || '-'}</div>
+                                        <div>${contact?.name || c.contactEmail || '-'}</div>
+                                        <div>${new Date(c.sentAt).toLocaleDateString()}</div>
+                                        <div>${c.expiresAt ? new Date(c.expiresAt).toLocaleDateString() : '-'}</div>
+                                        <div><span class="crm-badge ${c.derivedStatus}">${c.derivedStatus}</span></div>
+                                        <div>
+                                            ${c.status !== 'applied' ? `<button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.markCodeApplied('${c.id}')\">Mark Applied</button>` : ''}
+                                            <button class="crm-btn-sm" onclick="window.crmDashboard.recordCodeRedemption('${c.id}')">Record Redemption</button>
+                                        </div>
+                                    </div>`;
+                                }).join('')}
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    }
+
+    // Public API to log a form submission from the website
+    logFormSubmission({ name, email, phone, formType = 'contact', payload = {}, submittedAt = null }) {
+        const contact = this.findOrCreateContactByEmailOrPhone(name, email, phone);
+        const sub = new FormSubmission({ name, email, phone, formType, payload, submittedAt: submittedAt || new Date().toISOString(), contactId: contact?.id || null });
+        this.submissions.push(sub);
+        this.save('ccc_submissions', this.submissions);
+        // Optional: auto-create a follow-up task
+        this.addTask({
+            title: `Follow up: ${formType} form - ${name || email || phone}`,
+            type: 'follow-up',
+            relatedTo: contact ? null : null,
+            dueDate: new Date().toISOString()
+        });
+        this.render();
+        return sub.id;
+    }
+
+    viewSubmission(id) {
+        const s = this.submissions.find(x => x.id === id);
+        if (!s) return;
+        alert(`Submission Details\n\nName: ${s.name}\nEmail: ${s.email}\nPhone: ${s.phone}\nType: ${s.formType}\nDate: ${new Date(s.submittedAt).toLocaleString()}\n\nPayload:\n${JSON.stringify(s.payload, null, 2)}`);
+    }
+
+    createLeadFromSubmission(id) {
+        const s = this.submissions.find(x => x.id === id);
+        if (!s) return;
+        const contact = this.findOrCreateContactByEmailOrPhone(s.name, s.email, s.phone);
+        const lead = this.addLead({
+            contactId: contact?.id || null,
+            jobType: 'General',
+            city: contact?.city || '',
+            estimatedValue: 0,
+            source: 'Website',
+        });
+        s.leadId = lead.id;
+        s.contactId = contact?.id || null;
+        this.save('ccc_submissions', this.submissions);
+        alert('✅ Lead created from submission');
+        this.switchView('pipeline');
+    }
+
+    addDiscountCode() {
+        const code = prompt('Code:');
+        if (!code) return;
+        const value = prompt('Value/Description (e.g., 10% Off):') || '';
+        const contactEmail = prompt('Contact Email (optional):') || '';
+        const expiresAt = prompt('Expiry date (YYYY-MM-DD, optional):');
+        let contactId = null;
+        if (contactEmail) {
+            const contact = this.contacts.find(c => c.email && c.email.toLowerCase() === contactEmail.toLowerCase());
+            if (contact) contactId = contact.id;
+        }
+        const rec = new DiscountCode({ code, value, contactEmail, contactId, expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null });
+        this.discountCodes.push(rec);
+        this.save('ccc_discount_codes', this.discountCodes);
+        this.render();
+    }
+
+    markCodeApplied(id) {
+        const rec = this.discountCodes.find(x => x.id === id);
+        if (!rec) return;
+        rec.status = 'applied';
+        rec.redeemedAt = new Date().toISOString();
+        this.save('ccc_discount_codes', this.discountCodes);
+        this.render();
+    }
+
+    recordCodeRedemption(id) {
+        const rec = this.discountCodes.find(x => x.id === id);
+        if (!rec) return;
+        const when = prompt('Redemption date (YYYY-MM-DD):');
+        if (!when) return;
+        rec.redeemedAt = new Date(when).toISOString();
+        rec.status = 'applied';
+        this.save('ccc_discount_codes', this.discountCodes);
+        this.render();
+    }
+
+    findOrCreateContactByEmailOrPhone(name, email, phone) {
+        let contact = null;
+        if (email) contact = this.contacts.find(c => c.email && c.email.toLowerCase() === email.toLowerCase());
+        if (!contact && phone) contact = this.contacts.find(c => c.phone && c.phone === phone);
+        if (!contact) {
+            contact = new Contact({ name: name || email || phone || 'Unknown', email, phone, emailConsent: !!email, smsConsent: !!phone, consentDate: new Date().toISOString() });
+            this.contacts.push(contact);
+            this.save('ccc_contacts', this.contacts);
+        }
+        return contact;
+    }
+
     getRelatedName(relatedTo) {
         if (!relatedTo) return '';
         if (relatedTo.type === 'lead') {
@@ -2422,9 +2649,48 @@ class CRMDashboard {
                 color: #92400e;
             }
 
+            /* Forms & Codes */
+            .crm-forms-codes-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+            .crm-table {
+                width: 100%;
+                display: grid;
+                gap: 6px;
+            }
+            .crm-table-head, .crm-table-row {
+                display: grid;
+                grid-template-columns: 1.2fr 1.2fr 1fr 1fr 0.8fr 0.8fr 1.2fr;
+                gap: 8px;
+                align-items: center;
+            }
+            .crm-table-head {
+                font-weight: 600;
+                color: #374151;
+                border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 8px;
+            }
+            .crm-table-row {
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                padding: 10px;
+            }
+            .crm-badge.pending { background: #f3f4f6; color: #374151; }
+            .crm-badge.applied { background: #d1fae5; color: #065f46; }
+            .crm-badge.expired { background: #fee2e2; color: #991b1b; }
+
             @media (max-width: 768px) {
                 .crm-marketing-grid {
                     grid-template-columns: 1fr;
+                }
+                .crm-forms-codes-grid {
+                    grid-template-columns: 1fr;
+                }
+                .crm-table-head, .crm-table-row {
+                    grid-template-columns: 1fr 1fr;
                 }
             }
 
