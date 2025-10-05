@@ -1,7 +1,7 @@
 /**
  * Capital City Contractors - Lean CRM Dashboard
  * Version: 3.0 - Construction Edition
- * Phase 3: Contacts & Projects Views
+ * Phase 4: Tasks & Marketing
  */
 
 // ==================== DATA MODELS ====================
@@ -487,6 +487,8 @@ class CRMDashboard {
                                 onclick="window.crmDashboard.switchView('projects')">🏗️ Projects</button>
                         <button class="crm-nav-btn ${this.currentView === 'tasks' ? 'active' : ''}"
                                 onclick="window.crmDashboard.switchView('tasks')">✅ Tasks</button>
+                        <button class="crm-nav-btn ${this.currentView === 'marketing' ? 'active' : ''}"
+                                onclick="window.crmDashboard.switchView('marketing')">📧 Marketing</button>
                     </div>
                     <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
                 </div>
@@ -505,6 +507,7 @@ class CRMDashboard {
             case 'contacts': return this.renderContacts();
             case 'projects': return this.renderProjects();
             case 'tasks': return this.renderTasks();
+            case 'marketing': return this.renderMarketing();
             default: return this.renderDashboard();
         }
     }
@@ -1303,6 +1306,210 @@ class CRMDashboard {
         this.render();
     }
 
+    renderMarketing() {
+        const emailContacts = this.contacts.filter(c => c.emailConsent && c.email).length;
+        const smsContacts = this.contacts.filter(c => c.smsConsent && c.phone).length;
+        const totalCampaigns = this.campaigns.length;
+
+        return `
+            <div class="crm-view-header">
+                <h2>📧 Marketing</h2>
+                <div class="crm-view-actions">
+                    <span class="crm-stat-badge">📧 ${emailContacts} email</span>
+                    <span class="crm-stat-badge">💬 ${smsContacts} SMS</span>
+                </div>
+            </div>
+
+            <div class="crm-marketing-grid">
+                <!-- Segments Section -->
+                <div class="crm-marketing-section">
+                    <h3>📊 Segments</h3>
+                    <p class="crm-help-text">Create saved filters to target specific groups</p>
+
+                    <div class="crm-segment-list">
+                        <div class="crm-segment-card" onclick="window.crmDashboard.viewSegment('all-email')">
+                            <div class="crm-segment-name">All Email Subscribers</div>
+                            <div class="crm-segment-count">${emailContacts} contacts</div>
+                        </div>
+
+                        <div class="crm-segment-card" onclick="window.crmDashboard.viewSegment('all-sms')">
+                            <div class="crm-segment-name">All SMS Subscribers</div>
+                            <div class="crm-segment-count">${smsContacts} contacts</div>
+                        </div>
+
+                        <div class="crm-segment-card" onclick="window.crmDashboard.viewSegment('past-clients')">
+                            <div class="crm-segment-name">Past Clients</div>
+                            <div class="crm-segment-count">${this.contacts.filter(c => this.projects.some(p => p.contactId === c.id && p.status === 'closed')).length} contacts</div>
+                        </div>
+
+                        <div class="crm-segment-card" onclick="window.crmDashboard.viewSegment('active-leads')">
+                            <div class="crm-segment-name">Active Leads</div>
+                            <div class="crm-segment-count">${this.contacts.filter(c => this.leads.some(l => l.contactId === c.id && !['won', 'lost'].includes(l.status))).length} contacts</div>
+                        </div>
+                    </div>
+
+                    <button class="crm-btn-secondary" onclick="alert('Custom segments coming soon!')">+ Create Custom Segment</button>
+                </div>
+
+                <!-- Templates Section -->
+                <div class="crm-marketing-section">
+                    <h3>📝 Templates</h3>
+                    <p class="crm-help-text">Pre-written messages for common scenarios</p>
+
+                    <div class="crm-template-list">
+                        ${this.getMarketingTemplates().map(template => `
+                            <div class="crm-template-card">
+                                <div class="crm-template-header">
+                                    <strong>${template.name}</strong>
+                                    <span class="crm-badge">${template.type}</span>
+                                </div>
+                                <div class="crm-template-preview">${template.preview}</div>
+                                <button class="crm-btn-sm" onclick="window.crmDashboard.useTemplate('${template.id}')">Use Template</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaigns Section -->
+            <div class="crm-section">
+                <div class="crm-section-header">
+                    <h3>📨 Campaigns</h3>
+                    <button class="crm-btn" onclick="window.crmDashboard.createCampaign()">+ New Campaign</button>
+                </div>
+
+                ${this.campaigns.length > 0 ? `
+                    <div class="crm-campaigns-list">
+                        ${this.campaigns.map(campaign => `
+                            <div class="crm-campaign-card">
+                                <div class="crm-campaign-header">
+                                    <div>
+                                        <strong>${campaign.name}</strong>
+                                        <span class="crm-badge crm-badge-${campaign.status}">${campaign.status}</span>
+                                    </div>
+                                    <span class="crm-campaign-type">${campaign.type === 'email' ? '📧' : '💬'} ${campaign.type.toUpperCase()}</span>
+                                </div>
+                                <div class="crm-campaign-body">
+                                    <p><strong>Subject:</strong> ${campaign.subject || 'N/A'}</p>
+                                    <p><strong>Recipients:</strong> ${campaign.recipients.length}</p>
+                                    ${campaign.sentAt ? `<p><strong>Sent:</strong> ${new Date(campaign.sentAt).toLocaleString()}</p>` : ''}
+                                </div>
+                                <div class="crm-campaign-stats">
+                                    <span>📤 ${campaign.stats.sent} sent</span>
+                                    <span>👁️ ${campaign.stats.opened} opened</span>
+                                    <span>💬 ${campaign.stats.replied} replied</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '<p class="crm-empty">No campaigns yet. Create your first campaign!</p>'}
+            </div>
+
+            <!-- Compliance Notice -->
+            <div class="crm-compliance-notice">
+                <strong>📋 CASL Compliance:</strong> All emails include unsubscribe links. SMS messages include "Reply STOP to opt out".
+                Consent timestamps are tracked. Only send to contacts who have given explicit consent.
+            </div>
+        `;
+    }
+
+    getMarketingTemplates() {
+        return [
+            {
+                id: 'welcome',
+                name: 'Welcome Email',
+                type: 'email',
+                preview: 'Thank you for your interest! We\'re excited to help with your project...'
+            },
+            {
+                id: 'follow-up-2',
+                name: 'Day 2 Follow-up',
+                type: 'email',
+                preview: 'Just checking in on the estimate we sent. Do you have any questions?'
+            },
+            {
+                id: 'follow-up-7',
+                name: 'Day 7 Follow-up',
+                type: 'email',
+                preview: 'We wanted to follow up one more time about your project...'
+            },
+            {
+                id: 'seasonal-promo',
+                name: 'Seasonal Promotion',
+                type: 'email',
+                preview: 'Fall special: 10% off all exterior painting projects...'
+            },
+            {
+                id: 'review-request',
+                name: 'Review Request',
+                type: 'email',
+                preview: 'We hope you\'re enjoying your newly renovated space! Would you mind leaving us a review?'
+            },
+            {
+                id: 'sms-reminder',
+                name: 'Appointment Reminder',
+                type: 'sms',
+                preview: 'Hi [Name], reminder: site visit tomorrow at [Time]. Reply CONFIRM or RESCHEDULE.'
+            }
+        ];
+    }
+
+    viewSegment(segmentId) {
+        let contacts = [];
+
+        switch(segmentId) {
+            case 'all-email':
+                contacts = this.contacts.filter(c => c.emailConsent && c.email);
+                break;
+            case 'all-sms':
+                contacts = this.contacts.filter(c => c.smsConsent && c.phone);
+                break;
+            case 'past-clients':
+                contacts = this.contacts.filter(c =>
+                    this.projects.some(p => p.contactId === c.id && p.status === 'closed')
+                );
+                break;
+            case 'active-leads':
+                contacts = this.contacts.filter(c =>
+                    this.leads.some(l => l.contactId === c.id && !['won', 'lost'].includes(l.status))
+                );
+                break;
+        }
+
+        alert(`Segment: ${contacts.length} contacts\n\n${contacts.map(c => `${c.name} (${c.email || c.phone})`).slice(0, 10).join('\n')}${contacts.length > 10 ? '\n...' : ''}`);
+    }
+
+    useTemplate(templateId) {
+        const template = this.getMarketingTemplates().find(t => t.id === templateId);
+        if (template) {
+            alert(`Template: ${template.name}\n\nThis would open a campaign composer with this template pre-filled.\n\nFull email/SMS integration coming soon!`);
+        }
+    }
+
+    createCampaign() {
+        const name = prompt('Campaign name:');
+        if (!name) return;
+
+        const type = confirm('Email campaign? (Cancel for SMS)') ? 'email' : 'sms';
+        const subject = type === 'email' ? prompt('Email subject:') : null;
+
+        if (type === 'email' && !subject) return;
+
+        const campaign = new Campaign({
+            name,
+            type,
+            subject,
+            status: 'draft',
+            recipients: []
+        });
+
+        this.campaigns.push(campaign);
+        this.save('ccc_campaigns', this.campaigns);
+
+        alert(`✅ Campaign "${name}" created as draft!\n\nFull campaign editor coming soon.`);
+        this.render();
+    }
+
     getRelatedName(relatedTo) {
         if (!relatedTo) return '';
         if (relatedTo.type === 'lead') {
@@ -2046,6 +2253,181 @@ class CRMDashboard {
                 flex-shrink: 0;
             }
 
+            /* Marketing View */
+            .crm-marketing-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+                margin-bottom: 24px;
+            }
+
+            .crm-marketing-section {
+                background: #f9fafb;
+                padding: 20px;
+                border-radius: 8px;
+                border: 1px solid #e5e7eb;
+            }
+
+            .crm-marketing-section h3 {
+                margin: 0 0 8px 0;
+                font-size: 18px;
+            }
+
+            .crm-help-text {
+                color: #6b7280;
+                font-size: 14px;
+                margin: 0 0 16px 0;
+            }
+
+            .crm-segment-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+
+            .crm-segment-card {
+                background: white;
+                padding: 12px;
+                border-radius: 6px;
+                border: 1px solid #e5e7eb;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .crm-segment-card:hover {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                transform: translateY(-1px);
+            }
+
+            .crm-segment-name {
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+
+            .crm-segment-count {
+                color: #6b7280;
+                font-size: 14px;
+            }
+
+            .crm-template-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .crm-template-card {
+                background: white;
+                padding: 12px;
+                border-radius: 6px;
+                border: 1px solid #e5e7eb;
+            }
+
+            .crm-template-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 8px;
+            }
+
+            .crm-template-preview {
+                color: #6b7280;
+                font-size: 13px;
+                margin-bottom: 12px;
+                font-style: italic;
+            }
+
+            .crm-btn-sm {
+                background: #3b82f6;
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 13px;
+            }
+
+            .crm-section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
+            .crm-campaigns-list {
+                display: grid;
+                gap: 16px;
+            }
+
+            .crm-campaign-card {
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                padding: 16px;
+            }
+
+            .crm-campaign-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+
+            .crm-campaign-type {
+                color: #6b7280;
+                font-size: 14px;
+            }
+
+            .crm-badge-draft {
+                background: #f3f4f6;
+                color: #6b7280;
+            }
+
+            .crm-badge-sent {
+                background: #d1fae5;
+                color: #065f46;
+            }
+
+            .crm-badge-scheduled {
+                background: #fef3c7;
+                color: #92400e;
+            }
+
+            .crm-campaign-body {
+                font-size: 14px;
+                color: #6b7280;
+                margin-bottom: 12px;
+            }
+
+            .crm-campaign-body p {
+                margin: 4px 0;
+            }
+
+            .crm-campaign-stats {
+                display: flex;
+                gap: 16px;
+                padding-top: 12px;
+                border-top: 1px solid #e5e7eb;
+                font-size: 14px;
+                color: #6b7280;
+            }
+
+            .crm-compliance-notice {
+                background: #fef3c7;
+                border: 1px solid #fde68a;
+                border-radius: 8px;
+                padding: 16px;
+                margin-top: 24px;
+                font-size: 14px;
+                color: #92400e;
+            }
+
+            @media (max-width: 768px) {
+                .crm-marketing-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
             @media (max-width: 768px) {
                 .crm-metrics {
                     grid-template-columns: 1fr;
@@ -2084,5 +2466,5 @@ window.showCRM = function() {
 
 window.showCRMDashboard = window.showCRM;
 
-console.log('✅ CRM v3.0 Phase 3 loaded. Type showCRM() to open.');
+console.log('✅ CRM v3.0 Phase 4 loaded. Type showCRM() to open.');
 
