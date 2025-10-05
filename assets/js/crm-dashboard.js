@@ -904,6 +904,8 @@ class CRMDashboard {
                 </div>
             </div>
         `;
+    }
+
     daysSince(iso) {
         if (!iso) return 'N/A';
         const ms = new Date() - new Date(iso);
@@ -1273,6 +1275,8 @@ class CRMDashboard {
         } else if (action === 'sms' && contact.phone) {
             window.open(`sms:${contact.phone}`);
         }
+    }
+
     getContactLastActivity(contact) {
         const leads = this.leads.filter(l => l.contactId === contact.id);
         const times = leads.map(l => l.lastActivity).filter(Boolean).map(t => +new Date(t));
@@ -1459,6 +1463,8 @@ class CRMDashboard {
                 this.render();
             }
         }
+    }
+
     renderProjectTimeline(project) {
         const items = [];
         if (project.createdAt) items.push({ when: project.createdAt, text: 'Project created' });
@@ -1476,8 +1482,6 @@ class CRMDashboard {
         p.notes = (p.notes ? p.notes + '\n' : '') + `[${stamp.slice(0,10)}] ${note}`;
         this.save('ccc_projects', this.projects);
         this.render();
-    }
-
     }
 
     addProjectTask(projectId) {
