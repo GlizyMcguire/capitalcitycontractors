@@ -2741,12 +2741,6 @@ class CRMDashboard {
             .crm-input-sm { height: 28px; padding: 4px 8px; font-size: 13px; }
             .crm-saved-filter { display:flex; gap:6px; align-items:center; }
 
-                border-radius: 6px;
-                cursor: pointer;
-                font-size: 18px;
-            }
-
-
             /* === 3-Panel Layout === */
             .crm-shell {
                 display: grid;
