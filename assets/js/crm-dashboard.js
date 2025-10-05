@@ -120,7 +120,7 @@ class DiscountCode {
 class CRMDashboard {
     constructor() {
         console.log('🚀 Initializing CRM v3.0 - Phase 1...');
-        
+
         // Storage
         this.contacts = this.load('ccc_contacts', []);
         this.leads = this.load('ccc_leads', []);
@@ -143,7 +143,7 @@ class CRMDashboard {
                 { id: 'lost', name: 'Lost', color: '#ef4444' }
             ]
         });
-        
+
         // Migrate old data
         this.migrateOldData();
 
@@ -155,12 +155,14 @@ class CRMDashboard {
         // Current view state
         this.currentView = 'dashboard';
         this.selectedLead = null;
+        this.sidebarCollapsed = false;
+        this.hotkeysAttached = false;
 
         console.log(`✅ Loaded: ${this.contacts.length} contacts, ${this.leads.length} leads, ${this.projects.length} projects`);
     }
-    
+
     // ==================== STORAGE ====================
-    
+
     load(key, defaultValue) {
         try {
             const data = localStorage.getItem(key);
@@ -169,11 +171,11 @@ class CRMDashboard {
             return defaultValue;
         }
     }
-    
+
     save(key, data) {
         localStorage.setItem(key, JSON.stringify(data));
     }
-    
+
     migrateOldData() {
         const oldLeads = this.load('ccc_leads', []);
         if (oldLeads.length > 0 && this.leads.length === 0) {
@@ -189,7 +191,7 @@ class CRMDashboard {
                     createdAt: old.timestamp
                 });
                 this.contacts.push(contact);
-                
+
                 const lead = new Lead({
                     contactId: contact.id,
                     jobType: old.project || 'General',
@@ -204,21 +206,21 @@ class CRMDashboard {
             this.save('ccc_leads', this.leads);
         }
     }
-    
+
     createSeedData() {
         console.log('🌱 Creating seed data...');
-        
+
         // Sample contacts
         const sampleContacts = [
             { name: 'John Smith', email: 'john@example.com', phone: '613-555-0101', city: 'Ottawa', emailConsent: true },
             { name: 'Sarah Johnson', email: 'sarah@example.com', phone: '613-555-0102', city: 'Kanata', emailConsent: true, smsConsent: true },
             { name: 'Mike Brown', email: 'mike@example.com', phone: '613-555-0103', city: 'Nepean', emailConsent: true }
         ];
-        
+
         sampleContacts.forEach(data => {
             const contact = new Contact(data);
             this.contacts.push(contact);
-            
+
             // Create a lead for each
             const lead = new Lead({
                 contactId: contact.id,
@@ -233,27 +235,27 @@ class CRMDashboard {
             });
             this.leads.push(lead);
         });
-        
+
         this.save('ccc_contacts', this.contacts);
         this.save('ccc_leads', this.leads);
     }
-    
+
     // ==================== CRUD ====================
-    
+
     addContact(data) {
         const contact = new Contact(data);
         this.contacts.push(contact);
         this.save('ccc_contacts', this.contacts);
         return contact;
     }
-    
+
     addLead(data) {
         const lead = new Lead(data);
         this.leads.push(lead);
         this.save('ccc_leads', this.leads);
         return lead;
     }
-    
+
     updateLead(id, updates) {
         const lead = this.leads.find(l => l.id === id);
         if (lead) {
@@ -262,14 +264,14 @@ class CRMDashboard {
             this.save('ccc_leads', this.leads);
         }
     }
-    
+
     addTask(data) {
         const task = new Task(data);
         this.tasks.push(task);
         this.save('ccc_tasks', this.tasks);
         return task;
     }
-    
+
     completeTask(id) {
         const task = this.tasks.find(t => t.id === id);
         if (task) {
@@ -291,7 +293,7 @@ class CRMDashboard {
         this.tasks = this.tasks.filter(t => t.id !== id);
         this.save('ccc_tasks', this.tasks);
     }
-    
+
     convertToProject(leadId) {
         const lead = this.leads.find(l => l.id === leadId);
         if (!lead) return;
@@ -471,10 +473,25 @@ class CRMDashboard {
     attachEventListeners() {
         // Check for stale leads on render
         this.checkStaleLeads();
+
+        if (!this.hotkeysAttached) {
+            this.hotkeysAttached = true;
+            window.addEventListener('keydown', (e) => {
+                const tag = (e.target && e.target.tagName) || '';
+                if (tag === 'INPUT' || tag === 'TEXTAREA') return; // don't hijack typing
+                if (e.key === 'n' || e.key === 'N') {
+                    e.preventDefault(); this.showQuickAdd('lead');
+                } else if (e.key === 't' || e.key === 'T') {
+                    e.preventDefault(); this.showQuickAdd('task');
+                } else if (e.key === '/') {
+                    e.preventDefault(); alert('Global search coming soon.');
+                }
+            });
+        }
     }
-    
+
     // ==================== METRICS ====================
-    
+
     getMetrics() {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Start of today
@@ -521,28 +538,35 @@ class CRMDashboard {
     getHTML() {
         return `
             <div class="crm-container">
-                <div class="crm-header">
-                    <div class="crm-nav">
-                        <button class="crm-nav-btn ${this.currentView === 'dashboard' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('dashboard')">📊 Dashboard</button>
-                        <button class="crm-nav-btn ${this.currentView === 'pipeline' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('pipeline')">🎯 Pipeline</button>
-                        <button class="crm-nav-btn ${this.currentView === 'contacts' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('contacts')">👥 Contacts</button>
-                        <button class="crm-nav-btn ${this.currentView === 'projects' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('projects')">🏗️ Projects</button>
-                        <button class="crm-nav-btn ${this.currentView === 'tasks' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('tasks')">✅ Tasks</button>
-                        <button class="crm-nav-btn ${this.currentView === 'marketing' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('marketing')">📧 Marketing</button>
-                        <button class="crm-nav-btn ${this.currentView === 'forms-codes' ? 'active' : ''}"
-                                onclick="window.crmDashboard.switchView('forms-codes')">📋 Forms & Codes</button>
-                    </div>
-                    <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
-                </div>
+                <div class="crm-shell ${this.sidebarCollapsed ? 'collapsed' : ''}">
+                    <aside class="crm-sidebar">
+                        <div class="crm-sidebar-header">
+                            <div class="crm-logo">🏗️</div>
+                            <button class="crm-icon-btn" title="Collapse" onclick="window.crmDashboard.toggleSidebar()">${this.sidebarCollapsed ? '➡️' : '⬅️'}</button>
+                        </div>
+                        <nav class="crm-nav-vertical">
+                            <button class="crm-nav-item ${this.currentView === 'dashboard' ? 'active' : ''}" onclick="window.crmDashboard.switchView('dashboard')">📊 <span class="label">Dashboard</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'pipeline' ? 'active' : ''}" onclick="window.crmDashboard.switchView('pipeline')">🎯 <span class="label">Leads</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'projects' ? 'active' : ''}" onclick="window.crmDashboard.switchView('projects')">🏗️ <span class="label">Projects</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'contacts' ? 'active' : ''}" onclick="window.crmDashboard.switchView('contacts')">👥 <span class="label">Contacts</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'tasks' ? 'active' : ''}" onclick="window.crmDashboard.switchView('tasks')">✅ <span class="label">Tasks</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'marketing' ? 'active' : ''}" onclick="window.crmDashboard.switchView('marketing')">📧 <span class="label">Marketing</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'forms-codes' ? 'active' : ''}" onclick="window.crmDashboard.switchView('forms-codes')">📋 <span class="label">Forms & Codes</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'reports' ? 'active' : ''}" onclick="window.crmDashboard.switchView('reports')">📈 <span class="label">Reports</span></button>
+                            <button class="crm-nav-item ${this.currentView === 'settings' ? 'active' : ''}" onclick="window.crmDashboard.switchView('settings')">⚙️ <span class="label">Settings</span></button>
+                        </nav>
+                    </aside>
 
-                <div class="crm-content">
-                    ${this.renderCurrentView()}
+                    <main class="crm-main">
+                        <div class="crm-main-header">
+                            <h1 class="crm-page-title">${this.getPageTitle()}</h1>
+                            <button class="crm-btn-close" onclick="window.crmDashboard.close()">✕</button>
+                        </div>
+                        <div class="crm-content">
+                            ${this.renderCurrentView()}
+                        </div>
+                        <button class="crm-quick-add-fab" title="Quick Add" onclick="window.crmDashboard.openQuickAddMenu()">＋</button>
+                    </main>
                 </div>
             </div>
         `;
@@ -565,6 +589,46 @@ class CRMDashboard {
         this.currentView = view;
         this.selectedLead = null;
         this.render();
+    }
+
+    getPageTitle() {
+        const map = {
+            dashboard: 'Dashboard',
+            pipeline: 'Leads',
+            contacts: 'Contacts',
+            projects: 'Projects',
+            tasks: 'Tasks',
+            marketing: 'Marketing',
+            'forms-codes': 'Forms & Codes',
+            reports: 'Reports',
+            settings: 'Settings'
+        };
+        return map[this.currentView] || 'Dashboard';
+    }
+
+    toggleSidebar() {
+        this.sidebarCollapsed = !this.sidebarCollapsed;
+        this.render();
+    }
+
+    openQuickAddMenu() {
+        const existing = document.getElementById('crm-quick-add-menu');
+        if (existing) { existing.remove(); return; }
+        const m = document.createElement('div');
+        m.id = 'crm-quick-add-menu';
+        m.className = 'crm-quick-add-menu';
+        m.innerHTML = `
+            <button onclick="window.crmDashboard.showQuickAdd('lead'); this.parentElement.remove();">+ Lead</button>
+            <button onclick="window.crmDashboard.showQuickAdd('contact'); this.parentElement.remove();">+ Contact</button>
+            <button onclick="window.crmDashboard.showQuickAdd('task'); this.parentElement.remove();">+ Task</button>
+        `;
+        document.body.appendChild(m);
+        setTimeout(() => m.classList.add('open'), 10);
+        // Close when clicking outside
+        const onClick = (e) => {
+            if (!m.contains(e.target)) { m.remove(); document.removeEventListener('click', onClick); }
+        };
+        setTimeout(() => document.addEventListener('click', onClick), 0);
     }
 
     renderDashboard() {
@@ -1725,6 +1789,20 @@ class CRMDashboard {
         this.render();
     }
 
+    renderReports() {
+        return `
+            <div class="crm-view-header"><h2>📊 Reports</h2></div>
+            <p class="crm-empty">Reports coming soon.</p>
+        `;
+    }
+
+    renderSettings() {
+        return `
+            <div class="crm-view-header"><h2>⚙️ Settings</h2></div>
+            <p class="crm-empty">Settings coming soon.</p>
+        `;
+    }
+
     findOrCreateContactByEmailOrPhone(name, email, phone) {
         let contact = null;
         if (email) contact = this.contacts.find(c => c.email && c.email.toLowerCase() === email.toLowerCase());
@@ -1835,6 +1913,130 @@ class CRMDashboard {
                 border-radius: 6px;
                 cursor: pointer;
                 font-size: 18px;
+            }
+
+
+            /* === 3-Panel Layout === */
+            .crm-shell {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+                gap: 0;
+                min-height: 70vh;
+            }
+            .crm-shell.collapsed {
+                grid-template-columns: 72px 1fr;
+            }
+            .crm-sidebar {
+                position: sticky;
+                top: 0;
+                align-self: start;
+                height: 100%;
+                border-right: 2px solid #e5e7eb;
+                padding: 12px 8px;
+            }
+            .crm-sidebar-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+            .crm-logo {
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+                background: #3b82f6;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+            }
+            .crm-nav-vertical {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            .crm-nav-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                width: 100%;
+                background: #f3f4f6;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 12px;
+                cursor: pointer;
+                color: #374151;
+                font-weight: 600;
+            }
+            .crm-shell.collapsed .crm-nav-item .label { display: none; }
+            .crm-nav-item.active { background: #3b82f6; color: #fff; }
+            .crm-nav-item:hover { background: #e5e7eb; }
+            .crm-nav-item.active:hover { background: #2563eb; }
+
+            .crm-main {
+                padding-left: 16px;
+            }
+            .crm-main-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 16px;
+                border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 8px;
+            }
+            .crm-page-title {
+                margin: 0;
+                font-size: 20px;
+            }
+
+            /* Quick Add FAB */
+            .crm-quick-add-fab {
+                position: fixed;
+                right: 40px;
+                bottom: 40px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                border: none;
+                background: #10b981;
+                color: white;
+                font-size: 28px;
+                cursor: pointer;
+                box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+            }
+            .crm-quick-add-fab:hover { background: #059669; }
+
+            .crm-quick-add-menu {
+                position: fixed;
+                right: 40px;
+                bottom: 104px;
+                background: white;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                padding: 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+                opacity: 0;
+                transform: translateY(10px);
+                transition: all .15s ease;
+                z-index: 1000000;
+            }
+            .crm-quick-add-menu.open { opacity: 1; transform: translateY(0); }
+            .crm-quick-add-menu button {
+                background: #f3f4f6;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+                text-align: left;
+            }
+            .crm-quick-add-menu button:hover { background: #e5e7eb; }
+
+            @media (max-width: 900px) {
+                .crm-shell { grid-template-columns: 72px 1fr; }
             }
 
             .crm-content {
