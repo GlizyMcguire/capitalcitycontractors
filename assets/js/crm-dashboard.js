@@ -621,8 +621,6 @@ class CRMDashboard {
           </div>`;
     }
 
-    }
-
     openLead(leadId) {
         this.currentView = 'pipeline';
         this.selectedLead = leadId;
