@@ -569,13 +569,67 @@ class CRMDashboard {
                     </main>
                 </div>
             </div>
+            ${ (this.selectedLead || this.selectedContact || this.selectedProject) ? `<div class="crm-drawer-backdrop" onclick="window.crmDashboard.closeDrawer()"></div>` : ''}
+            ${ this.dayPopoverDateKey ? this.renderDayPopover() : '' }
         `;
+    }
+
+    renderDayPopover(){
+        const key = this.dayPopoverDateKey; if (!key) return '';
+        const [y,m,d] = key.split('-').map(n=>parseInt(n,10));
+        const day = new Date(y, m-1, d);
+        const today = new Date(); const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const tasks = this.tasks.filter(t=>{
+            if (!t.dueDate) return false; const dt = new Date(t.dueDate);
+            const k = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
+            return k === key && !t.archived;
+        }).sort((a,b)=> new Date(a.dueDate) - new Date(b.dueDate));
+        const title = day.toLocaleDateString();
+        return `
+          <div class="crm-modal-backdrop" onclick="window.crmDashboard.closeDayView()"></div>
+          <div class="crm-modal" role="dialog" aria-modal="true">
+            <div class="crm-modal-header">
+              <h3>Tasks on ${title}</h3>
+              <div style="display:flex; gap:8px;">
+                <button class="crm-btn-sm" onclick="window.crmDashboard.filterTasksByDate('${key}')">Filter List</button>
+                <button class="crm-btn-sm" onclick="window.crmDashboard.closeDayView()">Close</button>
+              </div>
+            </div>
+            <div class="crm-modal-body">
+              <div class="crm-template-add-row" style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+                <select class="crm-input crm-input-sm" id="day-template-select">
+                  <option value="">Add from template...</option>
+                  ${this.getTaskTemplates().map(t=>`<option value="${t.id}">${t.title}</option>`).join('')}
+                </select>
+                <button class="crm-btn-sm" onclick="const sel=document.getElementById('day-template-select'); if(sel.value) window.crmDashboard.addTemplateTaskOnDate(sel.value, '${key}')">Add</button>
+              </div>
+              ${tasks.length ? tasks.map(t=>{
+                const due = t.dueDate ? new Date(t.dueDate) : null;
+                const overdue = due && new Date(due.getFullYear(), due.getMonth(), due.getDate()) < todayOnly && !t.completed;
+                const related = this.getRelatedName(t.relatedTo);
+                const actions = [];
+                if (t.relatedTo?.type==='lead') actions.push(`<button class=\"crm-btn-xs\" onclick=\"window.crmDashboard.openLead('${t.relatedTo.id}')\">Open Lead</button>`);
+                if (t.relatedTo?.type==='project') actions.push(`<button class=\"crm-btn-xs\" onclick=\"window.crmDashboard.selectedProject='${t.relatedTo.id}'; window.crmDashboard.currentView='projects'; window.crmDashboard.render();\">Open Project</button>`);
+                return `<div class=\"crm-day-task-row ${overdue?'overdue':''}\">`
+                  + `<input type=\"checkbox\" ${t.completed?'checked':''} onchange=\"window.crmDashboard.completeTask('${t.id}'); window.crmDashboard.render();\">`
+                  + `<span class=\"ttl\">${t.title}${related?` <small>(${related})</small>`:''}</span>`
+                  + `<span class=\"meta\">${t.type||''}</span>`
+                  + `<span class=\"acts\">${actions.join(' ')}</span>`
+                  + `</div>`;
+              }).join('') : '<p class="crm-empty">No tasks on this date.</p>'}
+            </div>
+          </div>`;
+    }
+
     }
 
     openLead(leadId) {
         this.currentView = 'pipeline';
         this.selectedLead = leadId;
         this.render();
+    }
+    closeDrawer() {
+        this.selectedLead = null; this.selectedContact = null; this.selectedProject = null; this.render();
     }
 
     renderCurrentView() {
@@ -803,12 +857,16 @@ class CRMDashboard {
         const contact = this.contacts.find(c => c.id === lead.contactId);
 
         return `
-            <div class="crm-detail-panel">
+            <div class="crm-detail-panel open">
                 <div class="crm-detail-header">
                     <h3>${contact?.name || 'Unknown'}</h3>
                     <button class="crm-btn-close" onclick="window.crmDashboard.selectedLead = null; window.crmDashboard.render();">✕</button>
                 </div>
                 <div class="crm-detail-body">
+                    <div class="crm-detail-section">
+                        <strong>Smart Summary</strong>
+                        <p>Last activity: ${this.daysSince(lead.lastActivity)} days ago • Next action: ${this.nextActionText(lead)}</p>
+                    </div>
                     <div class="crm-detail-section">
                         <strong>Contact Info</strong>
                         <p>📧 ${contact?.email || 'N/A'}</p>
@@ -828,6 +886,18 @@ class CRMDashboard {
                             <p>${lead.notes}</p>
                         </div>
                     ` : ''}
+                    <div class="crm-detail-section">
+                        <strong>Activity Timeline</strong>
+                        ${this.renderLeadTimeline(lead, contact)}
+                    </div>
+                    <div class="crm-detail-section">
+                        <strong>Related Tasks</strong>
+                        ${this.renderRelatedTasks({ type: 'lead', id: lead.id })}
+                        <div style="margin-top:8px;">
+                          <button class="crm-btn-sm" onclick="window.crmDashboard.addLeadTask('${lead.id}')">+ Add Task</button>
+                          <button class="crm-btn-sm" onclick="window.crmDashboard.addLeadNote('${lead.id}')">+ Add Note</button>
+                        </div>
+                    </div>
                     <div class="crm-detail-actions">
                         <button class="crm-btn" onclick="window.crmDashboard.convertToProject('${lead.id}')">✅ Convert to Project</button>
                         <button class="crm-btn-secondary" onclick="window.crmDashboard.markAsLost('${lead.id}')">❌ Mark as Lost</button>
@@ -835,6 +905,58 @@ class CRMDashboard {
                 </div>
             </div>
         `;
+    daysSince(iso) {
+        if (!iso) return 'N/A';
+        const ms = new Date() - new Date(iso);
+        return Math.max(0, Math.floor(ms / (1000*60*60*24)));
+    }
+    nextActionText(lead) {
+        if (!lead.nextActionDate) return 'No next action';
+        const days = Math.ceil((new Date(lead.nextActionDate) - new Date())/(1000*60*60*24));
+        if (days < 0) return `Overdue by ${Math.abs(days)}d`;
+        if (days === 0) return 'Due today';
+        return `Due in ${days}d`;
+    }
+    renderLeadTimeline(lead, contact) {
+        const items = [];
+        items.push({ when: lead.createdAt, text: 'Lead created' });
+        if (lead.lastActivity) items.push({ when: lead.lastActivity, text: 'Activity updated' });
+        const relTasks = this.tasks.filter(t => t.relatedTo?.type === 'lead' && t.relatedTo?.id === lead.id);
+        relTasks.forEach(t => items.push({ when: t.createdAt || t.dueDate, text: `Task: ${t.title}${t.completed ? ' (completed)' : ''}` }));
+        if (contact?.id) {
+            const subs = this.submissions.filter(s => s.contactId === contact.id);
+            subs.forEach(s => items.push({ when: s.submittedAt, text: `Form submission (${s.formType})` }));
+        }
+        items.sort((a,b) => new Date(b.when) - new Date(a.when));
+        return `<ul class=\"crm-timeline\">${items.slice(0,10).map(i => `<li><span>${new Date(i.when).toLocaleString()}</span> — ${i.text}</li>`).join('')}</ul>`;
+    }
+    renderRelatedTasks(relatedTo) {
+        const list = this.tasks.filter(t => JSON.stringify(t.relatedTo) === JSON.stringify(relatedTo) && !t.archived);
+        if (list.length === 0) return '<p class="crm-empty">No related tasks.</p>';
+        return list.map(t => `
+            <div class=\"crm-detail-item\">
+                <input type=\"checkbox\" ${t.completed ? 'checked' : ''}
+                       onchange=\"window.crmDashboard.completeTask('${t.id}'); window.crmDashboard.render();\">
+                <span>${t.title} ${t.dueDate ? `— <small>${new Date(t.dueDate).toLocaleDateString()}</small>` : ''}</span>
+            </div>
+        `).join('');
+    }
+    addLeadTask(leadId) {
+        const title = prompt('Task title:');
+        if (!title) return;
+        this.addTask({ title, type: 'follow-up', relatedTo: { type: 'lead', id: leadId }, dueDate: new Date().toISOString() });
+        this.render();
+    }
+    addLeadNote(leadId) {
+        const note = prompt('Add note:');
+        if (!note) return;
+        const lead = this.leads.find(l => l.id === leadId);
+        if (!lead) return;
+        const stamp = new Date().toISOString();
+        lead.notes = (lead.notes ? lead.notes + '\n' : '') + `[${stamp.slice(0,10)}] ${note}`;
+        lead.lastActivity = stamp;
+        this.save('ccc_leads', this.leads);
+        this.render();
     }
 
     showQuickAdd(type) {
@@ -1066,12 +1188,20 @@ class CRMDashboard {
         const contactProjects = this.projects.filter(p => p.contactId === contact.id);
 
         return `
-            <div class="crm-detail-panel">
+            <div class="crm-detail-panel open">
                 <div class="crm-detail-header">
                     <h3>${contact.name}</h3>
                     <button class="crm-btn-close" onclick="window.crmDashboard.selectedContact = null; window.crmDashboard.render();">✕</button>
                 </div>
                 <div class="crm-detail-body">
+                    <div class="crm-detail-section">
+                        <strong>Smart Summary</strong>
+                        <p>Leads: ${contactLeads.length} • Projects: ${contactProjects.length} • Last activity: ${this.daysSince(this.getContactLastActivity(contact))} days ago</p>
+                        <div style="margin-top:8px;">
+                          <button class="crm-btn-sm" onclick="window.crmDashboard.addContactTask('${contact.id}')">+ Add Task</button>
+                          <button class="crm-btn-sm" onclick="window.crmDashboard.addContactNote('${contact.id}')">+ Add Note</button>
+                        </div>
+                    </div>
                     <div class="crm-detail-section">
                         <strong>Contact Info</strong>
                         <p>📧 ${contact.email || 'No email'}</p>
@@ -1108,6 +1238,12 @@ class CRMDashboard {
                                 </div>
                             `).join('')}
                         </div>
+
+                        <div class="crm-detail-section">
+                            <strong>Activity Timeline</strong>
+                            ${this.renderContactTimeline(contact)}
+                        </div>
+
                     ` : ''}
 
                     ${contact.notes ? `
@@ -1138,6 +1274,38 @@ class CRMDashboard {
         } else if (action === 'sms' && contact.phone) {
             window.open(`sms:${contact.phone}`);
         }
+    getContactLastActivity(contact) {
+        const leads = this.leads.filter(l => l.contactId === contact.id);
+        const times = leads.map(l => l.lastActivity).filter(Boolean).map(t => +new Date(t));
+        return times.length ? new Date(Math.max(...times)).toISOString() : null;
+    }
+    renderContactTimeline(contact) {
+        const items = [];
+        const leads = this.leads.filter(l => l.contactId === contact.id);
+        leads.forEach(l => items.push({ when: l.createdAt, text: `Lead created (${l.jobType})` }));
+        leads.forEach(l => { if (l.lastActivity) items.push({ when: l.lastActivity, text: 'Lead activity' }); });
+        const projects = this.projects.filter(p => p.contactId === contact.id);
+        projects.forEach(p => items.push({ when: p.createdAt, text: `Project created (${p.name})` }));
+        const subs = this.submissions.filter(s => s.contactId === contact.id);
+        subs.forEach(s => items.push({ when: s.submittedAt, text: `Form submission (${s.formType})` }));
+        items.sort((a,b) => new Date(b.when) - new Date(a.when));
+        return `<ul class=\"crm-timeline\">${items.slice(0,10).map(i => `<li><span>${new Date(i.when).toLocaleString()}</span> — ${i.text}</li>`).join('')}</ul>`;
+    }
+    addContactTask(contactId) {
+        const title = prompt('Task title:');
+        if (!title) return;
+        this.addTask({ title, type: 'follow-up', dueDate: new Date().toISOString() });
+        this.render();
+    }
+    addContactNote(contactId) {
+        const note = prompt('Add note:');
+        if (!note) return;
+        const c = this.contacts.find(x => x.id === contactId);
+        if (!c) return;
+        const stamp = new Date().toISOString();
+        c.notes = (c.notes ? c.notes + '\n' : '') + `[${stamp.slice(0,10)}] ${note}`;
+        this.save('ccc_contacts', this.contacts);
+        this.render();
     }
 
     renderProjects() {
@@ -1214,12 +1382,20 @@ class CRMDashboard {
         const projectTasks = this.tasks.filter(t => t.relatedTo?.type === 'project' && t.relatedTo?.id === project.id);
 
         return `
-            <div class="crm-detail-panel">
+            <div class="crm-detail-panel open">
                 <div class="crm-detail-header">
                     <h3>${project.name}</h3>
                     <button class="crm-btn-close" onclick="window.crmDashboard.selectedProject = null; window.crmDashboard.render();">✕</button>
                 </div>
                 <div class="crm-detail-body">
+                    <div class="crm-detail-section">
+                        <strong>Smart Summary</strong>
+                        <p>Progress: ${project.progress}%  b7  Next action: ${project.progress < 100 ? 'Continue work' : 'Completed'}</p>
+                        <div style="margin-top:8px;">
+                          <button class="crm-btn-sm" onclick="window.crmDashboard.addProjectTask('${project.id}')">+ Add Task</button>
+                          <button class="crm-btn-sm" onclick="window.crmDashboard.addProjectNote('${project.id}')">+ Add Note</button>
+                        </div>
+                    </div>
                     <div class="crm-detail-section">
                         <strong>Project Info</strong>
                         <p>👤 Client: ${contact?.name || 'Unknown'}</p>
@@ -1242,6 +1418,12 @@ class CRMDashboard {
                         <div class="crm-detail-section">
                             <strong>Tasks (${projectTasks.filter(t => !t.completed).length} open)</strong>
                             ${projectTasks.map(task => `
+
+                        <div class="crm-detail-section">
+                            <strong>Activity Timeline</strong>
+                            ${this.renderProjectTimeline(project)}
+                        </div>
+
                                 <div class="crm-detail-item">
                                     <input type="checkbox" ${task.completed ? 'checked' : ''}
                                            onchange="window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();">
@@ -1278,6 +1460,25 @@ class CRMDashboard {
                 this.render();
             }
         }
+    renderProjectTimeline(project) {
+        const items = [];
+        if (project.createdAt) items.push({ when: project.createdAt, text: 'Project created' });
+        const tasks = this.tasks.filter(t => t.relatedTo?.type === 'project' && t.relatedTo?.id === project.id);
+        tasks.forEach(t => items.push({ when: t.createdAt || t.dueDate, text: `Task: ${t.title}${t.completed ? ' (completed)' : ''}` }));
+        items.sort((a,b) => new Date(b.when) - new Date(a.when));
+        return `<ul class=\"crm-timeline\">${items.slice(0,10).map(i => `<li><span>${new Date(i.when).toLocaleString()}</span>    ${i.text}</li>`).join('')}</ul>`;
+    }
+    addProjectNote(projectId) {
+        const note = prompt('Add note:');
+        if (!note) return;
+        const p = this.projects.find(x => x.id === projectId);
+        if (!p) return;
+        const stamp = new Date().toISOString();
+        p.notes = (p.notes ? p.notes + '\n' : '') + `[${stamp.slice(0,10)}] ${note}`;
+        this.save('ccc_projects', this.projects);
+        this.render();
+    }
+
     }
 
     addProjectTask(projectId) {
@@ -1342,7 +1543,52 @@ class CRMDashboard {
                         onclick="window.crmDashboard.filterTasks('archived')">Archived (${archivedTasks.length})</button>
             </div>
 
-            ${this.renderTaskList()}
+            <div class="crm-filters-bar">
+                <button class="crm-filter-btn ${!this.tasksQuickFilter ? 'active' : ''}"
+                        onclick="window.crmDashboard.setTaskQuickFilter(null)">All</button>
+                <button class="crm-filter-btn ${this.tasksQuickFilter === 'today' ? 'active' : ''}"
+                        onclick="window.crmDashboard.setTaskQuickFilter('today')">Due Today</button>
+                <button class="crm-filter-btn ${this.tasksQuickFilter === 'overdue' ? 'active' : ''}"
+                        onclick="window.crmDashboard.setTaskQuickFilter('overdue')">Overdue</button>
+                <button class="crm-filter-btn ${this.tasksQuickFilter === 'week' ? 'active' : ''}"
+                        onclick="window.crmDashboard.setTaskQuickFilter('week')">This Week</button>
+                <button class="crm-filter-btn ${this.tasksQuickFilter === 'lead' ? 'active' : ''}"
+                        onclick="window.crmDashboard.setTaskQuickFilter('lead')">Linked to Leads</button>
+                <button class="crm-filter-btn ${this.tasksQuickFilter === 'project' ? 'active' : ''}"
+                        onclick="window.crmDashboard.setTaskQuickFilter('project')">Linked to Projects</button>
+                <span style="flex:1"></span>
+                <input class="crm-input crm-input-sm" style="max-width:200px" placeholder="Search tasks..."
+                       value="${this.tasksSearchQuery||''}"
+                       oninput="window.crmDashboard.setTasksSearchQuery(this.value)">
+                <select class="crm-input crm-input-sm" onchange="window.crmDashboard.setTasksTypeFilter(this.value)">
+                    ${['All', ...Array.from(new Set(this.tasks.map(t => t.type || 'other')))].map(x=>`<option ${((this.tasksTypeFilter||'All')===x)?'selected':''}>${x}</option>`).join('')}
+                </select>
+                    <button class="crm-filter-btn ${this.tasksCompact ? 'active' : ''}" onclick="window.crmDashboard.toggleTasksCompact()">Compact</button>
+
+                <div class="crm-toggle">
+                    <button class="crm-filter-btn ${this.tasksMode !== 'calendar' ? 'active' : ''}" onclick="window.crmDashboard.setTasksMode('list')">List</button>
+                    <button class="crm-filter-btn ${this.tasksMode === 'calendar' ? 'active' : ''}" onclick="window.crmDashboard.setTasksMode('calendar')">Calendar</button>
+                </div>
+                <div class="crm-saved-filter">
+                  <select class="crm-input crm-input-sm" id="tasks-saved-filter" onchange="window.crmDashboard.applySavedTaskFilter(this.value)">
+                    <option value="">Saved filters...</option>
+                    ${this.getSavedTaskFilters().map(f=>`<option value="${f.name}">${f.name}</option>`).join('')}
+                  </select>
+                  <button class="crm-btn-sm" onclick="window.crmDashboard.saveCurrentTaskFilter()">Save</button>
+                  <button class="crm-btn-sm" onclick="const sel=document.getElementById('tasks-saved-filter'); if(sel.value) window.crmDashboard.deleteSavedTaskFilter(sel.value)">Delete</button>
+                </div>
+            </div>
+
+
+            <div class="crm-templates-bar">
+              <div class="lbl">Templates:</div>
+              <div class="chips">
+                ${this.getTaskTemplates().length ? this.getTaskTemplates().map(t=>`<span class=\"chip\">${t.title}<button class=\"x\" title=\"Delete\" onclick=\"window.crmDashboard.deleteTaskTemplate('${t.id}')\">×</button></span>`).join('') : '<span class="muted">None</span>'}
+              </div>
+              <button class="crm-btn-sm" onclick="window.crmDashboard.addTaskTemplate()">+ New Template</button>
+            </div>
+
+            ${this.tasksMode === 'calendar' ? this.renderTaskCalendar() : this.renderTaskList()}
         `;
     }
 
@@ -1368,61 +1614,278 @@ class CRMDashboard {
             tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             emptyMessage = 'No archived tasks';
         }
+        // Apply quick filter if any
+        tasks = tasks.filter(t => this.taskMatchesQuickFilter(t, today));
+
 
         if (tasks.length === 0) {
             return `<p class="crm-empty">${emptyMessage}</p>`;
         }
 
+        const visibleIds = tasks.map(t=>t.id);
+        const bulk = (this.selectedTaskIds && this.selectedTaskIds.size) ? `
+            <div class=\"crm-bulk-bar\">${this.selectedTaskIds.size} selected
+              <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.completeSelectedTasks()\">Complete</button>
+              <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.archiveSelectedTasks()\">Archive</button>
+              <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.rescheduleSelectedTasks()\">Reschedule</button>
+              <button class=\"crm-btn-sm\" onclick=\"if(confirm('Delete selected tasks?')) window.crmDashboard.deleteSelectedTasks()\">Delete</button>
+              <span style=\"flex:1\"></span>
+              <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.selectAllVisibleTasks(${JSON.stringify(visibleIds)})\">Select All</button>
+              <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.clearTaskSelection()\">Clear</button>
+            </div>` : '';
+
+        const groups = this.groupTasks(tasks, today);
         return `
-            <div class="crm-tasks-list">
-                ${tasks.map(task => {
+            ${bulk}
+            <div class="crm-tasks-list ${this.tasksCompact ? 'compact' : ''}">
+              ${groups.map(g => g.items.length ? `
+                <div class=\"crm-task-group\">
+                  <div class=\"crm-task-group-title\">${g.title}</div>
+                  ${g.items.map(task => {
                     const related = this.getRelatedName(task.relatedTo);
                     const dueDate = task.dueDate ? new Date(task.dueDate) : null;
                     const dueDateOnly = dueDate ? new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()) : null;
                     const isOverdue = dueDateOnly && dueDateOnly < today && !task.completed;
                     const isToday = dueDateOnly && dueDateOnly.getTime() === today.getTime();
-
+                    const selected = this.isTaskSelected(task.id) ? 'selected' : '';
                     return `
-                        <div class="crm-task-row ${isOverdue ? 'overdue' : ''} ${task.completed ? 'completed' : ''}">
-                            <div class="crm-task-checkbox">
-                                ${!task.archived ? `
-                                    <input type="checkbox" ${task.completed ? 'checked' : ''}
-                                           onchange="window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();">
-                                ` : ''}
-                            </div>
-                            <div class="crm-task-content">
-                                <div class="crm-task-title">
-                                    ${isOverdue ? '⚠️ ' : ''}${task.title}
-                                    ${related ? `<span class="crm-task-related">- ${related}</span>` : ''}
-                                </div>
-                                <div class="crm-task-meta">
-                                    <span class="crm-task-type">${task.type}</span>
-                                    ${task.dueDate ? `
-                                        <span class="crm-task-due ${isOverdue ? 'overdue' : ''}">
-                                            ${isToday ? 'Today' : dueDate.toLocaleDateString()}
-                                        </span>
-                                    ` : ''}
-                                    ${task.completedAt ? `
-                                        <span class="crm-task-completed">
-                                            ✓ ${new Date(task.completedAt).toLocaleDateString()}
-                                        </span>
-                                    ` : ''}
-                                </div>
-                            </div>
-                            <div class="crm-task-actions">
-                                ${!task.archived && task.completed ? `
-                                    <button class="crm-icon-btn" onclick="window.crmDashboard.archiveTask('${task.id}'); window.crmDashboard.render();" title="Archive">📦</button>
-                                ` : ''}
-                                ${!task.archived ? `
-                                    <button class="crm-icon-btn" onclick="if(confirm('Delete this task?')) { window.crmDashboard.deleteTask('${task.id}'); window.crmDashboard.render(); }" title="Delete">🗑️</button>
-                                ` : ''}
-                            </div>
+                      <div class=\"crm-task-row ${selected} ${isOverdue ? 'overdue' : ''} ${task.completed ? 'completed' : ''}\">
+                        <div class=\"crm-task-select\">
+                          <input type=\"checkbox\" ${this.isTaskSelected(task.id)?'checked':''} onchange=\"window.crmDashboard.toggleTaskSelect('${task.id}')\">
                         </div>
-                    `;
-                }).join('')}
+                        <div class=\"crm-task-checkbox\">
+                          ${!task.archived ? `<input type=\"checkbox\" ${task.completed?'checked':''} onchange=\"window.crmDashboard.completeTask('${task.id}'); window.crmDashboard.render();\">` : ''}
+                        </div>
+                        <div class=\"crm-task-content\">
+                          <div class=\"crm-task-title\">${isOverdue ? '⚠️ ' : ''}${task.title} ${related ? `<span class=\"crm-task-related\">- ${related}</span>` : ''}</div>
+                          <div class=\"crm-task-meta\">
+                            <span class=\"crm-task-type\">${task.type||''}</span>
+                            ${task.dueDate ? `<span class=\"crm-task-due ${isOverdue?'overdue':''}\">${isToday ? 'Today' : dueDate.toLocaleDateString()}</span>` : ''}
+                            ${task.completedAt ? `<span class=\"crm-task-completed\">✓ ${new Date(task.completedAt).toLocaleDateString()}</span>` : ''}
+                          </div>
+                        </div>
+                        <div class=\"crm-task-actions\">
+                          ${!task.archived && task.completed ? `<button class=\"crm-icon-btn\" onclick=\"window.crmDashboard.archiveTask('${task.id}'); window.crmDashboard.render();\" title=\"Archive\">📦</button>` : ''}
+                          ${!task.archived ? `<button class=\"crm-icon-btn\" onclick=\"if(confirm('Delete this task?')) { window.crmDashboard.deleteTask('${task.id}'); window.crmDashboard.render(); }\" title=\"Delete\">🗑️</button>` : ''}
+                        </div>
+                      </div>`;
+                  }).join('')}
+                </div>` : '').join('')}
             </div>
         `;
     }
+    setTasksMode(mode) { this.tasksMode = mode; this.render(); }
+    setTaskQuickFilter(filter) { this.tasksQuickFilter = filter; this.render(); }
+    toggleTasksCompact(){ this.tasksCompact = !this.tasksCompact; this.render(); }
+    isTaskSelected(id){ if(!this.selectedTaskIds) this.selectedTaskIds = new Set(); return this.selectedTaskIds.has(id); }
+    toggleTaskSelect(id){ if(!this.selectedTaskIds) this.selectedTaskIds = new Set(); if(this.selectedTaskIds.has(id)) this.selectedTaskIds.delete(id); else this.selectedTaskIds.add(id); this.render(); }
+    selectAllVisibleTasks(ids){ if(!this.selectedTaskIds) this.selectedTaskIds = new Set(); ids.forEach(id=>this.selectedTaskIds.add(id)); this.render(); }
+    clearTaskSelection(){ if(this.selectedTaskIds) this.selectedTaskIds.clear(); this.render(); }
+
+    completeSelectedTasks(){ if(!this.selectedTaskIds) return; this.tasks.forEach(t=>{ if(this.selectedTaskIds.has(t.id) && !t.archived && !t.completed){ t.completed = true; t.completedAt = new Date().toISOString(); }}); this.save('ccc_tasks', this.tasks); this.render(); }
+    archiveSelectedTasks(){ if(!this.selectedTaskIds) return; this.tasks.forEach(t=>{ if(this.selectedTaskIds.has(t.id) && t.completed && !t.archived){ t.archived = true; }}); this.save('ccc_tasks', this.tasks); this.render(); }
+    deleteSelectedTasks(){ if(!this.selectedTaskIds) return; this.tasks = this.tasks.filter(t=>!this.selectedTaskIds.has(t.id)); this.save('ccc_tasks', this.tasks); this.selectedTaskIds.clear(); this.render(); }
+    rescheduleSelectedTasks(){ if(!this.selectedTaskIds) return; const d = prompt('Reschedule to date (YYYY-MM-DD):'); if(!d) return; const iso = new Date(`${d}T09:00:00`).toISOString(); this.tasks.forEach(t=>{ if(this.selectedTaskIds.has(t.id) && !t.archived){ t.dueDate = iso; t.completed = false; }}); this.save('ccc_tasks', this.tasks); this.render(); }
+
+    groupTasks(tasks, today){
+        const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - today.getDay());
+        const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate()+6);
+        const groups = [
+          { key:'overdue', title:'Overdue', items:[] },
+          { key:'today', title:'Today', items:[] },
+          { key:'week', title:'This Week', items:[] },
+          { key:'later', title:'Later', items:[] },
+          { key:'none', title:'No Due Date', items:[] },
+        ];
+        for(const t of tasks){
+          const d = t.dueDate ? new Date(t.dueDate) : null;
+          const only = d ? new Date(d.getFullYear(), d.getMonth(), d.getDate()) : null;
+          let bucket = 'none';
+          if(only){
+            if(only.getTime() === today.getTime()) bucket='today';
+            else if(only < today && !t.completed) bucket='overdue';
+            else if(only >= startOfWeek && only <= endOfWeek) bucket='week';
+            else if(only > endOfWeek) bucket='later';
+          }
+          const g = groups.find(g=>g.key===bucket); g.items.push(t);
+        }
+        // sort within groups by due date
+        for(const g of groups){ g.items.sort((a,b)=>{
+          const ad = a.dueDate?new Date(a.dueDate).getTime():Infinity;
+          const bd = b.dueDate?new Date(b.dueDate).getTime():Infinity;
+          return ad-bd;
+        }); }
+        return groups;
+    }
+    getTaskTemplates(){ if(!this.taskTemplates) this.taskTemplates = this.load('ccc_task_templates', []); return this.taskTemplates; }
+    saveTaskTemplates(arr){ this.taskTemplates = arr; this.save('ccc_task_templates', arr); }
+    addTaskTemplate(){ const title = prompt('Template title:'); if(!title) return; const type = prompt('Type (e.g., follow-up, call, email):','follow-up'); const tmpl = { id: crypto.randomUUID(), title, type: type||'other' }; const arr = this.getTaskTemplates(); arr.push(tmpl); this.saveTaskTemplates(arr); this.render(); }
+    deleteTaskTemplate(id){ const arr = this.getTaskTemplates().filter(t=>t.id!==id); this.saveTaskTemplates(arr); this.render(); }
+    addTemplateTaskOnDate(templateId, dateKey){ if(!templateId) return; const tmpl = this.getTaskTemplates().find(t=>t.id===templateId); if(!tmpl) return; const iso = new Date(`${dateKey}T09:00:00`).toISOString(); this.addTask({ title: tmpl.title, type: tmpl.type, dueDate: iso }); this.render(); }
+
+
+    taskMatchesQuickFilter(task, today) {
+        // Normalize key dates
+        const d = task.dueDate ? new Date(task.dueDate) : null;
+        const dueOnly = d ? new Date(d.getFullYear(), d.getMonth(), d.getDate()) : null;
+        const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - today.getDay());
+        const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+        // Quick filters
+        if (this.tasksQuickFilter === 'today') {
+            if (!dueOnly) return false; return dueOnly.getTime() === today.getTime();
+        }
+        if (this.tasksQuickFilter === 'overdue') {
+            if (!dueOnly) return false; return (dueOnly < today) && !task.completed;
+        }
+        if (this.tasksQuickFilter === 'week') {
+            if (!dueOnly) return false; return (dueOnly >= startOfWeek && dueOnly <= endOfWeek);
+        }
+        if (this.tasksQuickFilter === 'lead') {
+            if (task.relatedTo?.type !== 'lead') return false;
+        }
+        if (this.tasksQuickFilter === 'project') {
+            if (task.relatedTo?.type !== 'project') return false;
+        }
+        if (this.tasksQuickFilter === 'date') {
+            if (!dueOnly || !this.tasksDateKey) return false;
+            const key = `${dueOnly.getFullYear()}-${String(dueOnly.getMonth()+1).padStart(2,'0')}-${String(dueOnly.getDate()).padStart(2,'0')}`;
+            if (key !== this.tasksDateKey) return false;
+        }
+
+        // Type filter
+        if (this.tasksTypeFilter && this.tasksTypeFilter !== 'All') {
+            if ((task.type || 'other') !== this.tasksTypeFilter) return false;
+        }
+
+        // Status filter (optional hook; currently covered by quick filters)
+        if (this.tasksStatusFilter === 'completed' && !task.completed) return false;
+        if (this.tasksStatusFilter === 'active' && task.completed) return false;
+
+        // Search filter
+        const q = (this.tasksSearchQuery || '').trim().toLowerCase();
+        if (q) {
+            const related = this.getRelatedName(task.relatedTo) || '';
+            const hay = `${task.title || ''} ${related}`.toLowerCase();
+            if (!hay.includes(q)) return false;
+        }
+
+        return true;
+    }
+
+    renderTaskCalendar() {
+        const now = new Date();
+        const year = (this.tasksCalYear != null) ? this.tasksCalYear : now.getFullYear();
+        const month = (this.tasksCalMonth != null) ? this.tasksCalMonth : now.getMonth();
+        const first = new Date(year, month, 1);
+        const firstDow = first.getDay();
+        const daysInMonth = new Date(year, month+1, 0).getDate();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const cells = [];
+        for (let i=0;i<firstDow;i++) cells.push(null);
+        for (let d=1; d<=daysInMonth; d++) cells.push(new Date(year, month, d));
+        while (cells.length % 7 !== 0) cells.push(null);
+        if (cells.length < 42) while (cells.length < 42) cells.push(null);
+
+        // Build per-day tasks and find max for heat
+        const ongoing = this.tasks.filter(t => !t.archived);
+        const dayTasks = {};
+        ongoing.forEach(t => {
+            if (!t.dueDate) return; const dt = new Date(t.dueDate);
+            const key = `${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`;
+            (dayTasks[key] ||= []).push(t);
+        });
+        const maxCount = Math.max(1, ...Object.values(dayTasks).map(arr => arr.length));
+
+        const grid = cells.map(cell => {
+            if (!cell) return `<div class=\"crm-calendar-cell empty\"></div>`;
+            const key = `${cell.getFullYear()}-${cell.getMonth()}-${cell.getDate()}`;
+            let items = (dayTasks[key] || []).filter(t => this.taskMatchesQuickFilter(t, today));
+            items.sort((a,b)=> new Date(a.dueDate) - new Date(b.dueDate));
+            const isToday = cell.getTime() === today.getTime();
+            const count = items.length;
+            const heatLevel = count === 0 ? 0 : Math.min(5, Math.ceil((count / maxCount) * 5));
+            const dateKey = `${cell.getFullYear()}-${String(cell.getMonth()+1).padStart(2,'0')}-${String(cell.getDate()).padStart(2,'0')}`;
+            return `
+                <div class=\"crm-calendar-cell ${isToday?'today':''} ${heatLevel?('heat-'+heatLevel):''}\" onclick=\"window.crmDashboard.openDayView('${dateKey}')\" ondragover=\"event.preventDefault()\" ondrop=\"window.crmDashboard.onCalendarCellDrop('${dateKey}')\">
+                    <div class=\"crm-calendar-date\">${cell.getDate()}</div>
+                    <div class=\"crm-calendar-list\">
+                        ${items.slice(0,3).map(t=>{
+                            const overdue = t.dueDate && new Date(t.dueDate) < today && !t.completed;
+                            const related = this.getRelatedName(t.relatedTo);
+                            return `<div class=\"crm-calendar-task ${overdue?'overdue':''}\" title=\"${t.title}\" draggable=\"true\" ondragstart=\"window.crmDashboard.onCalendarTaskDragStart('${t.id}')\">\u2022 ${t.title}${related?` <small>(${related})</small>`:''}</div>`;
+                        }).join('')}
+                        ${items.length>3?`<div class=\"crm-calendar-more\">+${items.length-3} more</div>`:''}
+                    </div>
+                </div>`;
+        }).join('');
+
+        const monthName = new Date(year, month, 1).toLocaleString(undefined, { month: 'long', year: 'numeric' });
+        return `
+            <div class=\"crm-calendar\">
+                <div class=\"crm-calendar-header\">
+                    <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.shiftTasksMonth(-1)\">◀</button>
+                    <div class=\"crm-calendar-title\">${monthName}</div>
+                    <button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.shiftTasksMonth(1)\">▶</button>
+                </div>
+                <div class=\"crm-calendar-weekdays\"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+                <div class=\"crm-calendar-grid\">${grid}</div>
+            </div>
+        `;
+    }
+    onCalendarTaskDragStart(id){ this.dragTaskId = id; }
+    onCalendarCellDrop(dateKey){
+        if (!this.dragTaskId) return;
+        const t = this.tasks.find(x=>x.id===this.dragTaskId); if (!t) { this.dragTaskId=null; return; }
+        const iso = new Date(`${dateKey}T09:00:00`).toISOString();
+        t.dueDate = iso; this.save('ccc_tasks', this.tasks); this.dragTaskId = null; this.render();
+    }
+
+    openDayView(dateKey){ this.dayPopoverDateKey = dateKey; this.render(); }
+    closeDayView(){ this.dayPopoverDateKey = null; this.render(); }
+
+    shiftTasksMonth(delta){
+        const now = new Date();
+        if (this.tasksCalYear == null) this.tasksCalYear = now.getFullYear();
+        if (this.tasksCalMonth == null) this.tasksCalMonth = now.getMonth();
+        let m = this.tasksCalMonth + delta; let y = this.tasksCalYear;
+        if (m < 0){ m = 11; y -= 1; } else if (m > 11){ m = 0; y += 1; }
+        this.tasksCalMonth = m; this.tasksCalYear = y; this.render();
+    }
+    filterTasksByDate(dateKey){
+        this.tasksDateKey = dateKey; this.tasksQuickFilter = 'date'; this.tasksMode = 'list'; this.render();
+    }
+    setTasksTypeFilter(val){ this.tasksTypeFilter = val; this.render(); }
+    setTasksStatusFilter(val){ this.tasksStatusFilter = val; this.render(); }
+    setTasksSearchQuery(val){ this.tasksSearchQuery = val; this.render(); }
+
+    getSavedTaskFilters(){
+        if (!this.taskSavedFilters){ this.taskSavedFilters = this.load('ccc_task_filters', []); }
+        return this.taskSavedFilters;
+    }
+    saveCurrentTaskFilter(){
+        const name = prompt('Name this filter:'); if (!name) return;
+        const filt = { name,
+            quick: this.tasksQuickFilter||null,
+            type: this.tasksTypeFilter||null,
+            status: this.tasksStatusFilter||null,
+            search: this.tasksSearchQuery||'',
+        };
+        const arr = this.getSavedTaskFilters().filter(f=>f.name!==name);
+        arr.push(filt);
+        this.taskSavedFilters = arr; this.save('ccc_task_filters', arr); this.render();
+    }
+    applySavedTaskFilter(name){
+        if (!name) return; const f = this.getSavedTaskFilters().find(x=>x.name===name); if (!f) return;
+        this.tasksQuickFilter = f.quick; this.tasksTypeFilter = f.type; this.tasksStatusFilter = f.status; this.tasksSearchQuery = f.search;
+        this.render();
+    }
+    deleteSavedTaskFilter(name){
+        const arr = this.getSavedTaskFilters().filter(f=>f.name!==name);
+        this.taskSavedFilters = arr; this.save('ccc_task_filters', arr); this.render();
+    }
+
+
 
     filterTasks(filter) {
         this.taskFilter = filter;
@@ -1872,17 +2335,281 @@ class CRMDashboard {
     }
 
     renderReports() {
+        const leads = this.leads;
+        const contacts = this.contacts;
+        // Lead source performance
+        const bySource = {};
+        leads.forEach(l => { const s = l.leadSource || 'Unknown'; bySource[s] = (bySource[s]||0)+1; });
+        const totalLeads = leads.length || 1;
+        // Monthly growth (YYYY-MM)
+        const monthKey = d => { const dt = new Date(d); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; };
+        const growth = {};
+        contacts.forEach(c => { if (c.createdAt) { const k = monthKey(c.createdAt); growth[k] = growth[k]||{contacts:0,leads:0}; growth[k].contacts++; }});
+        leads.forEach(l => { if (l.createdAt) { const k = monthKey(l.createdAt); growth[k] = growth[k]||{contacts:0,leads:0}; growth[k].leads++; }});
+        const months = Object.keys(growth).sort();
+        // Job type conversion
+        const jobConv = this.settings.jobTypes.map(j => {
+            const all = leads.filter(l => l.jobType === j).length;
+            const won = leads.filter(l => l.jobType === j && l.status === 'won').length;
+            return { job:j, all, won, rate: all ? Math.round((won/all)*100) : 0 };
+        });
+        // Pipeline value by stage
+        const byStageVal = {};
+        this.settings.stages.forEach(s => { byStageVal[s.id]=0; });
+        leads.forEach(l => { byStageVal[l.status] = (byStageVal[l.status]||0) + (parseInt(l.estimatedValue)||0); });
+        // Won/Lost ratio
+        const won = leads.filter(l => l.status==='won').length;
+        const lost = leads.filter(l => l.status==='lost').length;
+
         return `
-            <div class="crm-view-header"><h2>📊 Reports</h2></div>
-            <p class="crm-empty">Reports coming soon.</p>
+            <div class="crm-view-header">
+              <h2>📊 Reports</h2>
+              <div class="crm-view-actions">
+                <button class="crm-btn" onclick="window.crmDashboard.exportReportsCSV()">Export CSV</button>
+              </div>
+            </div>
+
+            <div class="crm-grid-2">
+              <div class="crm-card">
+                <h3>Lead Source Performance</h3>
+                ${Object.entries(bySource).sort((a,b)=>b[1]-a[1]).map(([s,c])=>{
+                    const pct = Math.round((c/totalLeads)*100);
+                    return `<div class=\"crm-bar-row\"><span>${s}</span><div class=\"crm-bar\"><div style=\"width:${pct}%\"></div></div><span>${c}</span></div>`;
+                }).join('')}
+              </div>
+
+              <div class="crm-card">
+                <h3>Won / Lost Ratio</h3>
+                <p><strong>Won:</strong> ${won} &nbsp; <strong>Lost:</strong> ${lost}</p>
+              </div>
+
+              <div class="crm-card">
+                <h3>Monthly Growth (Contacts / Leads)</h3>
+                <div class="crm-table">
+                  <div class="crm-table-row crm-table-head"><div>Month</div><div>Contacts</div><div>Leads</div></div>
+                  ${months.map(m=>`<div class=\"crm-table-row\"><div>${m}</div><div>${growth[m].contacts}</div><div>${growth[m].leads}</div></div>`).join('')}
+                </div>
+              </div>
+
+              <div class="crm-card">
+                <h3>Job Type Conversion</h3>
+                ${jobConv.map(x=>`<div class=\"crm-bar-row\"><span>${x.job}</span><div class=\"crm-bar\"><div style=\"width:${x.rate}%\"></div></div><span>${x.won}/${x.all}</span></div>`).join('')}
+              </div>
+
+              <div class="crm-card">
+                <h3>Pipeline Value by Stage</h3>
+                ${this.settings.stages.map(s=>{
+                    const val = byStageVal[s.id]||0;
+                    const max = Math.max(1, ...Object.values(byStageVal));
+                    const pct = Math.round((val/max)*100);
+                    return `<div class=\"crm-bar-row\"><span>${s.name}</span><div class=\"crm-bar\"><div style=\"width:${pct}%\"></div></div><span>$${this.formatMoney(val)}</span></div>`;
+                }).join('')}
+              </div>
+            </div>
         `;
     }
 
+    exportReportsCSV() {
+        const rows = [];
+        rows.push(['Section','Metric','Value'].join(','));
+        // Lead sources
+        const bySource = {};
+        this.leads.forEach(l=>{ const s=l.leadSource||'Unknown'; bySource[s]=(bySource[s]||0)+1; });
+        Object.entries(bySource).forEach(([s,c])=>rows.push(['Lead Sources',s,c].join(',')));
+        // Won/Lost
+        const won = this.leads.filter(l=>l.status==='won').length;
+        const lost = this.leads.filter(l=>l.status==='lost').length;
+        rows.push(['Won/Lost','Won',won].join(','));
+        rows.push(['Won/Lost','Lost',lost].join(','));
+        // Monthly growth
+        const monthKey = d => { const dt = new Date(d); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; };
+        const growth = {};
+        this.contacts.forEach(c=>{ if(c.createdAt){ const k=monthKey(c.createdAt); growth[k]=growth[k]||{contacts:0,leads:0}; growth[k].contacts++; }});
+        this.leads.forEach(l=>{ if(l.createdAt){ const k=monthKey(l.createdAt); growth[k]=growth[k]||{contacts:0,leads:0}; growth[k].leads++; }});
+        Object.keys(growth).sort().forEach(m=>{
+            rows.push(['Monthly Growth',`${m} contacts`,growth[m].contacts].join(','));
+            rows.push(['Monthly Growth',`${m} leads`,growth[m].leads].join(','));
+        });
+        // Job type conversion
+        this.settings.jobTypes.forEach(j=>{
+            const all=this.leads.filter(l=>l.jobType===j).length;
+            const w=this.leads.filter(l=>l.jobType===j && l.status==='won').length;
+            rows.push(['Job Conversion',`${j} won/total`,`${w}/${all}`].join(','));
+        });
+        // Pipeline values
+        const byStageVal={}; this.settings.stages.forEach(s=>byStageVal[s.id]=0);
+        this.leads.forEach(l=>{ byStageVal[l.status]=(byStageVal[l.status]||0)+(parseInt(l.estimatedValue)||0); });
+        this.settings.stages.forEach(s=>{
+            rows.push(['Pipeline Value',s.name,`$${this.formatMoney(byStageVal[s.id]||0)}`].join(','));
+        });
+        const csv = rows.join('\n');
+        this.downloadFile('reports.csv', csv, 'text/csv');
+    }
+    downloadFile(filename, content, mime='text/plain') {
+        const blob = new Blob([content], { type: mime });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = filename; a.click();
+        URL.revokeObjectURL(url);
+    }
+
     renderSettings() {
+        const s = this.settings || {};
+        s.business = s.business || { companyName: 'Capital City Contractors', phone: '', email: '' };
+        s.notifications = s.notifications || { email: true, sms: false };
         return `
-            <div class="crm-view-header"><h2>⚙️ Settings</h2></div>
-            <p class="crm-empty">Settings coming soon.</p>
+          <div class="crm-view-header"><h2>⚙️ Settings</h2></div>
+          <div class="crm-grid-2">
+            <div class="crm-card">
+              <h3>Business Info</h3>
+              <input class="crm-input" id="set-biz-name" placeholder="Company Name" value="${s.business.companyName||''}">
+              <input class="crm-input" id="set-biz-phone" placeholder="Phone" value="${s.business.phone||''}">
+              <input class="crm-input" id="set-biz-email" placeholder="Email" value="${s.business.email||''}">
+              <button class="crm-btn" onclick="window.crmDashboard.saveBusinessInfo()">Save</button>
+            </div>
+
+            <div class="crm-card">
+              <h3>Notifications</h3>
+              <label><input type="checkbox" id="set-notify-email" ${s.notifications.email?'checked':''}> Email alerts</label><br>
+              <label><input type="checkbox" id="set-notify-sms" ${s.notifications.sms?'checked':''}> SMS alerts</label><br>
+              <button class="crm-btn" onclick="window.crmDashboard.saveNotifications()">Save</button>
+            </div>
+
+            <div class="crm-card">
+              <h3>Job Types</h3>
+              <div class="crm-chip-list">
+                ${s.jobTypes.map((jt,i)=>`<span class=\"crm-chip\">${jt}<button onclick=\"window.crmDashboard.removeJobType(${i})\">✕</button></span>`).join('')}
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <input class="crm-input" id="new-jobtype" placeholder="Add job type">
+                <button class="crm-btn" onclick="window.crmDashboard.addJobType()">Add</button>
+              </div>
+            </div>
+
+            <div class="crm-card">
+              <h3>Lead Sources</h3>
+              <div class="crm-chip-list">
+                ${s.leadSources.map((ls,i)=>`<span class=\"crm-chip\">${ls}<button onclick=\"window.crmDashboard.removeLeadSource(${i})\">✕</button></span>`).join('')}
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <input class="crm-input" id="new-leadsource" placeholder="Add lead source">
+                <button class="crm-btn" onclick="window.crmDashboard.addLeadSource()">Add</button>
+              </div>
+            </div>
+
+            <div class="crm-card" style="grid-column:1 / -1;">
+              <h3>Pipeline Stages</h3>
+              <div class="crm-table">
+                <div class="crm-table-row crm-table-head"><div>Stage</div><div>Color</div><div>Order</div><div>Actions</div></div>
+                ${s.stages.map((st,idx)=>`
+                  <div class=\"crm-table-row\">
+                    <div><input class=\"crm-input\" value=\"${st.name}\" onchange=\"window.crmDashboard.renameStage('${st.id}', this.value)\"></div>
+                    <div><input type=\"color\" value=\"${st.color}\" onchange=\"window.crmDashboard.setStageColor('${st.id}', this.value)\"></div>
+                    <div>
+                      <button class=\"crm-btn-sm\" ${idx===0?'disabled':''} onclick=\"window.crmDashboard.moveStage('${st.id}', -1)\">↑</button>
+                      <button class=\"crm-btn-sm\" ${idx===s.stages.length-1?'disabled':''} onclick=\"window.crmDashboard.moveStage('${st.id}', 1)\">↓</button>
+                    </div>
+                    <div><button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.removeStage('${st.id}')\">Delete</button></div>
+                  </div>
+                `).join('')}
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px;">
+                <input class="crm-input" id="new-stage-name" placeholder="New stage name">
+                <input type="color" id="new-stage-color" value="#64748b">
+                <button class="crm-btn" onclick="window.crmDashboard.addStage()">Add Stage</button>
+              </div>
+            </div>
+
+            <div class="crm-card" style="grid-column:1 / -1;">
+              <h3>Data Management</h3>
+              <button class="crm-btn" onclick="window.crmDashboard.exportAllData()">Export All Data</button>
+              <button class="crm-btn" onclick="window.crmDashboard.importData()">Import Data</button>
+              <button class="crm-btn-secondary" onclick="window.crmDashboard.clearAllData()">Clear All Data</button>
+            </div>
+          </div>
         `;
+    }
+    saveBusinessInfo() {
+        this.settings.business = {
+            companyName: document.getElementById('set-biz-name').value,
+            phone: document.getElementById('set-biz-phone').value,
+            email: document.getElementById('set-biz-email').value,
+        };
+        this.save('ccc_settings', this.settings); this.render();
+    }
+    saveNotifications() {
+        this.settings.notifications = {
+            email: document.getElementById('set-notify-email').checked,
+            sms: document.getElementById('set-notify-sms').checked,
+        };
+        this.save('ccc_settings', this.settings); this.render();
+    }
+    addJobType() {
+        const v = document.getElementById('new-jobtype').value.trim();
+        if (!v) return; this.settings.jobTypes.push(v); this.save('ccc_settings', this.settings); this.render();
+    }
+    removeJobType(idx) { this.settings.jobTypes.splice(idx,1); this.save('ccc_settings', this.settings); this.render(); }
+    addLeadSource() {
+        const v = document.getElementById('new-leadsource').value.trim();
+        if (!v) return; this.settings.leadSources.push(v); this.save('ccc_settings', this.settings); this.render();
+    }
+    removeLeadSource(idx) { this.settings.leadSources.splice(idx,1); this.save('ccc_settings', this.settings); this.render(); }
+    renameStage(id, name) {
+        const st = this.settings.stages.find(s=>s.id===id); if (!st) return; st.name = name; this.save('ccc_settings', this.settings); this.render();
+    }
+    setStageColor(id, color) {
+        const st = this.settings.stages.find(s=>s.id===id); if (!st) return; st.color = color; this.save('ccc_settings', this.settings); this.render();
+    }
+    moveStage(id, dir) {
+        const i = this.settings.stages.findIndex(s=>s.id===id); if (i<0) return;
+        const j = i + dir; if (j<0 || j>=this.settings.stages.length) return;
+        const arr = this.settings.stages; const [it] = arr.splice(i,1); arr.splice(j,0,it);
+        this.save('ccc_settings', this.settings); this.render();
+    }
+    addStage() {
+        const name = document.getElementById('new-stage-name').value.trim(); if (!name) return;
+        const color = document.getElementById('new-stage-color').value || '#64748b';
+        const id = name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+        if (this.settings.stages.find(s=>s.id===id)) return alert('Stage id exists');
+        this.settings.stages.push({ id, name, color }); this.save('ccc_settings', this.settings); this.render();
+    }
+    removeStage(id) {
+        this.settings.stages = this.settings.stages.filter(s=>s.id!==id); this.save('ccc_settings', this.settings); this.render();
+    }
+    exportAllData() {
+        const snapshot = {
+            contacts: this.contacts,
+            leads: this.leads,
+            projects: this.projects,
+            tasks: this.tasks,
+            campaigns: this.campaigns,
+            submissions: this.submissions,
+            discountCodes: this.discountCodes,
+            settings: this.settings,
+        };
+        this.downloadFile('ccc_data.json', JSON.stringify(snapshot, null, 2), 'application/json');
+    }
+    importData() {
+        const text = prompt('Paste JSON exported from this app:');
+        if (!text) return; try {
+            const data = JSON.parse(text);
+            if (data.contacts) { this.contacts = data.contacts; this.save('ccc_contacts', this.contacts); }
+            if (data.leads) { this.leads = data.leads; this.save('ccc_leads', this.leads); }
+            if (data.projects) { this.projects = data.projects; this.save('ccc_projects', this.projects); }
+            if (data.tasks) { this.tasks = data.tasks; this.save('ccc_tasks', this.tasks); }
+            if (data.campaigns) { this.campaigns = data.campaigns; this.save('ccc_campaigns', this.campaigns); }
+            if (data.submissions) { this.submissions = data.submissions; this.save('ccc_submissions', this.submissions); }
+            if (data.discountCodes) { this.discountCodes = data.discountCodes; this.save('ccc_discount_codes', this.discountCodes); }
+            if (data.settings) { this.settings = data.settings; this.save('ccc_settings', this.settings); }
+            alert('Data imported.'); this.render();
+        } catch(e) { alert('Invalid JSON.'); }
+    }
+    clearAllData() {
+        if (!confirm('This will erase all CRM data. Continue?')) return;
+        ['ccc_contacts','ccc_leads','ccc_projects','ccc_tasks','ccc_campaigns','ccc_submissions','ccc_discount_codes','ccc_settings']
+          .forEach(k=>localStorage.removeItem(k));
+        this.contacts=[]; this.leads=[]; this.projects=[]; this.tasks=[]; this.campaigns=[]; this.submissions=[]; this.discountCodes=[];
+        this.settings = this.load('ccc_settings', this.settings); this.render();
     }
 
     findOrCreateContactByEmailOrPhone(name, email, phone) {
@@ -1962,6 +2689,14 @@ class CRMDashboard {
                 gap: 8px;
             }
 
+            .crm-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100001; }
+            .crm-modal { position: fixed; z-index: 100002; top: 10%; left: 50%; transform: translateX(-50%); width: min(640px, 92vw); background: #fff; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+            .crm-modal-header { display:flex; align-items:center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
+            .crm-modal-body { padding: 12px 16px; max-height: 60vh; overflow: auto; }
+            .crm-day-task-row { display:grid; grid-template-columns: auto 1fr auto auto; gap: 8px; align-items:center; padding: 8px 0; border-bottom: 1px dashed #e5e7eb; }
+            .crm-day-task-row.overdue .ttl { color: #b91c1c; }
+            .crm-btn-xs { font-size: 12px; padding: 2px 6px; border-radius: 6px; border: 1px solid #e5e7eb; background: #f9fafb; cursor:pointer; }
+
             .crm-nav-btn {
                 background: #f3f4f6;
                 border: none;
@@ -1992,6 +2727,17 @@ class CRMDashboard {
                 border: none;
                 width: 32px;
                 height: 32px;
+            }
+            .crm-calendar-header { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:8px; margin-bottom:8px; }
+            .crm-calendar-title { font-weight:600; color:#374151; }
+            .crm-calendar-cell.heat-1 { background: #f3f4f6; }
+            .crm-calendar-cell.heat-2 { background: #e5f0ff; }
+            .crm-calendar-cell.heat-3 { background: #d0e4ff; }
+            .crm-calendar-cell.heat-4 { background: #bcd7ff; }
+            .crm-calendar-cell.heat-5 { background: #a6caff; }
+            .crm-input-sm { height: 28px; padding: 4px 8px; font-size: 13px; }
+            .crm-saved-filter { display:flex; gap:6px; align-items:center; }
+
                 border-radius: 6px;
                 cursor: pointer;
                 font-size: 18px;
@@ -2089,6 +2835,17 @@ class CRMDashboard {
             }
             .crm-quick-add-fab:hover { background: #059669; }
 
+            .crm-calendar { margin-top: 8px; }
+            .crm-calendar-weekdays { display:grid; grid-template-columns: repeat(7,1fr); gap:8px; font-size:12px; color:#6b7280; padding:4px 0; }
+            .crm-calendar-grid { display:grid; grid-template-columns: repeat(7,1fr); gap:8px; }
+            .crm-calendar-cell { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:8px; min-height:96px; display:flex; flex-direction:column; }
+            .crm-calendar-cell.today { outline:2px solid #3b82f6; }
+            .crm-calendar-cell.empty { background: #f9fafb; border-style: dashed; }
+            .crm-calendar-date { font-weight:600; color:#374151; margin-bottom:6px; }
+            .crm-calendar-task { font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+            .crm-calendar-task.overdue { color:#b91c1c; }
+            .crm-calendar-more { font-size:12px; color:#6b7280; margin-top:4px; }
+
             .crm-quick-add-menu {
                 position: fixed;
                 right: 40px;
@@ -2158,6 +2915,20 @@ class CRMDashboard {
             .crm-section {
                 margin-bottom: 24px;
             }
+
+            .crm-grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+            .crm-bar-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin: 6px 0; }
+            .crm-bar { background: #f3f4f6; height: 8px; border-radius: 4px; overflow: hidden; }
+            .crm-bar > div { background: #3b82f6; height: 8px; }
+            .crm-chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
+            .crm-chip { background: #e5e7eb; color: #374151; padding: 4px 8px; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; }
+            .crm-drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 99999; animation: crmFade .2s ease; }
+            @keyframes crmFade { from { opacity: 0; } to { opacity: 1; } }
+
+            .crm-chip button { background: transparent; border: none; cursor: pointer; color: #6b7280; }
+            .crm-timeline { list-style: none; padding: 0; margin: 0; }
+            .crm-timeline li { padding: 6px 0; border-bottom: 1px dashed #e5e7eb; font-size: 13px; display:flex; gap:8px; }
+            .crm-timeline li span { color: #6b7280; min-width: 140px; display:inline-block; }
 
             .crm-section h2 {
                 font-size: 18px;
@@ -2420,12 +3191,15 @@ class CRMDashboard {
                 right: 0;
                 top: 0;
                 bottom: 0;
-                width: 400px;
+                width: 420px;
                 background: white;
-                box-shadow: -4px 0 6px rgba(0, 0, 0, 0.1);
-                z-index: 10;
+                box-shadow: -10px 0 24px rgba(0,0,0,0.08);
+                z-index: 100000;
                 overflow-y: auto;
+                transform: translateX(100%);
+                transition: transform .2s ease;
             }
+            .crm-detail-panel.open { transform: translateX(0); }
 
             .crm-detail-header {
                 display: flex;
@@ -2716,6 +3490,12 @@ class CRMDashboard {
             .crm-task-title {
                 font-size: 15px;
                 font-weight: 500;
+            .crm-templates-bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 12px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:12px; }
+            .crm-templates-bar .lbl { font-weight:600; color:#374151; }
+            .crm-templates-bar .chips { display:flex; gap:6px; align-items:center; }
+            .crm-templates-bar .chip { display:inline-flex; align-items:center; gap:6px; padding:4px 8px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; }
+            .crm-templates-bar .chip .x { border:none; background:transparent; cursor:pointer; font-size:14px; line-height:1; }
+
                 color: #1f2937;
                 margin-bottom: 4px;
             }
@@ -2728,6 +3508,12 @@ class CRMDashboard {
             .crm-task-related {
                 color: #6b7280;
                 font-weight: normal;
+
+            .crm-tasks-list.compact .crm-task-row { padding: 8px; gap: 8px; }
+            .crm-task-group-title { margin: 12px 0 6px; font-weight: 600; color: #374151; }
+            .crm-bulk-bar { display:flex; align-items:center; gap:8px; padding:8px 12px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:8px; margin-bottom:8px; }
+            .crm-task-select input { width:16px; height:16px; }
+
                 font-size: 14px;
             }
 
