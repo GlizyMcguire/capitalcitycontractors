@@ -1,7 +1,7 @@
 /**
  * Capital City Contractors - Lean CRM Dashboard
  * Version: 3.0 - Construction Edition
- * Phase 4: Tasks & Marketing
+ * Phase 5: Advanced Reports & Analytics
  * Build: 2025-01-05
  */
 
@@ -2338,78 +2338,243 @@ class CRMDashboard {
     }
 
     renderReports() {
-        const leads = this.leads;
-        const contacts = this.contacts;
-        // Lead source performance
+        // Initialize date range filter if not set
+        if (!this.reportsDateRange) this.reportsDateRange = 'all';
+
+        // Calculate date range
+        const now = new Date();
+        let startDate = null;
+        switch(this.reportsDateRange) {
+            case '7d': startDate = new Date(now - 7*24*60*60*1000); break;
+            case '30d': startDate = new Date(now - 30*24*60*60*1000); break;
+            case '90d': startDate = new Date(now - 90*24*60*60*1000); break;
+            case 'year': startDate = new Date(now.getFullYear(), 0, 1); break;
+            case 'all': startDate = null; break;
+        }
+
+        // Filter data by date range
+        const leads = startDate ? this.leads.filter(l => new Date(l.createdAt) >= startDate) : this.leads;
+        const contacts = startDate ? this.contacts.filter(c => new Date(c.createdAt) >= startDate) : this.contacts;
+        const tasks = startDate ? this.tasks.filter(t => new Date(t.createdAt) >= startDate) : this.tasks;
+
+        // Lead source performance with conversion rates
         const bySource = {};
-        leads.forEach(l => { const s = l.leadSource || 'Unknown'; bySource[s] = (bySource[s]||0)+1; });
+        leads.forEach(l => {
+            const s = l.leadSource || 'Unknown';
+            if (!bySource[s]) bySource[s] = {total:0, won:0, lost:0, value:0};
+            bySource[s].total++;
+            if (l.status === 'won') { bySource[s].won++; bySource[s].value += (l.estimatedValue||0); }
+            if (l.status === 'lost') bySource[s].lost++;
+        });
         const totalLeads = leads.length || 1;
+
         // Monthly growth (YYYY-MM)
         const monthKey = d => { const dt = new Date(d); return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`; };
         const growth = {};
         contacts.forEach(c => { if (c.createdAt) { const k = monthKey(c.createdAt); growth[k] = growth[k]||{contacts:0,leads:0}; growth[k].contacts++; }});
         leads.forEach(l => { if (l.createdAt) { const k = monthKey(l.createdAt); growth[k] = growth[k]||{contacts:0,leads:0}; growth[k].leads++; }});
-        const months = Object.keys(growth).sort();
+        const months = Object.keys(growth).sort().slice(-6); // Last 6 months
+
         // Job type conversion
         const jobConv = this.settings.jobTypes.map(j => {
             const all = leads.filter(l => l.jobType === j).length;
             const won = leads.filter(l => l.jobType === j && l.status === 'won').length;
-            return { job:j, all, won, rate: all ? Math.round((won/all)*100) : 0 };
-        });
+            const value = leads.filter(l => l.jobType === j && l.status === 'won').reduce((sum,l)=>sum+(l.estimatedValue||0),0);
+            return { job:j, all, won, rate: all ? Math.round((won/all)*100) : 0, value };
+        }).filter(x => x.all > 0);
+
         // Pipeline value by stage
         const byStageVal = {};
         this.settings.stages.forEach(s => { byStageVal[s.id]=0; });
         leads.forEach(l => { byStageVal[l.status] = (byStageVal[l.status]||0) + (parseInt(l.estimatedValue)||0); });
+
         // Won/Lost ratio
         const won = leads.filter(l => l.status==='won').length;
         const lost = leads.filter(l => l.status==='lost').length;
+        const wonValue = leads.filter(l => l.status==='won').reduce((sum,l)=>sum+(l.estimatedValue||0),0);
+        const avgDealSize = won > 0 ? Math.round(wonValue / won) : 0;
+
+        // Conversion funnel
+        const funnel = [
+            { stage: 'New Leads', count: leads.filter(l => l.status === 'new').length },
+            { stage: 'Qualified', count: leads.filter(l => l.status === 'qualified').length },
+            { stage: 'Estimate Sent', count: leads.filter(l => l.status === 'estimate-sent').length },
+            { stage: 'Negotiation', count: leads.filter(l => l.status === 'negotiation').length },
+            { stage: 'Won', count: won }
+        ];
+        const funnelMax = Math.max(...funnel.map(f => f.count), 1);
+
+        // Activity metrics
+        const completedTasks = tasks.filter(t => t.completed).length;
+        const avgTasksPerDay = startDate ? Math.round(completedTasks / Math.max(1, Math.ceil((now - startDate)/(24*60*60*1000)))) : 0;
+
+        // Revenue forecast (based on pipeline)
+        const pipelineValue = leads.filter(l => !['won','lost'].includes(l.status)).reduce((sum,l)=>sum+(l.estimatedValue||0),0);
+        const conversionRate = totalLeads > 0 ? (won / totalLeads) : 0.25; // Default 25%
+        const forecastRevenue = Math.round(pipelineValue * conversionRate);
 
         return `
             <div class="crm-view-header">
-              <h2>📊 Reports</h2>
+              <h2>📊 Reports & Analytics</h2>
               <div class="crm-view-actions">
-                <button class="crm-btn" onclick="window.crmDashboard.exportReportsCSV()">Export CSV</button>
+                <div class="crm-filters-bar">
+                  <button class="crm-filter-btn ${this.reportsDateRange==='7d'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('7d')">Last 7 Days</button>
+                  <button class="crm-filter-btn ${this.reportsDateRange==='30d'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('30d')">Last 30 Days</button>
+                  <button class="crm-filter-btn ${this.reportsDateRange==='90d'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('90d')">Last 90 Days</button>
+                  <button class="crm-filter-btn ${this.reportsDateRange==='year'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('year')">This Year</button>
+                  <button class="crm-filter-btn ${this.reportsDateRange==='all'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('all')">All Time</button>
+                </div>
+                <button class="crm-btn" onclick="window.crmDashboard.exportReportsCSV()">📥 Export CSV</button>
               </div>
+            </div>
+
+            <!-- Key Metrics Cards -->
+            <div class="crm-metrics" style="margin-bottom:24px;">
+                <div class="crm-card">
+                    <div class="crm-card-value">${totalLeads}</div>
+                    <div class="crm-card-label">Total Leads</div>
+                </div>
+                <div class="crm-card">
+                    <div class="crm-card-value">${won}</div>
+                    <div class="crm-card-label">Won Deals</div>
+                </div>
+                <div class="crm-card">
+                    <div class="crm-card-value">$${this.formatMoney(wonValue)}</div>
+                    <div class="crm-card-label">Revenue</div>
+                </div>
+                <div class="crm-card">
+                    <div class="crm-card-value">$${this.formatMoney(avgDealSize)}</div>
+                    <div class="crm-card-label">Avg Deal Size</div>
+                </div>
+                <div class="crm-card">
+                    <div class="crm-card-value">${Math.round(conversionRate*100)}%</div>
+                    <div class="crm-card-label">Conversion Rate</div>
+                </div>
             </div>
 
             <div class="crm-grid-2">
+              <!-- Conversion Funnel -->
               <div class="crm-card">
-                <h3>Lead Source Performance</h3>
-                ${Object.entries(bySource).sort((a,b)=>b[1]-a[1]).map(([s,c])=>{
-                    const pct = Math.round((c/totalLeads)*100);
-                    return `<div class=\"crm-bar-row\"><span>${s}</span><div class=\"crm-bar\"><div style=\"width:${pct}%\"></div></div><span>${c}</span></div>`;
+                <h3>🎯 Conversion Funnel</h3>
+                ${funnel.map(f => {
+                    const pct = Math.round((f.count/funnelMax)*100);
+                    return `<div class=\"crm-funnel-row\">
+                        <span class=\"crm-funnel-label\">${f.stage}</span>
+                        <div class=\"crm-funnel-bar\" style=\"width:${pct}%\">${f.count}</div>
+                    </div>`;
                 }).join('')}
               </div>
 
+              <!-- Lead Source Performance -->
               <div class="crm-card">
-                <h3>Won / Lost Ratio</h3>
-                <p><strong>Won:</strong> ${won} &nbsp; <strong>Lost:</strong> ${lost}</p>
+                <h3>📊 Lead Source Performance</h3>
+                ${Object.entries(bySource).sort((a,b)=>b[1].total-a[1].total).map(([s,data])=>{
+                    const pct = Math.round((data.total/totalLeads)*100);
+                    const convRate = data.total > 0 ? Math.round((data.won/data.total)*100) : 0;
+                    return `<div class=\"crm-bar-row\">
+                        <span>${s}</span>
+                        <div class=\"crm-bar\"><div style=\"width:${pct}%\"></div></div>
+                        <span>${data.total} (${convRate}% won)</span>
+                    </div>`;
+                }).join('')}
               </div>
 
+              <!-- Monthly Growth -->
               <div class="crm-card">
-                <h3>Monthly Growth (Contacts / Leads)</h3>
-                <div class="crm-table">
-                  <div class="crm-table-row crm-table-head"><div>Month</div><div>Contacts</div><div>Leads</div></div>
-                  ${months.map(m=>`<div class=\"crm-table-row\"><div>${m}</div><div>${growth[m].contacts}</div><div>${growth[m].leads}</div></div>`).join('')}
+                <h3>📈 Monthly Growth Trend</h3>
+                <div class="crm-chart">
+                  ${months.map(m=>{
+                      const c = growth[m].contacts;
+                      const l = growth[m].leads;
+                      const maxVal = Math.max(...months.map(mm=>Math.max(growth[mm].contacts, growth[mm].leads)), 1);
+                      const cHeight = Math.round((c/maxVal)*100);
+                      const lHeight = Math.round((l/maxVal)*100);
+                      return `<div class=\"crm-chart-col\">
+                          <div class=\"crm-chart-bars\">
+                              <div class=\"crm-chart-bar\" style=\"height:${cHeight}%; background:#3b82f6;\" title=\"${c} contacts\"></div>
+                              <div class=\"crm-chart-bar\" style=\"height:${lHeight}%; background:#10b981;\" title=\"${l} leads\"></div>
+                          </div>
+                          <div class=\"crm-chart-label\">${m.slice(5)}</div>
+                      </div>`;
+                  }).join('')}
+                </div>
+                <div style="display:flex; gap:16px; justify-content:center; margin-top:12px; font-size:13px;">
+                    <span><span style="display:inline-block; width:12px; height:12px; background:#3b82f6; border-radius:2px;"></span> Contacts</span>
+                    <span><span style="display:inline-block; width:12px; height:12px; background:#10b981; border-radius:2px;"></span> Leads</span>
                 </div>
               </div>
 
+              <!-- Job Type Conversion -->
               <div class="crm-card">
-                <h3>Job Type Conversion</h3>
-                ${jobConv.map(x=>`<div class=\"crm-bar-row\"><span>${x.job}</span><div class=\"crm-bar\"><div style=\"width:${x.rate}%\"></div></div><span>${x.won}/${x.all}</span></div>`).join('')}
+                <h3>🏗️ Job Type Performance</h3>
+                ${jobConv.sort((a,b)=>b.value-a.value).map(x=>`<div class=\"crm-bar-row\">
+                    <span>${x.job}</span>
+                    <div class=\"crm-bar\"><div style=\"width:${x.rate}%\"></div></div>
+                    <span>${x.won}/${x.all} ($${this.formatMoney(x.value)})</span>
+                </div>`).join('')}
               </div>
 
+              <!-- Pipeline Value by Stage -->
               <div class="crm-card">
-                <h3>Pipeline Value by Stage</h3>
-                ${this.settings.stages.map(s=>{
+                <h3>💰 Pipeline Value by Stage</h3>
+                ${this.settings.stages.filter(s => !['won','lost'].includes(s.id)).map(s=>{
                     const val = byStageVal[s.id]||0;
                     const max = Math.max(1, ...Object.values(byStageVal));
                     const pct = Math.round((val/max)*100);
-                    return `<div class=\"crm-bar-row\"><span>${s.name}</span><div class=\"crm-bar\"><div style=\"width:${pct}%\"></div></div><span>$${this.formatMoney(val)}</span></div>`;
+                    return `<div class=\"crm-bar-row\">
+                        <span style=\"color:${s.color};\">● ${s.name}</span>
+                        <div class=\"crm-bar\"><div style=\"width:${pct}%; background:${s.color};\"></div></div>
+                        <span>$${this.formatMoney(val)}</span>
+                    </div>`;
                 }).join('')}
+              </div>
+
+              <!-- Revenue Forecast -->
+              <div class="crm-card">
+                <h3>🔮 Revenue Forecast</h3>
+                <p style="margin-bottom:12px;">Based on current pipeline and ${Math.round(conversionRate*100)}% conversion rate:</p>
+                <div class=\"crm-forecast-box\">
+                    <div class=\"crm-forecast-label\">Pipeline Value</div>
+                    <div class=\"crm-forecast-value\">$${this.formatMoney(pipelineValue)}</div>
+                </div>
+                <div class=\"crm-forecast-arrow\">↓</div>
+                <div class=\"crm-forecast-box crm-forecast-highlight\">
+                    <div class=\"crm-forecast-label\">Projected Revenue</div>
+                    <div class=\"crm-forecast-value\">$${this.formatMoney(forecastRevenue)}</div>
+                </div>
+              </div>
+
+              <!-- Activity Metrics -->
+              <div class="crm-card">
+                <h3>⚡ Activity Metrics</h3>
+                <div class=\"crm-detail-item\">
+                    <span>Tasks Completed</span>
+                    <strong>${completedTasks}</strong>
+                </div>
+                <div class=\"crm-detail-item\">
+                    <span>Avg Tasks/Day</span>
+                    <strong>${avgTasksPerDay}</strong>
+                </div>
+                <div class=\"crm-detail-item\">
+                    <span>Won Deals</span>
+                    <strong>${won}</strong>
+                </div>
+                <div class=\"crm-detail-item\">
+                    <span>Lost Deals</span>
+                    <strong>${lost}</strong>
+                </div>
+                <div class=\"crm-detail-item\">
+                    <span>Win Rate</span>
+                    <strong>${Math.round(conversionRate*100)}%</strong>
+                </div>
               </div>
             </div>
         `;
+    }
+
+    setReportsDateRange(range) {
+        this.reportsDateRange = range;
+        this.render();
     }
 
     exportReportsCSV() {
@@ -2917,6 +3082,27 @@ class CRMDashboard {
             .crm-bar-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin: 6px 0; }
             .crm-bar { background: #f3f4f6; height: 8px; border-radius: 4px; overflow: hidden; }
             .crm-bar > div { background: #3b82f6; height: 8px; }
+
+            /* Funnel Chart */
+            .crm-funnel-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+            .crm-funnel-label { min-width: 120px; font-size: 13px; color: #6b7280; }
+            .crm-funnel-bar { background: linear-gradient(90deg, #3b82f6, #60a5fa); color: white; padding: 6px 12px; border-radius: 4px; font-weight: 600; font-size: 14px; text-align: center; transition: all 0.3s; }
+            .crm-funnel-bar:hover { transform: scale(1.02); box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3); }
+
+            /* Growth Chart */
+            .crm-chart { display: flex; gap: 8px; align-items: flex-end; height: 180px; padding: 12px; background: #f9fafb; border-radius: 8px; }
+            .crm-chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+            .crm-chart-bars { display: flex; gap: 4px; align-items: flex-end; height: 140px; width: 100%; }
+            .crm-chart-bar { flex: 1; border-radius: 4px 4px 0 0; transition: all 0.3s; cursor: pointer; }
+            .crm-chart-bar:hover { opacity: 0.8; transform: translateY(-2px); }
+            .crm-chart-label { font-size: 11px; color: #6b7280; font-weight: 600; }
+
+            /* Forecast Box */
+            .crm-forecast-box { background: #f3f4f6; border: 2px solid #e5e7eb; border-radius: 8px; padding: 16px; text-align: center; }
+            .crm-forecast-highlight { background: linear-gradient(135deg, #dbeafe, #e0f2fe); border-color: #3b82f6; }
+            .crm-forecast-label { font-size: 13px; color: #6b7280; margin-bottom: 8px; }
+            .crm-forecast-value { font-size: 28px; font-weight: 700; color: #1f2937; }
+            .crm-forecast-arrow { text-align: center; font-size: 24px; color: #3b82f6; margin: 8px 0; }
             .crm-chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
             .crm-chip { background: #e5e7eb; color: #374151; padding: 4px 8px; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; }
             .crm-drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 99999; animation: crmFade .2s ease; }
