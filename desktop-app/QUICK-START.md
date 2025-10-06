@@ -76,6 +76,19 @@ Close the app window when done testing.
 
 ### 5. Build the .exe
 
+**IMPORTANT: Run Command Prompt as Administrator!**
+
+1. Close your current Command Prompt
+2. Press `Windows` key
+3. Type `cmd`
+4. **Right-click** on "Command Prompt"
+5. Click **"Run as administrator"**
+6. Click "Yes" when Windows asks for permission
+7. Navigate to the folder again:
+```bash
+cd C:\Users\YourName\Documents\GitHub\capitalcitycontractors\desktop-app
+```
+8. Now run the build:
 ```bash
 npm run build-win
 ```
@@ -88,6 +101,8 @@ Press Enter and wait 3-5 minutes. You'll see:
 **What this creates:**
 - `dist/Capital City Contractors CRM Setup 3.0.0.exe` (installer)
 - About 150-200 MB file
+
+**Why Administrator?** Windows requires admin privileges to create symbolic links during the build process.
 
 ---
 
@@ -135,11 +150,19 @@ The app is now installed on your computer. You can:
 - Make sure you're in the `desktop-app` folder
 - Check internet connection
 
-### Build fails with errors
+### Build fails with "Cannot create symbolic link" error
+**This is the most common issue!**
+- **Solution:** Run Command Prompt as Administrator
+- Close current Command Prompt
+- Right-click Command Prompt → "Run as administrator"
+- Navigate to desktop-app folder again
+- Run `npm run build-win` again
+
+### Build fails with other errors
 - Run `npm install` again
 - Update Node.js to latest LTS version
-- Run Command Prompt as Administrator
 - Check antivirus isn't blocking
+- Clear cache: Delete `C:\Users\YourName\AppData\Local\electron-builder\Cache\`
 
 ### App won't start after installation
 - Check Windows Defender didn't block it
