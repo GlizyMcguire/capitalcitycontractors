@@ -3242,15 +3242,44 @@
         window.testEmailSystem = testEmailSystem;
         window.runSystemTest = runSystemTest;
 
-        // Admin access keyboard shortcut (Ctrl+Shift+C)
+        // Admin access with password protection (Ctrl+Shift+C)
+        const CRM_PASSWORD = 'CCC2025Admin'; // Change this to your secure password
+        let passwordAttempts = 0;
+        const MAX_ATTEMPTS = 3;
+
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.shiftKey && e.code === 'KeyC') {
                 e.preventDefault();
-                const adminBtn = document.getElementById('adminCrmBtn');
-                if (adminBtn) {
-                    adminBtn.style.display = adminBtn.style.display === 'none' ? 'block' : 'none';
-                    if (adminBtn.style.display === 'block') {
+
+                if (passwordAttempts >= MAX_ATTEMPTS) {
+                    alert('❌ Too many failed attempts. Please refresh the page to try again.');
+                    return;
+                }
+
+                const password = prompt('🔐 Enter CRM Admin Password:');
+
+                if (password === null) {
+                    // User cancelled
+                    return;
+                }
+
+                if (password === CRM_PASSWORD) {
+                    // Correct password
+                    passwordAttempts = 0;
+                    const adminBtn = document.getElementById('adminCrmBtn');
+                    if (adminBtn) {
+                        adminBtn.style.display = 'block';
+                        alert('✅ CRM Dashboard access granted!');
                         console.log('🔧 Admin CRM Dashboard access enabled. Click the CRM button or use showCRMDashboard()');
+                    }
+                } else {
+                    // Wrong password
+                    passwordAttempts++;
+                    const remaining = MAX_ATTEMPTS - passwordAttempts;
+                    if (remaining > 0) {
+                        alert(`❌ Incorrect password. ${remaining} attempt(s) remaining.`);
+                    } else {
+                        alert('❌ Too many failed attempts. Please refresh the page to try again.');
                     }
                 }
             }
