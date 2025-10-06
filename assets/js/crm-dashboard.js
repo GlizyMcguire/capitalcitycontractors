@@ -585,40 +585,73 @@ class CRMDashboard {
             const k = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
             return k === key && !t.archived;
         }).sort((a,b)=> new Date(a.dueDate) - new Date(b.dueDate));
-        const title = day.toLocaleDateString();
+        const title = day.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const dateForTask = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const templates = this.getTaskTemplates();
+
         return `
           <div class="crm-modal-backdrop" onclick="window.crmDashboard.closeDayView()"></div>
           <div class="crm-modal" role="dialog" aria-modal="true">
             <div class="crm-modal-header">
-              <h3>Tasks on ${title}</h3>
-              <div style="display:flex; gap:8px;">
-                <button class="crm-btn-sm" onclick="window.crmDashboard.filterTasksByDate('${key}')">Filter List</button>
-                <button class="crm-btn-sm" onclick="window.crmDashboard.closeDayView()">Close</button>
-              </div>
+              <h3>📅 ${title}</h3>
+              <button class="crm-btn-sm" onclick="window.crmDashboard.closeDayView()">✕ Close</button>
             </div>
             <div class="crm-modal-body">
-              <div class="crm-template-add-row" style="display:flex; gap:8px; align-items:center; margin-bottom:16px; padding:12px; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb;">
-                <select class="crm-input crm-input-sm" id="day-template-select" style="flex:1;">
-                  <option value="">➕ Add from template...</option>
-                  ${this.getTaskTemplates().map(t=>`<option value="${t.id}">${t.title}</option>`).join('')}
-                </select>
-                <button class="crm-btn-sm" onclick="const sel=document.getElementById('day-template-select'); if(sel.value) window.crmDashboard.addTemplateTaskOnDate(sel.value, '${key}')">Add Task</button>
+              <!-- Quick Add New Task -->
+              <div style="margin-bottom:20px; padding:16px; background:#f0f9ff; border:2px solid #3b82f6; border-radius:8px;">
+                <h4 style="margin:0 0 12px 0; color:#1e40af; font-size:14px;">➕ Create New Task</h4>
+                <input type="text" id="day-new-task-title" placeholder="Task title (e.g., Call client, Send estimate...)" class="crm-input" style="margin-bottom:8px;">
+                <div style="display:flex; gap:8px;">
+                  <select id="day-new-task-type" class="crm-input crm-input-sm" style="flex:1;">
+                    <option value="call">📞 Call</option>
+                    <option value="email">📧 Email</option>
+                    <option value="sms">💬 SMS</option>
+                    <option value="follow-up">🔄 Follow-up</option>
+                    <option value="meeting">🤝 Meeting</option>
+                    <option value="site-visit">🏗️ Site Visit</option>
+                  </select>
+                  <button class="crm-btn" onclick="window.crmDashboard.createTaskOnDate('${dateForTask}')">
+                    💾 Create Task
+                  </button>
+                </div>
               </div>
-              ${tasks.length ? `<div style="margin-bottom:8px; font-weight:600; color:#6b7280; font-size:13px; text-transform:uppercase;">Tasks (${tasks.length})</div>` : ''}
-              ${tasks.length ? tasks.map(t=>{
-                const due = t.dueDate ? new Date(t.dueDate) : null;
-                const overdue = due && new Date(due.getFullYear(), due.getMonth(), due.getDate()) < todayOnly && !t.completed;
-                const related = this.getRelatedName(t.relatedTo);
-                const actions = [];
-                if (t.relatedTo?.type==='lead') actions.push(`<button class=\"crm-btn-xs\" onclick=\"window.crmDashboard.openLead('${t.relatedTo.id}')\">Open Lead</button>`);
-                if (t.relatedTo?.type==='project') actions.push(`<button class=\"crm-btn-xs\" onclick=\"window.crmDashboard.selectedProject='${t.relatedTo.id}'; window.crmDashboard.currentView='projects'; window.crmDashboard.render();\">Open Project</button>`);
-                return `<div class=\"crm-day-task-row ${overdue?'overdue':''}\">`
-                  + `<input type=\"checkbox\" ${t.completed?'checked':''} onchange=\"window.crmDashboard.completeTask('${t.id}'); window.crmDashboard.render();\">`
-                  + `<span class=\"ttl\">${t.title}${related?` <small>(${related})</small>`:''}</span>`
-                  + `<span class=\"meta\">${t.type||''}</span>`
-                  + `<span class=\"acts\">${actions.join(' ')}</span>`
-                  + `</div>`;
-              }).join('') : '<p class="crm-empty">No tasks on this date.</p>'}
+
+              ${templates.length > 0 ? `
+              <!-- Add from Template -->
+              <div style="margin-bottom:20px; padding:12px; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb;">
+                <h4 style="margin:0 0 8px 0; color:#6b7280; font-size:13px;">📋 Or Add from Template</h4>
+                <div style="display:flex; gap:8px; align-items:center;">
+                  <select class="crm-input crm-input-sm" id="day-template-select" style="flex:1;">
+                    <option value="">Select a template...</option>
+                    ${templates.map(t=>`<option value="${t.id}">${t.title} (${t.type})</option>`).join('')}
+                  </select>
+                  <button class="crm-btn-sm" onclick="window.crmDashboard.addTemplateTaskOnDate('${dateForTask}')">
+                    Add
+                  </button>
+                </div>
+              </div>
+              ` : ''}
+
+              <!-- Existing Tasks -->
+              ${tasks.length ? `
+                <div style="margin-bottom:8px; padding-bottom:8px; border-bottom:2px solid #e5e7eb;">
+                  <h4 style="margin:0; color:#374151; font-size:14px;">📋 Tasks on this day (${tasks.length})</h4>
+                </div>
+                ${tasks.map(t=>{
+                  const due = t.dueDate ? new Date(t.dueDate) : null;
+                  const overdue = due && new Date(due.getFullYear(), due.getMonth(), due.getDate()) < todayOnly && !t.completed;
+                  const related = this.getRelatedName(t.relatedTo);
+                  const actions = [];
+                  if (t.relatedTo?.type==='lead') actions.push(`<button class=\"crm-btn-xs\" onclick=\"window.crmDashboard.openLead('${t.relatedTo.id}'); window.crmDashboard.closeDayView();\">Open Lead</button>`);
+                  if (t.relatedTo?.type==='project') actions.push(`<button class=\"crm-btn-xs\" onclick=\"window.crmDashboard.selectedProject='${t.relatedTo.id}'; window.crmDashboard.currentView='projects'; window.crmDashboard.closeDayView(); window.crmDashboard.render();\">Open Project</button>`);
+                  return `<div class=\"crm-day-task-row ${overdue?'overdue':''}\">`
+                    + `<input type=\"checkbox\" ${t.completed?'checked':''} onchange=\"window.crmDashboard.completeTask('${t.id}'); window.crmDashboard.render();\">`
+                    + `<div style=\"flex:1;\"><div class=\"ttl\">${t.title}</div>${related?`<div style=\"font-size:11px; color:#6b7280; margin-top:2px;\">${related}</div>`:''}</div>`
+                    + `<span class=\"meta\">${t.type||''}</span>`
+                    + `<div class=\"acts\">${actions.join(' ')}</div>`
+                    + `</div>`;
+                }).join('')}
+              ` : '<p class="crm-empty" style="text-align:center; padding:20px; color:#9ca3af;">No tasks scheduled for this day yet. Create one above!</p>'}
             </div>
           </div>`;
     }
@@ -1736,7 +1769,43 @@ class CRMDashboard {
     saveTaskTemplates(arr){ this.taskTemplates = arr; this.save('ccc_task_templates', arr); }
     addTaskTemplate(){ const title = prompt('Template title:'); if(!title) return; const type = prompt('Type (e.g., follow-up, call, email):','follow-up'); const tmpl = { id: crypto.randomUUID(), title, type: type||'other' }; const arr = this.getTaskTemplates(); arr.push(tmpl); this.saveTaskTemplates(arr); this.render(); }
     deleteTaskTemplate(id){ const arr = this.getTaskTemplates().filter(t=>t.id!==id); this.saveTaskTemplates(arr); this.render(); }
-    addTemplateTaskOnDate(templateId, dateKey){ if(!templateId) return; const tmpl = this.getTaskTemplates().find(t=>t.id===templateId); if(!tmpl) return; const iso = new Date(`${dateKey}T09:00:00`).toISOString(); this.addTask({ title: tmpl.title, type: tmpl.type, dueDate: iso }); this.render(); }
+
+    addTemplateTaskOnDate(dateKey){
+        const sel = document.getElementById('day-template-select');
+        if (!sel || !sel.value) {
+            alert('Please select a template first');
+            return;
+        }
+        const templateId = sel.value;
+        const tmpl = this.getTaskTemplates().find(t=>t.id===templateId);
+        if (!tmpl) {
+            alert('Template not found');
+            return;
+        }
+        const iso = new Date(`${dateKey}T09:00:00`).toISOString();
+        this.addTask({ title: tmpl.title, type: tmpl.type, dueDate: iso });
+        alert(`✅ Task "${tmpl.title}" added to ${dateKey}`);
+        this.render();
+    }
+
+    createTaskOnDate(dateKey) {
+        const titleInput = document.getElementById('day-new-task-title');
+        const typeSelect = document.getElementById('day-new-task-type');
+
+        if (!titleInput || !titleInput.value.trim()) {
+            alert('Please enter a task title');
+            titleInput?.focus();
+            return;
+        }
+
+        const title = titleInput.value.trim();
+        const type = typeSelect?.value || 'follow-up';
+        const iso = new Date(`${dateKey}T09:00:00`).toISOString();
+
+        this.addTask({ title, type, dueDate: iso });
+        alert(`✅ Task "${title}" created for ${dateKey}`);
+        this.render();
+    }
 
 
     taskMatchesQuickFilter(task, today) {
@@ -3292,21 +3361,41 @@ class CRMDashboard {
                 overflow-y: auto;
             }
             .crm-day-task-row {
-                display:grid;
-                grid-template-columns: auto 1fr auto auto;
-                gap: 8px;
+                display:flex;
+                gap: 12px;
                 align-items:center;
-                padding: 10px 0;
+                padding: 12px;
                 border-bottom: 1px solid #e5e7eb;
+                transition: all 0.2s;
             }
+            .crm-day-task-row:hover { background: #f9fafb; }
             .crm-day-task-row:last-child { border-bottom: none; }
-            .crm-day-task-row.overdue { background: #fef2f2; padding: 10px 8px; border-radius: 6px; margin: 4px 0; }
+            .crm-day-task-row.overdue { background: #fef2f2; border-left: 4px solid #dc2626; }
+            .crm-day-task-row.overdue:hover { background: #fee2e2; }
             .crm-day-task-row.overdue .ttl { color: #b91c1c; font-weight: 600; }
-            .crm-day-task-row .ttl { font-size: 14px; color: #374151; }
-            .crm-day-task-row .meta { font-size: 12px; color: #6b7280; text-transform: capitalize; }
-            .crm-day-task-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
-            .crm-btn-xs { font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #e5e7eb; background: #f9fafb; cursor:pointer; transition: all 0.2s; }
-            .crm-btn-xs:hover { background: #e5e7eb; }
+            .crm-day-task-row .ttl { font-size: 14px; color: #374151; font-weight: 500; }
+            .crm-day-task-row .meta {
+                font-size: 11px;
+                color: #6b7280;
+                text-transform: capitalize;
+                background: #f3f4f6;
+                padding: 4px 8px;
+                border-radius: 12px;
+                white-space: nowrap;
+            }
+            .crm-day-task-row .acts { display: flex; gap: 4px; }
+            .crm-day-task-row input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+            .crm-btn-xs {
+                font-size: 11px;
+                padding: 4px 8px;
+                border-radius: 6px;
+                border: 1px solid #e5e7eb;
+                background: #f9fafb;
+                cursor:pointer;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+            .crm-btn-xs:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
 
             .crm-nav-btn {
                 background: #f3f4f6;
