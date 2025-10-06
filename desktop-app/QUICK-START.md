@@ -94,6 +94,8 @@ npm run build-win
 ```
 
 Press Enter and wait 3-5 minutes. You'll see:
+- "🔧 Setting up desktop app build..."
+- "✅ Copied crm-dashboard.js"
 - "Building..." messages
 - Progress bars
 - "Done!" when finished
@@ -103,6 +105,8 @@ Press Enter and wait 3-5 minutes. You'll see:
 - About 150-200 MB file
 
 **Why Administrator?** Windows requires admin privileges to create symbolic links during the build process.
+
+**Note:** The build automatically copies the CRM files before building. If you update the CRM code, just run `npm run build-win` again to rebuild with the latest changes.
 
 ---
 
