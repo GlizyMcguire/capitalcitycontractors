@@ -69,6 +69,11 @@
     <script>
         // Initialize CRM when page loads
         document.addEventListener('DOMContentLoaded', () => {
+            // Automatically show the CRM dashboard
+            if (window.showCRM) {
+                window.showCRM();
+            }
+
             // Hide loading screen after CRM initializes
             setTimeout(() => {
                 const loadingScreen = document.getElementById('loadingScreen');
