@@ -3259,12 +3259,12 @@ class CRMDashboard {
                 gap: 8px;
             }
 
-            /* Day Popover Modal */
-            .crm-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100001; animation: fadeIn 0.2s ease; }
+            /* Day Popover Modal & Quick Add Modal */
+            .crm-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000001; animation: fadeIn 0.2s ease; }
             @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
             .crm-modal {
                 position: fixed;
-                z-index: 100002;
+                z-index: 10000002;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
