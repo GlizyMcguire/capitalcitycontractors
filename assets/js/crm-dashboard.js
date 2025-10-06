@@ -962,19 +962,29 @@ class CRMDashboard {
     }
 
     showQuickAdd(type) {
-        const modal = document.createElement('div');
-        modal.className = 'crm-modal';
-        modal.innerHTML = `
-            <div class="crm-modal-content">
-                <h3>Add ${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
-                ${this.getQuickAddForm(type)}
-                <div class="crm-modal-actions">
-                    <button class="crm-btn" onclick="window.crmDashboard.submitQuickAdd('${type}')">Save</button>
-                    <button class="crm-btn-secondary" onclick="this.closest('.crm-modal').remove()">Cancel</button>
+        // Remove any existing modal
+        const existing = document.querySelector('.crm-quick-add-modal-wrapper');
+        if (existing) existing.remove();
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'crm-quick-add-modal-wrapper';
+        wrapper.innerHTML = `
+            <div class="crm-modal-backdrop" onclick="this.parentElement.remove()"></div>
+            <div class="crm-modal" role="dialog" aria-modal="true">
+                <div class="crm-modal-header">
+                    <h3>➕ Add ${type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                    <button class="crm-btn-sm" onclick="this.closest('.crm-quick-add-modal-wrapper').remove()">✕ Close</button>
+                </div>
+                <div class="crm-modal-body">
+                    ${this.getQuickAddForm(type)}
+                    <div class="crm-modal-actions" style="display:flex; gap:8px; margin-top:16px;">
+                        <button class="crm-btn" onclick="window.crmDashboard.submitQuickAdd('${type}')">💾 Save</button>
+                        <button class="crm-btn-secondary" onclick="this.closest('.crm-quick-add-modal-wrapper').remove()">Cancel</button>
+                    </div>
                 </div>
             </div>
         `;
-        document.body.appendChild(modal);
+        document.body.appendChild(wrapper);
     }
 
     getQuickAddForm(type) {
@@ -1107,7 +1117,8 @@ class CRMDashboard {
             alert('✅ Task added!');
         }
 
-        document.querySelector('.crm-modal').remove();
+        const wrapper = document.querySelector('.crm-quick-add-modal-wrapper');
+        if (wrapper) wrapper.remove();
         this.render();
     }
 
@@ -2687,70 +2698,46 @@ class CRMDashboard {
         return `
           <div class="crm-grid-2">
             <div class="crm-card">
-              <h3>Business Info</h3>
-              <input class="crm-input" id="set-biz-name" placeholder="Company Name" value="${s.business.companyName||''}">
-              <input class="crm-input" id="set-biz-phone" placeholder="Phone" value="${s.business.phone||''}">
-              <input class="crm-input" id="set-biz-email" placeholder="Email" value="${s.business.email||''}">
-              <button class="crm-btn" onclick="window.crmDashboard.saveBusinessInfo()">Save</button>
+              <h3>🏢 Business Information</h3>
+              <p class="crm-setting-desc">Your company details</p>
+              <div class="crm-setting-item">
+                <label><strong>Company Name</strong></label>
+                <input class="crm-input" id="set-biz-name" placeholder="Company Name" value="${s.business.companyName||''}">
+              </div>
+              <div class="crm-setting-item">
+                <label><strong>Phone</strong></label>
+                <input class="crm-input" id="set-biz-phone" placeholder="Phone" value="${s.business.phone||''}">
+              </div>
+              <div class="crm-setting-item">
+                <label><strong>Email</strong></label>
+                <input class="crm-input" id="set-biz-email" placeholder="Email" value="${s.business.email||''}">
+              </div>
+              <div class="crm-setting-item">
+                <label><strong>Address</strong></label>
+                <input class="crm-input" id="set-biz-address" placeholder="Business Address" value="${s.business.address||''}">
+              </div>
+              <button class="crm-btn" onclick="window.crmDashboard.saveBusinessInfo()">💾 Save Business Info</button>
             </div>
 
             <div class="crm-card">
-              <h3>Notifications</h3>
-              <label><input type="checkbox" id="set-notify-email" ${s.notifications.email?'checked':''}> Email alerts</label><br>
-              <label><input type="checkbox" id="set-notify-sms" ${s.notifications.sms?'checked':''}> SMS alerts</label><br>
-              <button class="crm-btn" onclick="window.crmDashboard.saveNotifications()">Save</button>
-            </div>
-
-            <div class="crm-card">
-              <h3>Job Types</h3>
-              <div class="crm-chip-list">
-                ${s.jobTypes.map((jt,i)=>`<span class=\"crm-chip\">${jt}<button onclick=\"window.crmDashboard.removeJobType(${i})\">✕</button></span>`).join('')}
+              <h3>ℹ️ About</h3>
+              <p class="crm-setting-desc">CRM system information</p>
+              <div class="crm-detail-item">
+                <span>System</span>
+                <strong>Capital City Contractors CRM</strong>
               </div>
-              <div style="display:flex;gap:8px;margin-top:8px;">
-                <input class="crm-input" id="new-jobtype" placeholder="Add job type">
-                <button class="crm-btn" onclick="window.crmDashboard.addJobType()">Add</button>
+              <div class="crm-detail-item">
+                <span>Version</span>
+                <strong>3.0.0</strong>
               </div>
-            </div>
-
-            <div class="crm-card">
-              <h3>Lead Sources</h3>
-              <div class="crm-chip-list">
-                ${s.leadSources.map((ls,i)=>`<span class=\"crm-chip\">${ls}<button onclick=\"window.crmDashboard.removeLeadSource(${i})\">✕</button></span>`).join('')}
+              <div class="crm-detail-item">
+                <span>Build</span>
+                <strong>2025-01-05</strong>
               </div>
-              <div style="display:flex;gap:8px;margin-top:8px;">
-                <input class="crm-input" id="new-leadsource" placeholder="Add lead source">
-                <button class="crm-btn" onclick="window.crmDashboard.addLeadSource()">Add</button>
+              <div class="crm-detail-item">
+                <span>License</span>
+                <strong>Proprietary</strong>
               </div>
-            </div>
-
-            <div class="crm-card" style="grid-column:1 / -1;">
-              <h3>Pipeline Stages</h3>
-              <div class="crm-table">
-                <div class="crm-table-row crm-table-head"><div>Stage</div><div>Color</div><div>Order</div><div>Actions</div></div>
-                ${s.stages.map((st,idx)=>`
-                  <div class=\"crm-table-row\">
-                    <div><input class=\"crm-input\" value=\"${st.name}\" onchange=\"window.crmDashboard.renameStage('${st.id}', this.value)\"></div>
-                    <div><input type=\"color\" value=\"${st.color}\" onchange=\"window.crmDashboard.setStageColor('${st.id}', this.value)\"></div>
-                    <div>
-                      <button class=\"crm-btn-sm\" ${idx===0?'disabled':''} onclick=\"window.crmDashboard.moveStage('${st.id}', -1)\">↑</button>
-                      <button class=\"crm-btn-sm\" ${idx===s.stages.length-1?'disabled':''} onclick=\"window.crmDashboard.moveStage('${st.id}', 1)\">↓</button>
-                    </div>
-                    <div><button class=\"crm-btn-sm\" onclick=\"window.crmDashboard.removeStage('${st.id}')\">Delete</button></div>
-                  </div>
-                `).join('')}
-              </div>
-              <div style="display:flex;gap:8px;margin-top:8px;">
-                <input class="crm-input" id="new-stage-name" placeholder="New stage name">
-                <input type="color" id="new-stage-color" value="#64748b">
-                <button class="crm-btn" onclick="window.crmDashboard.addStage()">Add Stage</button>
-              </div>
-            </div>
-
-            <div class="crm-card" style="grid-column:1 / -1;">
-              <h3>Data Management</h3>
-              <button class="crm-btn" onclick="window.crmDashboard.exportAllData()">Export All Data</button>
-              <button class="crm-btn" onclick="window.crmDashboard.importData()">Import Data</button>
-              <button class="crm-btn-secondary" onclick="window.crmDashboard.clearAllData()">Clear All Data</button>
             </div>
           </div>
         `;
@@ -3019,8 +3006,11 @@ class CRMDashboard {
             companyName: document.getElementById('set-biz-name').value,
             phone: document.getElementById('set-biz-phone').value,
             email: document.getElementById('set-biz-email').value,
+            address: document.getElementById('set-biz-address')?.value || '',
         };
-        this.save('ccc_settings', this.settings); this.render();
+        this.save('ccc_settings', this.settings);
+        alert('✅ Business information saved!');
+        this.render();
     }
     saveNotifications() {
         this.settings.notifications = {
