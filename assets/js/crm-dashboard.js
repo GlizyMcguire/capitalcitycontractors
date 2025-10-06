@@ -148,10 +148,11 @@ class CRMDashboard {
         // Migrate old data
         this.migrateOldData();
 
-        // Create seed data if empty
-        if (this.leads.length === 0) {
-            this.createSeedData();
-        }
+        // Seed data disabled - start with clean slate
+        // Users can add their own data or import from backup
+        // if (this.leads.length === 0) {
+        //     this.createSeedData();
+        // }
 
         // Current view state
         this.currentView = 'dashboard';
