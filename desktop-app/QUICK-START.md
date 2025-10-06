@@ -108,14 +108,22 @@ Press Enter and wait 3-5 minutes. You'll see:
 
 ### 6. Install and Run
 
-1. Open File Explorer
-2. Go to: `desktop-app/dist/`
-3. Double-click: `Capital City Contractors CRM Setup 3.0.0.exe`
-4. Click "Yes" if Windows asks for permission
-5. Follow the installation wizard (click Next → Next → Install)
-6. App installs to: `C:\Program Files\Capital City Contractors CRM\`
-7. Desktop shortcut is created automatically
-8. Click "Finish" to launch the app
+1. **Open File Explorer** (Windows Explorer)
+2. **Navigate to the dist folder:**
+   - Full path: `C:\Users\D\Documents\GitHub\capitalcitycontractors\desktop-app\dist\`
+   - Or from your current location, just open the `dist` folder
+3. **Find the installer file:** `Capital City Contractors CRM Setup 3.0.0.exe`
+4. **Double-click the .exe file** to run the installer
+5. Click **"Yes"** if Windows asks for permission
+6. Follow the installation wizard:
+   - Click **Next**
+   - Click **Next**
+   - Click **Install**
+7. App installs to: `C:\Program Files\Capital City Contractors CRM\`
+8. Desktop shortcut is created automatically
+9. Click **"Finish"** to launch the app
+
+**Note:** This is a local file on your computer, not a website URL!
 
 ---
 
