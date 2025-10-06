@@ -1,0 +1,52 @@
+ICON SETUP INSTRUCTIONS
+========================
+
+The desktop app needs icon files for different platforms.
+
+REQUIRED FILES:
+---------------
+1. icon.png (512x512 or 1024x1024) - For Linux and as base
+2. icon.ico (256x256) - For Windows
+3. icon.icns (512x512) - For Mac
+
+HOW TO CREATE ICONS:
+--------------------
+
+Option 1: Use Online Tool (Easiest)
+- Go to: https://www.icoconverter.com/
+- Upload your logo/image
+- Download .ico, .icns, and .png versions
+- Place in this assets/ folder
+
+Option 2: Use Photoshop/GIMP
+- Create 1024x1024 image
+- Export as PNG
+- Use online converter for .ico and .icns
+
+Option 3: Use Icon Generator
+- Go to: https://icon.kitchen/
+- Upload image
+- Generate all formats
+- Download and place here
+
+RECOMMENDED DESIGN:
+-------------------
+- Simple, recognizable logo
+- High contrast
+- Works at small sizes (16x16)
+- Represents your brand
+- Construction/contractor theme
+
+TEMPORARY SOLUTION:
+-------------------
+Until you have custom icons, the app will use default Electron icon.
+The app will still work perfectly, just won't have custom branding.
+
+CURRENT STATUS:
+---------------
+[ ] icon.png - Not yet created
+[ ] icon.ico - Not yet created  
+[ ] icon.icns - Not yet created
+
+Once you have these files, place them in this folder and rebuild the app.
+
