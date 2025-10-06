@@ -1,7 +1,7 @@
 /**
  * Capital City Contractors - Lean CRM Dashboard
  * Version: 3.0 - Construction Edition
- * Phase 5: Advanced Reports & Analytics
+ * Phase 6: Settings & Customization
  * Build: 2025-01-05
  */
 
@@ -2623,11 +2623,68 @@ class CRMDashboard {
     }
 
     renderSettings() {
+        // Initialize settings tab if not set
+        if (!this.settingsTab) this.settingsTab = 'general';
+
         const s = this.settings || {};
-        s.business = s.business || { companyName: 'Capital City Contractors', phone: '', email: '' };
-        s.notifications = s.notifications || { email: true, sms: false };
+        s.business = s.business || { companyName: 'Capital City Contractors', phone: '', email: '', address: '' };
+        s.notifications = s.notifications || { email: true, sms: false, staleLeadDays: 3 };
+        s.automation = s.automation || { autoReminders: true, autoTasksOnEstimate: true, duplicateDetection: true };
+        s.preferences = s.preferences || { theme: 'light', defaultView: 'dashboard', compactMode: false };
+
+        // Calculate storage usage
+        const storageUsed = Object.keys(localStorage).reduce((sum, key) => {
+            if (key.startsWith('ccc_')) return sum + localStorage.getItem(key).length;
+            return sum;
+        }, 0);
+        const storageKB = Math.round(storageUsed / 1024);
+        const storageMB = (storageKB / 1024).toFixed(2);
+
         return `
-          <div class="crm-view-header"><h2>⚙️ Settings</h2></div>
+          <div class="crm-view-header">
+            <h2>⚙️ Settings & Configuration</h2>
+          </div>
+
+          <!-- Settings Tabs -->
+          <div class="crm-settings-tabs">
+            <button class="crm-settings-tab ${this.settingsTab==='general'?'active':''}" onclick="window.crmDashboard.setSettingsTab('general')">
+              🏢 General
+            </button>
+            <button class="crm-settings-tab ${this.settingsTab==='pipeline'?'active':''}" onclick="window.crmDashboard.setSettingsTab('pipeline')">
+              🎯 Pipeline
+            </button>
+            <button class="crm-settings-tab ${this.settingsTab==='automation'?'active':''}" onclick="window.crmDashboard.setSettingsTab('automation')">
+              ⚡ Automation
+            </button>
+            <button class="crm-settings-tab ${this.settingsTab==='preferences'?'active':''}" onclick="window.crmDashboard.setSettingsTab('preferences')">
+              🎨 Preferences
+            </button>
+            <button class="crm-settings-tab ${this.settingsTab==='data'?'active':''}" onclick="window.crmDashboard.setSettingsTab('data')">
+              💾 Data
+            </button>
+            <button class="crm-settings-tab ${this.settingsTab==='system'?'active':''}" onclick="window.crmDashboard.setSettingsTab('system')">
+              🔧 System
+            </button>
+          </div>
+
+          <div class="crm-settings-content">
+            ${this.settingsTab === 'general' ? this.renderSettingsGeneral(s) : ''}
+            ${this.settingsTab === 'pipeline' ? this.renderSettingsPipeline(s) : ''}
+            ${this.settingsTab === 'automation' ? this.renderSettingsAutomation(s) : ''}
+            ${this.settingsTab === 'preferences' ? this.renderSettingsPreferences(s) : ''}
+            ${this.settingsTab === 'data' ? this.renderSettingsData(s) : ''}
+            ${this.settingsTab === 'system' ? this.renderSettingsSystem(s, storageKB, storageMB) : ''}
+          </div>
+        `;
+    }
+
+    setSettingsTab(tab) {
+        this.settingsTab = tab;
+        this.render();
+    }
+
+    renderSettingsGeneral(s) {
+        return `
           <div class="crm-grid-2">
             <div class="crm-card">
               <h3>Business Info</h3>
@@ -2698,6 +2755,265 @@ class CRMDashboard {
           </div>
         `;
     }
+
+    renderSettingsPipeline(s) {
+        return `
+          <div class="crm-grid-2">
+            <div class="crm-card">
+              <h3>🏗️ Job Types</h3>
+              <p class="crm-setting-desc">Manage the types of construction jobs you offer</p>
+              <div class="crm-chip-list">
+                ${s.jobTypes.map((jt,i)=>`<span class=\"crm-chip\">${jt}<button onclick=\"window.crmDashboard.removeJobType(${i})\">✕</button></span>`).join('')}
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <input class="crm-input" id="new-jobtype" placeholder="e.g., Kitchen Remodel">
+                <button class="crm-btn" onclick="window.crmDashboard.addJobType()">Add</button>
+              </div>
+            </div>
+
+            <div class="crm-card">
+              <h3>📊 Lead Sources</h3>
+              <p class="crm-setting-desc">Track where your leads come from</p>
+              <div class="crm-chip-list">
+                ${s.leadSources.map((ls,i)=>`<span class=\"crm-chip\">${ls}<button onclick=\"window.crmDashboard.removeLeadSource(${i})\">✕</button></span>`).join('')}
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <input class="crm-input" id="new-leadsource" placeholder="e.g., Facebook Ads">
+                <button class="crm-btn" onclick="window.crmDashboard.addLeadSource()">Add</button>
+              </div>
+            </div>
+
+            <div class="crm-card" style="grid-column:1 / -1;">
+              <h3>🎯 Pipeline Stages</h3>
+              <p class="crm-setting-desc">Customize your sales pipeline stages, colors, and order</p>
+              <div class="crm-table">
+                <div class="crm-table-row crm-table-head"><div>Stage Name</div><div>Color</div><div>Reorder</div><div>Actions</div></div>
+                ${s.stages.map((st,idx)=>`
+                  <div class=\"crm-table-row\">
+                    <div><input class=\"crm-input\" value=\"${st.name}\" onchange=\"window.crmDashboard.renameStage('${st.id}', this.value)\"></div>
+                    <div><input type=\"color\" value=\"${st.color}\" onchange=\"window.crmDashboard.setStageColor('${st.id}', this.value)\" style=\"width:60px; height:36px; cursor:pointer;\"></div>
+                    <div>
+                      <button class=\"crm-btn-sm\" ${idx===0?'disabled':''} onclick=\"window.crmDashboard.moveStage('${st.id}', -1)\">↑</button>
+                      <button class=\"crm-btn-sm\" ${idx===s.stages.length-1?'disabled':''} onclick=\"window.crmDashboard.moveStage('${st.id}', 1)\">↓</button>
+                    </div>
+                    <div><button class=\"crm-btn-sm\" onclick=\"if(confirm('Delete stage ${st.name}?')) window.crmDashboard.removeStage('${st.id}')\">🗑️ Delete</button></div>
+                  </div>
+                `).join('')}
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px;">
+                <input class="crm-input" id="new-stage-name" placeholder="New stage name" style="flex:1;">
+                <input type="color" id="new-stage-color" value="#64748b" style="width:60px; height:40px; cursor:pointer;">
+                <button class="crm-btn" onclick="window.crmDashboard.addStage()">➕ Add Stage</button>
+              </div>
+            </div>
+          </div>
+        `;
+    }
+
+    renderSettingsAutomation(s) {
+        return `
+          <div class="crm-grid-2">
+            <div class="crm-card">
+              <h3>⚡ Automation Rules</h3>
+              <p class="crm-setting-desc">Configure automatic actions to save time</p>
+
+              <div class="crm-setting-item">
+                <label>
+                  <input type="checkbox" id="auto-reminders" ${s.automation.autoReminders?'checked':''}>
+                  <strong>Auto-Reminders</strong>
+                </label>
+                <p class="crm-setting-help">Automatically create follow-up tasks for leads not contacted in <input type="number" id="stale-lead-days" value="${s.notifications.staleLeadDays||3}" style="width:50px; padding:4px;"> days</p>
+              </div>
+
+              <div class="crm-setting-item">
+                <label>
+                  <input type="checkbox" id="auto-tasks-estimate" ${s.automation.autoTasksOnEstimate?'checked':''}>
+                  <strong>Auto-Tasks on Estimate</strong>
+                </label>
+                <p class="crm-setting-help">Automatically create follow-up tasks when estimate is sent</p>
+              </div>
+
+              <div class="crm-setting-item">
+                <label>
+                  <input type="checkbox" id="duplicate-detection" ${s.automation.duplicateDetection?'checked':''}>
+                  <strong>Duplicate Detection</strong>
+                </label>
+                <p class="crm-setting-help">Warn when creating leads with similar names or addresses</p>
+              </div>
+
+              <button class="crm-btn" onclick="window.crmDashboard.saveAutomation()">💾 Save Automation Settings</button>
+            </div>
+
+            <div class="crm-card">
+              <h3>🔔 Notifications</h3>
+              <p class="crm-setting-desc">Choose how you want to be notified</p>
+
+              <div class="crm-setting-item">
+                <label>
+                  <input type="checkbox" id="set-notify-email" ${s.notifications.email?'checked':''}>
+                  <strong>Email Notifications</strong>
+                </label>
+                <p class="crm-setting-help">Receive email alerts for important events</p>
+              </div>
+
+              <div class="crm-setting-item">
+                <label>
+                  <input type="checkbox" id="set-notify-sms" ${s.notifications.sms?'checked':''}>
+                  <strong>SMS Notifications</strong>
+                </label>
+                <p class="crm-setting-help">Receive text message alerts (requires integration)</p>
+              </div>
+
+              <button class="crm-btn" onclick="window.crmDashboard.saveNotifications()">💾 Save Notification Settings</button>
+            </div>
+          </div>
+        `;
+    }
+
+    renderSettingsPreferences(s) {
+        return `
+          <div class="crm-grid-2">
+            <div class="crm-card">
+              <h3>🎨 Appearance</h3>
+              <p class="crm-setting-desc">Customize how the CRM looks</p>
+
+              <div class="crm-setting-item">
+                <label><strong>Theme</strong></label>
+                <select class="crm-input" id="pref-theme">
+                  <option value="light" ${s.preferences.theme==='light'?'selected':''}>☀️ Light Mode</option>
+                  <option value="dark" ${s.preferences.theme==='dark'?'selected':''}>🌙 Dark Mode (Coming Soon)</option>
+                </select>
+              </div>
+
+              <div class="crm-setting-item">
+                <label>
+                  <input type="checkbox" id="pref-compact" ${s.preferences.compactMode?'checked':''}>
+                  <strong>Compact Mode</strong>
+                </label>
+                <p class="crm-setting-help">Reduce spacing for more content on screen</p>
+              </div>
+
+              <button class="crm-btn" onclick="window.crmDashboard.savePreferences()">💾 Save Preferences</button>
+            </div>
+
+            <div class="crm-card">
+              <h3>🚀 Defaults</h3>
+              <p class="crm-setting-desc">Set default values and behaviors</p>
+
+              <div class="crm-setting-item">
+                <label><strong>Default View on Login</strong></label>
+                <select class="crm-input" id="pref-default-view">
+                  <option value="dashboard" ${s.preferences.defaultView==='dashboard'?'selected':''}>📊 Dashboard</option>
+                  <option value="pipeline" ${s.preferences.defaultView==='pipeline'?'selected':''}>🎯 Leads</option>
+                  <option value="tasks" ${s.preferences.defaultView==='tasks'?'selected':''}>✅ Tasks</option>
+                  <option value="projects" ${s.preferences.defaultView==='projects'?'selected':''}>🏗️ Projects</option>
+                </select>
+              </div>
+
+              <button class="crm-btn" onclick="window.crmDashboard.savePreferences()">💾 Save Preferences</button>
+            </div>
+          </div>
+        `;
+    }
+
+    renderSettingsData(s) {
+        return `
+          <div class="crm-grid-2">
+            <div class="crm-card">
+              <h3>📤 Export Data</h3>
+              <p class="crm-setting-desc">Download your CRM data for backup or migration</p>
+              <button class="crm-btn" onclick="window.crmDashboard.exportAllData()">📥 Export All Data (JSON)</button>
+              <p class="crm-setting-help">Downloads a complete backup of all contacts, leads, projects, tasks, and settings</p>
+            </div>
+
+            <div class="crm-card">
+              <h3>📥 Import Data</h3>
+              <p class="crm-setting-desc">Restore data from a previous export</p>
+              <button class="crm-btn" onclick="window.crmDashboard.importData()">📤 Import Data (JSON)</button>
+              <p class="crm-setting-help">⚠️ This will merge with existing data. Backup first!</p>
+            </div>
+
+            <div class="crm-card" style="grid-column:1 / -1;">
+              <h3>🗑️ Clear Data</h3>
+              <p class="crm-setting-desc">⚠️ Danger Zone - These actions cannot be undone!</p>
+              <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="crm-btn-secondary" onclick="if(confirm('Clear all leads? This cannot be undone!')) window.crmDashboard.clearLeads()">Clear Leads</button>
+                <button class="crm-btn-secondary" onclick="if(confirm('Clear all tasks? This cannot be undone!')) window.crmDashboard.clearTasks()">Clear Tasks</button>
+                <button class="crm-btn-secondary" onclick="if(confirm('Clear all projects? This cannot be undone!')) window.crmDashboard.clearProjects()">Clear Projects</button>
+                <button class="crm-btn-secondary" onclick="if(confirm('Clear ALL DATA? This will delete everything and cannot be undone!')) window.crmDashboard.clearAllData()">🔥 Clear All Data</button>
+              </div>
+            </div>
+          </div>
+        `;
+    }
+
+    renderSettingsSystem(s, storageKB, storageMB) {
+        const version = '3.0.0';
+        const buildDate = '2025-01-05';
+        const dataCount = {
+            contacts: this.contacts.length,
+            leads: this.leads.length,
+            projects: this.projects.length,
+            tasks: this.tasks.length,
+            campaigns: this.campaigns.length
+        };
+
+        return `
+          <div class="crm-grid-2">
+            <div class="crm-card">
+              <h3>ℹ️ System Information</h3>
+              <div class="crm-detail-item">
+                <span>Version</span>
+                <strong>${version}</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>Build Date</span>
+                <strong>${buildDate}</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>Storage Used</span>
+                <strong>${storageKB} KB (${storageMB} MB)</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>Browser</span>
+                <strong>${navigator.userAgent.split(' ').slice(-1)[0]}</strong>
+              </div>
+            </div>
+
+            <div class="crm-card">
+              <h3>📊 Data Statistics</h3>
+              <div class="crm-detail-item">
+                <span>👥 Contacts</span>
+                <strong>${dataCount.contacts}</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>🎯 Leads</span>
+                <strong>${dataCount.leads}</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>🏗️ Projects</span>
+                <strong>${dataCount.projects}</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>✅ Tasks</span>
+                <strong>${dataCount.tasks}</strong>
+              </div>
+              <div class="crm-detail-item">
+                <span>📧 Campaigns</span>
+                <strong>${dataCount.campaigns}</strong>
+              </div>
+            </div>
+
+            <div class="crm-card" style="grid-column:1 / -1;">
+              <h3>🔧 Diagnostics</h3>
+              <p class="crm-setting-desc">System health and troubleshooting</p>
+              <button class="crm-btn" onclick="window.crmDashboard.runDiagnostics()">🔍 Run Diagnostics</button>
+              <div id="diagnostics-output" style="margin-top:12px; padding:12px; background:#f9fafb; border-radius:6px; font-family:monospace; font-size:12px; display:none;"></div>
+            </div>
+          </div>
+        `;
+    }
+
     saveBusinessInfo() {
         this.settings.business = {
             companyName: document.getElementById('set-biz-name').value,
@@ -2710,8 +3026,103 @@ class CRMDashboard {
         this.settings.notifications = {
             email: document.getElementById('set-notify-email').checked,
             sms: document.getElementById('set-notify-sms').checked,
+            staleLeadDays: parseInt(document.getElementById('stale-lead-days')?.value || 3)
         };
-        this.save('ccc_settings', this.settings); this.render();
+        this.save('ccc_settings', this.settings);
+        alert('✅ Notification settings saved!');
+        this.render();
+    }
+
+    saveAutomation() {
+        this.settings.automation = {
+            autoReminders: document.getElementById('auto-reminders').checked,
+            autoTasksOnEstimate: document.getElementById('auto-tasks-estimate').checked,
+            duplicateDetection: document.getElementById('duplicate-detection').checked
+        };
+        this.settings.notifications.staleLeadDays = parseInt(document.getElementById('stale-lead-days')?.value || 3);
+        this.save('ccc_settings', this.settings);
+        alert('✅ Automation settings saved!');
+        this.render();
+    }
+
+    savePreferences() {
+        this.settings.preferences = {
+            theme: document.getElementById('pref-theme').value,
+            defaultView: document.getElementById('pref-default-view').value,
+            compactMode: document.getElementById('pref-compact').checked
+        };
+        this.save('ccc_settings', this.settings);
+        alert('✅ Preferences saved!');
+        this.render();
+    }
+
+    clearLeads() {
+        this.leads = [];
+        this.save('ccc_leads', this.leads);
+        alert('✅ All leads cleared!');
+        this.render();
+    }
+
+    clearTasks() {
+        this.tasks = [];
+        this.save('ccc_tasks', this.tasks);
+        alert('✅ All tasks cleared!');
+        this.render();
+    }
+
+    clearProjects() {
+        this.projects = [];
+        this.save('ccc_projects', this.projects);
+        alert('✅ All projects cleared!');
+        this.render();
+    }
+
+    runDiagnostics() {
+        const output = document.getElementById('diagnostics-output');
+        if (!output) return;
+
+        output.style.display = 'block';
+        output.innerHTML = 'Running diagnostics...<br>';
+
+        setTimeout(() => {
+            const checks = [];
+
+            // Check localStorage availability
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                checks.push('✅ LocalStorage: Available');
+            } catch(e) {
+                checks.push('❌ LocalStorage: Not available - ' + e.message);
+            }
+
+            // Check data integrity
+            const dataKeys = ['ccc_contacts', 'ccc_leads', 'ccc_projects', 'ccc_tasks', 'ccc_campaigns', 'ccc_settings'];
+            dataKeys.forEach(key => {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key) || '[]');
+                    checks.push(`✅ ${key}: ${Array.isArray(data) ? data.length + ' items' : 'Valid'}`);
+                } catch(e) {
+                    checks.push(`❌ ${key}: Corrupted - ${e.message}`);
+                }
+            });
+
+            // Check for orphaned tasks
+            const orphanedTasks = this.tasks.filter(t => {
+                if (!t.relatedTo) return false;
+                if (t.relatedTo.type === 'lead') return !this.leads.find(l => l.id === t.relatedTo.id);
+                if (t.relatedTo.type === 'project') return !this.projects.find(p => p.id === t.relatedTo.id);
+                return false;
+            });
+            checks.push(`${orphanedTasks.length > 0 ? '⚠️' : '✅'} Orphaned Tasks: ${orphanedTasks.length}`);
+
+            // Check for duplicate IDs
+            const leadIds = this.leads.map(l => l.id);
+            const duplicateLeads = leadIds.length !== new Set(leadIds).size;
+            checks.push(`${duplicateLeads ? '❌' : '✅'} Duplicate Lead IDs: ${duplicateLeads ? 'Found' : 'None'}`);
+
+            output.innerHTML = checks.join('<br>');
+        }, 500);
     }
     addJobType() {
         const v = document.getElementById('new-jobtype').value.trim();
@@ -3147,10 +3558,35 @@ class CRMDashboard {
             .crm-forecast-arrow { text-align: center; font-size: 24px; color: #3b82f6; margin: 8px 0; }
             .crm-chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
             .crm-chip { background: #e5e7eb; color: #374151; padding: 4px 8px; border-radius: 16px; display: inline-flex; align-items: center; gap: 6px; }
+            .crm-chip button { background: transparent; border: none; cursor: pointer; color: #6b7280; }
+
+            /* Settings Tabs */
+            .crm-settings-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #e5e7eb; overflow-x: auto; }
+            .crm-settings-tab {
+                background: transparent;
+                border: none;
+                padding: 12px 20px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                color: #6b7280;
+                border-bottom: 3px solid transparent;
+                transition: all 0.2s;
+                white-space: nowrap;
+            }
+            .crm-settings-tab:hover { color: #3b82f6; background: #f9fafb; }
+            .crm-settings-tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+            .crm-settings-content { animation: fadeIn 0.3s ease; }
+
+            /* Settings Items */
+            .crm-setting-desc { color: #6b7280; font-size: 13px; margin: 8px 0 16px 0; }
+            .crm-setting-item { margin: 16px 0; padding: 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }
+            .crm-setting-item label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+            .crm-setting-item input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+            .crm-setting-help { margin: 8px 0 0 26px; font-size: 12px; color: #6b7280; }
+
             .crm-drawer-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 99999; animation: crmFade .2s ease; }
             @keyframes crmFade { from { opacity: 0; } to { opacity: 1; } }
-
-            .crm-chip button { background: transparent; border: none; cursor: pointer; color: #6b7280; }
             .crm-timeline { list-style: none; padding: 0; margin: 0; }
             .crm-timeline li { padding: 6px 0; border-bottom: 1px dashed #e5e7eb; font-size: 13px; display:flex; gap:8px; }
             .crm-timeline li span { color: #6b7280; min-width: 140px; display:inline-block; }
