@@ -597,13 +597,14 @@ class CRMDashboard {
               </div>
             </div>
             <div class="crm-modal-body">
-              <div class="crm-template-add-row" style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
-                <select class="crm-input crm-input-sm" id="day-template-select">
-                  <option value="">Add from template...</option>
+              <div class="crm-template-add-row" style="display:flex; gap:8px; align-items:center; margin-bottom:16px; padding:12px; background:#f9fafb; border-radius:8px; border:1px solid #e5e7eb;">
+                <select class="crm-input crm-input-sm" id="day-template-select" style="flex:1;">
+                  <option value="">➕ Add from template...</option>
                   ${this.getTaskTemplates().map(t=>`<option value="${t.id}">${t.title}</option>`).join('')}
                 </select>
-                <button class="crm-btn-sm" onclick="const sel=document.getElementById('day-template-select'); if(sel.value) window.crmDashboard.addTemplateTaskOnDate(sel.value, '${key}')">Add</button>
+                <button class="crm-btn-sm" onclick="const sel=document.getElementById('day-template-select'); if(sel.value) window.crmDashboard.addTemplateTaskOnDate(sel.value, '${key}')">Add Task</button>
               </div>
+              ${tasks.length ? `<div style="margin-bottom:8px; font-weight:600; color:#6b7280; font-size:13px; text-transform:uppercase;">Tasks (${tasks.length})</div>` : ''}
               ${tasks.length ? tasks.map(t=>{
                 const due = t.dueDate ? new Date(t.dueDate) : null;
                 const overdue = due && new Date(due.getFullYear(), due.getMonth(), due.getDate()) < todayOnly && !t.completed;
@@ -2857,13 +2858,54 @@ class CRMDashboard {
                 gap: 8px;
             }
 
-            .crm-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 100001; }
-            .crm-modal { position: fixed; z-index: 100002; top: 10%; left: 50%; transform: translateX(-50%); width: min(640px, 92vw); background: #fff; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-            .crm-modal-header { display:flex; align-items:center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e5e7eb; }
-            .crm-modal-body { padding: 12px 16px; max-height: 60vh; overflow: auto; }
-            .crm-day-task-row { display:grid; grid-template-columns: auto 1fr auto auto; gap: 8px; align-items:center; padding: 8px 0; border-bottom: 1px dashed #e5e7eb; }
-            .crm-day-task-row.overdue .ttl { color: #b91c1c; }
-            .crm-btn-xs { font-size: 12px; padding: 2px 6px; border-radius: 6px; border: 1px solid #e5e7eb; background: #f9fafb; cursor:pointer; }
+            /* Day Popover Modal */
+            .crm-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100001; animation: fadeIn 0.2s ease; }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            .crm-modal {
+                position: fixed;
+                z-index: 100002;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: min(500px, 90vw);
+                max-height: 80vh;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            }
+            @keyframes slideIn { from { transform: translate(-50%, -45%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
+            .crm-modal-header {
+                display:flex;
+                align-items:center;
+                justify-content: space-between;
+                padding: 16px 20px;
+                border-bottom: 2px solid #e5e7eb;
+                background: #f9fafb;
+                border-radius: 12px 12px 0 0;
+            }
+            .crm-modal-header h3 { margin: 0; font-size: 18px; color: #1f2937; }
+            .crm-modal-body {
+                padding: 20px;
+                max-height: calc(80vh - 80px);
+                overflow-y: auto;
+            }
+            .crm-day-task-row {
+                display:grid;
+                grid-template-columns: auto 1fr auto auto;
+                gap: 8px;
+                align-items:center;
+                padding: 10px 0;
+                border-bottom: 1px solid #e5e7eb;
+            }
+            .crm-day-task-row:last-child { border-bottom: none; }
+            .crm-day-task-row.overdue { background: #fef2f2; padding: 10px 8px; border-radius: 6px; margin: 4px 0; }
+            .crm-day-task-row.overdue .ttl { color: #b91c1c; font-weight: 600; }
+            .crm-day-task-row .ttl { font-size: 14px; color: #374151; }
+            .crm-day-task-row .meta { font-size: 12px; color: #6b7280; text-transform: capitalize; }
+            .crm-day-task-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+            .crm-btn-xs { font-size: 12px; padding: 4px 8px; border-radius: 6px; border: 1px solid #e5e7eb; background: #f9fafb; cursor:pointer; transition: all 0.2s; }
+            .crm-btn-xs:hover { background: #e5e7eb; }
 
             .crm-nav-btn {
                 background: #f3f4f6;
@@ -3218,7 +3260,8 @@ class CRMDashboard {
                 font-size: 14px;
             }
 
-            .crm-modal {
+            /* Legacy modal styles - not currently used */
+            .crm-modal-legacy {
                 position: fixed;
                 top: 0;
                 left: 0;
