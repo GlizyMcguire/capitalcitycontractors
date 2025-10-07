@@ -3693,6 +3693,30 @@
     display: none;
 }
 
+
+/* Reviews: responsive fixes for mobile/tablet to prevent narrow cards and overlapping arrows */
+@media (max-width: 768px) {
+  .reviews-container { padding: 0 20px; }
+  .review-card { padding: 24px 56px; }
+  .review-nav-btn {
+    width: 42px; height: 42px;
+    top: 50%; transform: translateY(-50%);
+  }
+  .review-nav-btn.prev-btn { left: 8px; }
+  .review-nav-btn.next-btn { right: 8px; }
+  /* Disable hover grow/bounce on touch devices */
+  .review-nav-btn:hover { transform: translateY(-50%); }
+}
+
+@media (max-width: 480px) {
+  .reviews-container { padding: 0 12px; }
+  .review-card { padding: 20px 52px; }
+  .review-nav-btn { width: 40px; height: 40px; }
+  /* Prevent active press bounce on touch */
+  .review-nav-btn:active { transform: translateY(-50%); }
+
+}
+
 /* Chat Options Popup */
 .chat-options-popup {
     display: none;
