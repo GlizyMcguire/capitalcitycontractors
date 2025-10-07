@@ -2255,32 +2255,37 @@
     padding: var(--space-3);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--white);
+    background: rgba(255, 255, 255, 0.95); /* Changed to opaque white */
+    color: var(--text-primary); /* Changed to dark text */
     font-size: var(--text-base);
     transition: all var(--transition-normal);
 }
 
 .quote-form input::placeholder,
-.quote-form textarea::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+.quote-form textarea::placeholder,
+.quote-form select::placeholder {
+    color: rgba(0, 0, 0, 0.5); /* Changed to dark placeholder */
 }
 
 .quote-form input:focus,
 .quote-form select:focus,
 .quote-form textarea:focus {
     outline: none;
-    border-color: var(--white);
-    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-color); /* Changed to blue border */
+    background: var(--white); /* Solid white on focus */
+    color: var(--text-primary); /* Keep dark text */
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1); /* Add focus ring */
 }
 
 .quote-form select {
     cursor: pointer;
+    /* Ensure text is visible in select */
+    color: var(--text-primary);
 }
 
 .quote-form select option {
-    background: var(--primary-color);
-    color: var(--white);
+    background: var(--white); /* Changed to white background */
+    color: var(--text-primary); /* Changed to dark text */
 }
 
 .form-actions {
