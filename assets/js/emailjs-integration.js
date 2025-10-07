@@ -20,7 +20,8 @@ class EmailJSIntegration {
         this.form = null;
         this.isSubmitting = false;
         this.attachedFiles = [];
-        
+        this.validationSetup = false; // Flag to prevent duplicate validation setup
+
         this.init();
     }
     
@@ -67,17 +68,28 @@ class EmailJSIntegration {
     }
     
     setupFormValidation() {
+        // Prevent this method from running more than once
+        if (this.validationSetup) {
+            console.log('⚠️ Validation already set up, skipping duplicate setup');
+            return;
+        }
+
+        this.validationSetup = true;
         const inputs = this.form.querySelectorAll('input[required], textarea[required], select[required]');
 
-        inputs.forEach(input => {
-            // Mark field as having validation to prevent duplicate listeners
-            if (input.dataset.validationSetup) {
-                return; // Skip if already set up
-            }
-            input.dataset.validationSetup = 'true';
+        console.log(`✅ Setting up validation for ${inputs.length} fields`);
 
-            input.addEventListener('blur', () => this.validateField(input));
-            input.addEventListener('input', () => this.clearFieldError(input));
+        inputs.forEach(input => {
+            // Use named functions to ensure we can identify them
+            const blurHandler = () => this.validateField(input);
+            const inputHandler = () => this.clearFieldError(input);
+
+            // Store handlers on the element for potential cleanup
+            input._blurHandler = blurHandler;
+            input._inputHandler = inputHandler;
+
+            input.addEventListener('blur', blurHandler);
+            input.addEventListener('input', inputHandler);
         });
     }
     
@@ -116,29 +128,44 @@ class EmailJSIntegration {
     }
     
     showFieldValidation(field, isValid, errorMessage) {
-        // Remove existing error styling
-        field.classList.remove('error', 'valid');
-
-        // Remove ALL existing error messages (in case there are duplicates)
-        const existingErrors = field.parentNode.querySelectorAll('.field-error');
-        existingErrors.forEach(error => error.remove());
-
-        if (!isValid && errorMessage) {
-            field.classList.add('error');
-
-            // Add error message only if one doesn't already exist
-            if (!field.parentNode.querySelector('.field-error')) {
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'field-error';
-                errorDiv.textContent = errorMessage;
-                field.parentNode.appendChild(errorDiv);
-            }
-        } else if (field.value.trim()) {
-            field.classList.add('valid');
+        // Clear any pending validation timeout for this field
+        if (field._validationTimeout) {
+            clearTimeout(field._validationTimeout);
         }
+
+        // Debounce validation display to prevent rapid duplicate calls
+        field._validationTimeout = setTimeout(() => {
+            // Remove existing error styling
+            field.classList.remove('error', 'valid');
+
+            // Remove ALL existing error messages (in case there are duplicates)
+            const existingErrors = field.parentNode.querySelectorAll('.field-error');
+            existingErrors.forEach(error => error.remove());
+
+            if (!isValid && errorMessage) {
+                field.classList.add('error');
+
+                // Double-check no error exists before adding
+                const doubleCheck = field.parentNode.querySelector('.field-error');
+                if (!doubleCheck) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'field-error';
+                    errorDiv.textContent = errorMessage;
+                    errorDiv.setAttribute('data-field', field.name || field.id);
+                    field.parentNode.appendChild(errorDiv);
+                }
+            } else if (field.value.trim()) {
+                field.classList.add('valid');
+            }
+        }, 10); // Small delay to batch rapid calls
     }
     
     clearFieldError(field) {
+        // Clear any pending validation timeout
+        if (field._validationTimeout) {
+            clearTimeout(field._validationTimeout);
+        }
+
         field.classList.remove('error');
         // Remove ALL error messages (in case there are duplicates)
         const errorDivs = field.parentNode.querySelectorAll('.field-error');
