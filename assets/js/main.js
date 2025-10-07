@@ -869,6 +869,12 @@ function initializeQuoteForm() {
     const form = document.getElementById('quoteForm');
     if (!form) return;
 
+    // Check if EmailJS integration is already handling this form
+    if (window.emailJSIntegration) {
+        console.log('Quote form already handled by EmailJS integration');
+        return;
+    }
+
     // Initialize file upload functionality
     initializeFileUpload();
 
