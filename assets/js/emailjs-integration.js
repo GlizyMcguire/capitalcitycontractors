@@ -68,8 +68,14 @@ class EmailJSIntegration {
     
     setupFormValidation() {
         const inputs = this.form.querySelectorAll('input[required], textarea[required], select[required]');
-        
+
         inputs.forEach(input => {
+            // Mark field as having validation to prevent duplicate listeners
+            if (input.dataset.validationSetup) {
+                return; // Skip if already set up
+            }
+            input.dataset.validationSetup = 'true';
+
             input.addEventListener('blur', () => this.validateField(input));
             input.addEventListener('input', () => this.clearFieldError(input));
         });
@@ -112,21 +118,21 @@ class EmailJSIntegration {
     showFieldValidation(field, isValid, errorMessage) {
         // Remove existing error styling
         field.classList.remove('error', 'valid');
-        
-        // Remove existing error message
-        const existingError = field.parentNode.querySelector('.field-error');
-        if (existingError) {
-            existingError.remove();
-        }
-        
+
+        // Remove ALL existing error messages (in case there are duplicates)
+        const existingErrors = field.parentNode.querySelectorAll('.field-error');
+        existingErrors.forEach(error => error.remove());
+
         if (!isValid && errorMessage) {
             field.classList.add('error');
-            
-            // Add error message
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'field-error';
-            errorDiv.textContent = errorMessage;
-            field.parentNode.appendChild(errorDiv);
+
+            // Add error message only if one doesn't already exist
+            if (!field.parentNode.querySelector('.field-error')) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'field-error';
+                errorDiv.textContent = errorMessage;
+                field.parentNode.appendChild(errorDiv);
+            }
         } else if (field.value.trim()) {
             field.classList.add('valid');
         }
@@ -134,10 +140,9 @@ class EmailJSIntegration {
     
     clearFieldError(field) {
         field.classList.remove('error');
-        const errorDiv = field.parentNode.querySelector('.field-error');
-        if (errorDiv) {
-            errorDiv.remove();
-        }
+        // Remove ALL error messages (in case there are duplicates)
+        const errorDivs = field.parentNode.querySelectorAll('.field-error');
+        errorDivs.forEach(errorDiv => errorDiv.remove());
     }
     
     setupFileUpload() {
@@ -418,6 +423,12 @@ class EmailJSIntegration {
 
 // Initialize EmailJS integration when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
+    // Prevent duplicate initialization
+    if (window.emailJSIntegration) {
+        console.log('⚠️ EmailJS Integration already initialized, skipping');
+        return;
+    }
+
     console.log('🚀 Starting EmailJS Integration for Quote Form');
     window.emailJSIntegration = new EmailJSIntegration();
 });
