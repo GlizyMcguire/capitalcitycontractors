@@ -65,10 +65,10 @@
     border-radius: var(--radius-lg);
     /* Make completely non-interactive */
     pointer-events: none !important;
-    user-select: none !important;
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
     -ms-user-select: none !important;
+    user-select: none !important;
     outline: none !important;
     border: none !important;
     /* Prevent dragging */
@@ -695,7 +695,7 @@
     font-size: var(--text-lg);
 }
 
-/* Enhanced Animations */
+/* Enhanced Animations - Optimized for performance */
 @keyframes pulse-glow {
     0% {
         box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
@@ -710,13 +710,13 @@
 
 @keyframes btn-pulse {
     0% {
-        transform: scale(1);
+        transform: scale3d(1, 1, 1);
     }
     50% {
-        transform: scale(1.02);
+        transform: scale3d(1.02, 1.02, 1);
     }
     100% {
-        transform: scale(1);
+        transform: scale3d(1, 1, 1);
     }
 }
 
@@ -774,10 +774,10 @@
         border-radius: var(--radius-md);
         /* FORCE complete non-interactivity on mobile */
         pointer-events: none !important;
-        user-select: none !important;
         -webkit-user-select: none !important;
         -moz-user-select: none !important;
         -ms-user-select: none !important;
+        user-select: none !important;
         outline: none !important;
         border: none !important;
         /* Prevent touch interactions */
@@ -1452,7 +1452,8 @@
     border: 3px solid var(--gray-300);
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    image-rendering: -webkit-optimize-contrast; /* Edge support */
+    -ms-interpolation-mode: nearest-neighbor; /* IE/Edge fallback */
+    image-rendering: -webkit-optimize-contrast; /* Safari/Chrome */
     image-rendering: crisp-edges; /* Modern browsers */
 }
 
@@ -1839,11 +1840,11 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translate3d(0, 30px, 0);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -1989,7 +1990,7 @@
 @keyframes slideInLeft {
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -2031,10 +2032,10 @@
 
 @keyframes rotate {
     from {
-        transform: rotate(0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
     }
     to {
-        transform: rotate(360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
     }
 }
 
@@ -2607,18 +2608,22 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-50px) scale(0.9);
+        transform: translate3d(0, -50px, 0) scale3d(0.9, 0.9, 1);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
     }
 }
 
@@ -3025,9 +3030,9 @@
 /* Duplicate slideInUp removed - using fadeInUp instead */
 
 @keyframes gradientShift {
-    0% { transform: translateX(0%); }
-    50% { transform: translateX(-50%); }
-    100% { transform: translateX(0%); }
+    0% { transform: translate3d(0%, 0, 0); }
+    50% { transform: translate3d(-50%, 0, 0); }
+    100% { transform: translate3d(0%, 0, 0); }
 }
 
 .testimonial-header {
@@ -3475,15 +3480,15 @@
 
 @keyframes pulse {
     0% {
-        transform: scale(1);
+        transform: scale3d(1, 1, 1);
         opacity: 1;
     }
     70% {
-        transform: scale(1.1);
+        transform: scale3d(1.1, 1.1, 1);
         opacity: 0.7;
     }
     100% {
-        transform: scale(1);
+        transform: scale3d(1, 1, 1);
         opacity: 1;
     }
 }
