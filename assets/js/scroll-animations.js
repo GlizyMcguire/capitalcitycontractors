@@ -216,7 +216,8 @@ class FormEnhancements {
     }
 
     setupFormValidation() {
-        const forms = document.querySelectorAll('form');
+        // Avoid duplicating validation on the main quote form (handled by EmailJSIntegration)
+        const forms = document.querySelectorAll('form:not(#quoteForm)');
         
         forms.forEach(form => {
             const inputs = form.querySelectorAll('input, textarea, select');
