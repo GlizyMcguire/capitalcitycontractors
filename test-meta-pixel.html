@@ -232,16 +232,19 @@
         }
 
         function testLead() {
-            log('Sending Lead event...', 'info');
+            log('Sending Lead event with test code TEST42844...', 'info');
             try {
                 fbq('track', 'Lead', {
                     content_name: 'Test Lead',
                     content_category: 'Quote Request',
                     value: 0.00,
                     currency: 'CAD'
+                }, {
+                    eventID: 'test_' + Date.now(),
+                    test_event_code: 'TEST42844'
                 });
-                log('✅ Lead event sent successfully', 'success');
-                alert('✅ Lead event sent! Check Facebook Events Manager.');
+                log('✅ Lead event sent successfully with test code TEST42844', 'success');
+                alert('✅ Lead event sent with test code TEST42844! Check Facebook Test Events tab.');
             } catch (error) {
                 log('❌ Error sending Lead event: ' + error.message, 'error');
                 alert('❌ Error: ' + error.message);
