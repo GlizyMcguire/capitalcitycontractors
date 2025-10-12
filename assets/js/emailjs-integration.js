@@ -85,10 +85,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         currency: 'CAD',
                         value: 0.00
                     }, {
-                        eventID: 'quote_' + Date.now(),
-                        test_event_code: 'TEST42844'  // Facebook Test Events code
+                        eventID: 'quote_' + Date.now()
                     });
-                    console.log('✅ Meta Pixel Lead event tracked with test code TEST42844');
+                    console.log('✅ Meta Pixel Lead event tracked');
                 } else {
                     console.log('⚠️ Meta Pixel not loaded');
                 }
