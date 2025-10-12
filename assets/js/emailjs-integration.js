@@ -52,18 +52,36 @@ class EmailJSIntegration {
     
     setupFormHandling() {
         this.form = document.getElementById(this.config.formId);
-        
+
         if (!this.form) {
             console.error('❌ Quote form not found');
             return;
         }
-        
+
+        console.log('✅ Quote form found:', this.form);
+
         // Add form submit event listener
-        this.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
-        
+        this.form.addEventListener('submit', (e) => {
+            console.log('🎯 FORM SUBMIT EVENT TRIGGERED');
+            this.handleFormSubmit(e);
+        });
+
+        console.log('✅ Form submit event listener attached');
+
+        // Also add click listener to submit button as backup
+        const submitBtn = this.form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            console.log('✅ Submit button found:', submitBtn);
+            submitBtn.addEventListener('click', (e) => {
+                console.log('🎯 SUBMIT BUTTON CLICKED');
+            });
+        } else {
+            console.error('❌ Submit button not found');
+        }
+
         // Add real-time validation
         this.setupFormValidation();
-        
+
         console.log('✅ Form handling setup complete');
     }
     
@@ -266,13 +284,14 @@ class EmailJSIntegration {
     }
     
     async handleFormSubmit(event) {
+        console.log('🔥 handleFormSubmit called!');
         event.preventDefault();
-        
+
         if (this.isSubmitting) {
             console.log('⚠️ Form submission already in progress');
             return;
         }
-        
+
         console.log('📝 Processing quote form submission...');
         
         // Validate form
