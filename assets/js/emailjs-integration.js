@@ -309,13 +309,26 @@ class EmailJSIntegration {
     validateForm() {
         const requiredFields = this.form.querySelectorAll('input[required], textarea[required], select[required]');
         let isValid = true;
-        
+        const invalidFields = [];
+
         requiredFields.forEach(field => {
-            if (!this.validateField(field)) {
+            const fieldValid = this.validateField(field);
+            if (!fieldValid) {
                 isValid = false;
+                invalidFields.push({
+                    name: field.name || field.id,
+                    value: field.value,
+                    type: field.type
+                });
             }
         });
-        
+
+        if (!isValid) {
+            console.log('❌ Validation failed for fields:', invalidFields);
+        } else {
+            console.log('✅ All fields validated successfully');
+        }
+
         return isValid;
     }
     
@@ -340,7 +353,8 @@ class EmailJSIntegration {
     
     async sendEmail(formData) {
         console.log('📧 Sending email via EmailJS...');
-        
+        console.log('📋 Form data:', formData);
+
         const templateParams = {
             from_name: formData.name,
             from_email: formData.email,
@@ -354,13 +368,17 @@ class EmailJSIntegration {
             to_name: 'Capital City Contractors',
             reply_to: formData.email
         };
-        
+
+        console.log('📤 Template params:', templateParams);
+        console.log('🔑 Service ID:', this.config.serviceId);
+        console.log('📝 Template ID:', this.config.templateId);
+
         const response = await emailjs.send(
             this.config.serviceId,
             this.config.templateId,
             templateParams
         );
-        
+
         console.log('✅ Email sent successfully:', response);
         return response;
     }
