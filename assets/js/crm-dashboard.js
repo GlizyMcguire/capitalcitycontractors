@@ -791,6 +791,9 @@ class CRMDashboard {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
+        // Get visitor analytics
+        const visitorStats = typeof VisitorTracker !== 'undefined' ? VisitorTracker.getAnalyticsSummary() : null;
+
         // Get tasks due today or overdue
         const todayAndOverdueTasks = this.tasks.filter(t => {
             if (t.completed || !t.dueDate) return false;
@@ -825,6 +828,31 @@ class CRMDashboard {
                     <div class="crm-card-label">List Growth</div>
                 </div>
             </div>
+
+            <!-- Website Visitor Metrics -->
+            ${visitorStats ? `
+            <div class="crm-section">
+                <h2>👥 Website Visitors (Last 7 Days)</h2>
+                <div class="crm-metrics">
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.today.visitors}</div>
+                        <div class="crm-card-label">Visitors Today</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.today.pageViews}</div>
+                        <div class="crm-card-label">Page Views Today</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.last7Days.visitors}</div>
+                        <div class="crm-card-label">Unique Visitors (7d)</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.last7Days.pageViews}</div>
+                        <div class="crm-card-label">Page Views (7d)</div>
+                    </div>
+                </div>
+            </div>
+            ` : ''}
 
             <!-- Mini Pipeline Board -->
             <div class="crm-section">
@@ -2556,6 +2584,9 @@ class CRMDashboard {
         const conversionRate = totalLeads > 0 ? (won / totalLeads) : 0.25; // Default 25%
         const forecastRevenue = Math.round(pipelineValue * conversionRate);
 
+        // Get visitor analytics
+        const visitorStats = typeof VisitorTracker !== 'undefined' ? VisitorTracker.getAnalyticsSummary() : null;
+
         return `
             <div class="crm-view-header">
               <h2>📊 Reports & Analytics</h2>
@@ -2594,6 +2625,76 @@ class CRMDashboard {
                     <div class="crm-card-label">Conversion Rate</div>
                 </div>
             </div>
+
+            <!-- Website Visitor Analytics -->
+            ${visitorStats ? `
+            <div class="crm-section">
+                <h2>👥 Website Visitor Analytics</h2>
+                <div class="crm-metrics" style="margin-bottom:16px;">
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.today.visitors}</div>
+                        <div class="crm-card-label">Visitors Today</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.last7Days.visitors}</div>
+                        <div class="crm-card-label">Visitors (7d)</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.last30Days.visitors}</div>
+                        <div class="crm-card-label">Visitors (30d)</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.last7Days.pageViews}</div>
+                        <div class="crm-card-label">Page Views (7d)</div>
+                    </div>
+                    <div class="crm-card">
+                        <div class="crm-card-value">${visitorStats.allTime.visitors}</div>
+                        <div class="crm-card-label">Total Visitors</div>
+                    </div>
+                </div>
+
+                <div class="crm-grid-2">
+                    <!-- Daily Visitor Trend -->
+                    <div class="crm-card">
+                        <h3>📈 Daily Visitor Trend (Last 30 Days)</h3>
+                        ${visitorStats.dailyStats.slice(-30).map(day => {
+                            const maxVisitors = Math.max(...visitorStats.dailyStats.slice(-30).map(d => d.uniqueVisitors.length), 1);
+                            const pct = Math.round((day.uniqueVisitors.length / maxVisitors) * 100);
+                            return `<div class="crm-bar-row">
+                                <span>${new Date(day.date).toLocaleDateString('en-US', {month:'short', day:'numeric'})}</span>
+                                <div class="crm-bar"><div style="width:${pct}%"></div></div>
+                                <span>${day.uniqueVisitors.length} visitors</span>
+                            </div>`;
+                        }).join('')}
+                    </div>
+
+                    <!-- Recent Page Views -->
+                    <div class="crm-card">
+                        <h3>🔍 Recent Page Views</h3>
+                        <div class="crm-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Page</th>
+                                        <th>Time</th>
+                                        <th>Referrer</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${visitorStats.recentPageViews.slice(0, 10).map(pv => `
+                                        <tr>
+                                            <td>${pv.page}</td>
+                                            <td>${new Date(pv.timestamp).toLocaleTimeString()}</td>
+                                            <td>${pv.referrer === 'direct' ? 'Direct' : new URL(pv.referrer).hostname}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ` : ''}
 
             <div class="crm-grid-2">
               <!-- Conversion Funnel -->
