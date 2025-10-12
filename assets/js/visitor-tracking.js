@@ -338,6 +338,38 @@ class VisitorTracker {
         const pageViews7d = last7Days.reduce((sum, d) => sum + d.pageViews, 0);
         const pageViews30d = last30Days.reduce((sum, d) => sum + d.pageViews, 0);
 
+        // Calculate top pages
+        const pageCounts = {};
+        analytics.pageViews.forEach(pv => {
+            pageCounts[pv.page] = (pageCounts[pv.page] || 0) + 1;
+        });
+        const topPages = Object.entries(pageCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10)
+            .map(([page, views]) => ({ page, views }));
+
+        // Calculate referrer sources
+        const referrerCounts = {};
+        analytics.pageViews.forEach(pv => {
+            const ref = pv.referrer === 'direct' ? 'Direct' :
+                        pv.referrer.includes('google') ? 'Google' :
+                        pv.referrer.includes('facebook') ? 'Facebook' :
+                        pv.referrer.includes('instagram') ? 'Instagram' :
+                        pv.referrer.includes('twitter') ? 'Twitter' :
+                        pv.referrer.includes('linkedin') ? 'LinkedIn' :
+                        'Other';
+            referrerCounts[ref] = (referrerCounts[ref] || 0) + 1;
+        });
+        const topReferrers = Object.entries(referrerCounts)
+            .sort((a, b) => b[1] - a[1])
+            .map(([source, count]) => ({ source, count }));
+
+        // Calculate average time on page
+        const pageViewsWithTime = analytics.pageViews.filter(pv => pv.timeOnPage);
+        const avgTimeOnPage = pageViewsWithTime.length > 0
+            ? Math.round(pageViewsWithTime.reduce((sum, pv) => sum + pv.timeOnPage, 0) / pageViewsWithTime.length)
+            : 0;
+
         return {
             today: {
                 visitors: todayStats.uniqueVisitors.length,
@@ -356,8 +388,27 @@ class VisitorTracker {
                 pageViews: analytics.pageViews.length
             },
             dailyStats: analytics.dailyStats,
-            recentPageViews: analytics.pageViews.slice(-50).reverse()
+            recentPageViews: analytics.pageViews.slice(-50).reverse(),
+            topPages: topPages,
+            topReferrers: topReferrers,
+            avgTimeOnPage: avgTimeOnPage
         };
+    }
+
+    // Public static method to reset all visitor analytics
+    static resetAnalytics() {
+        const storageKey = 'ccc_visitor_analytics';
+        const visitorIdKey = 'ccc_visitor_id';
+        const sessionKey = 'ccc_visitor_session';
+        const lastPageViewKey = 'ccc_last_pageview';
+
+        localStorage.removeItem(storageKey);
+        localStorage.removeItem(visitorIdKey);
+        localStorage.removeItem(lastPageViewKey);
+        sessionStorage.removeItem(sessionKey);
+
+        console.log('✅ Visitor analytics reset successfully');
+        return true;
     }
 }
 

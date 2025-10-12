@@ -2670,28 +2670,118 @@ class CRMDashboard {
                         }).join('')}
                     </div>
 
+                    <!-- Top Pages by Views -->
+                    <div class="crm-card">
+                        <h3>📄 Top Pages by Views</h3>
+                        ${visitorStats.topPages && visitorStats.topPages.length > 0 ? `
+                            ${visitorStats.topPages.map(page => {
+                                const maxViews = Math.max(...visitorStats.topPages.map(p => p.views), 1);
+                                const pct = Math.round((page.views / maxViews) * 100);
+                                return `<div class="crm-bar-row">
+                                    <span>${page.page === '/' ? 'Home' : page.page}</span>
+                                    <div class="crm-bar"><div style="width:${pct}%"></div></div>
+                                    <span>${page.views} views</span>
+                                </div>`;
+                            }).join('')}
+                        ` : '<p style="text-align:center;color:#666;padding:20px;">No page view data yet</p>'}
+                    </div>
+                </div>
+
+                <div class="crm-grid-2">
+                    <!-- Traffic Sources -->
+                    <div class="crm-card">
+                        <h3>🌐 Traffic Sources</h3>
+                        ${visitorStats.topReferrers && visitorStats.topReferrers.length > 0 ? `
+                            ${visitorStats.topReferrers.map(ref => {
+                                const maxCount = Math.max(...visitorStats.topReferrers.map(r => r.count), 1);
+                                const pct = Math.round((ref.count / maxCount) * 100);
+                                const icon = ref.source === 'Direct' ? '🔗' :
+                                           ref.source === 'Google' ? '🔍' :
+                                           ref.source === 'Facebook' ? '📘' :
+                                           ref.source === 'Instagram' ? '📷' :
+                                           ref.source === 'Twitter' ? '🐦' :
+                                           ref.source === 'LinkedIn' ? '💼' : '🌍';
+                                return `<div class="crm-bar-row">
+                                    <span>${icon} ${ref.source}</span>
+                                    <div class="crm-bar"><div style="width:${pct}%"></div></div>
+                                    <span>${ref.count} visits</span>
+                                </div>`;
+                            }).join('')}
+                        ` : '<p style="text-align:center;color:#666;padding:20px;">No referrer data yet</p>'}
+                    </div>
+
                     <!-- Recent Page Views -->
                     <div class="crm-card">
                         <h3>🔍 Recent Page Views</h3>
-                        <div class="crm-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Page</th>
-                                        <th>Time</th>
-                                        <th>Referrer</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${visitorStats.recentPageViews.slice(0, 10).map(pv => `
+                        ${visitorStats.recentPageViews && visitorStats.recentPageViews.length > 0 ? `
+                            <div class="crm-table">
+                                <table>
+                                    <thead>
                                         <tr>
-                                            <td>${pv.page}</td>
-                                            <td>${new Date(pv.timestamp).toLocaleTimeString()}</td>
-                                            <td>${pv.referrer === 'direct' ? 'Direct' : new URL(pv.referrer).hostname}</td>
+                                            <th>Page</th>
+                                            <th>Time</th>
+                                            <th>Referrer</th>
                                         </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        ${visitorStats.recentPageViews.slice(0, 10).map(pv => {
+                                            let referrerDisplay = 'Direct';
+                                            if (pv.referrer && pv.referrer !== 'direct') {
+                                                try {
+                                                    referrerDisplay = new URL(pv.referrer).hostname;
+                                                } catch (e) {
+                                                    referrerDisplay = pv.referrer;
+                                                }
+                                            }
+                                            return `<tr>
+                                                <td>${pv.page === '/' ? 'Home' : pv.page}</td>
+                                                <td>${new Date(pv.timestamp).toLocaleTimeString()}</td>
+                                                <td>${referrerDisplay}</td>
+                                            </tr>`;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p style="text-align:center;color:#666;padding:20px;">No page views yet</p>'}
+                    </div>
+                </div>
+
+                <div class="crm-grid-2">
+                    <!-- Engagement Metrics -->
+                    <div class="crm-card">
+                        <h3>⏱️ Engagement Metrics</h3>
+                        <div style="padding:20px;">
+                            <div style="margin-bottom:16px;">
+                                <div style="font-size:24px;font-weight:600;color:#059669;">${visitorStats.avgTimeOnPage || 0}s</div>
+                                <div style="color:#666;font-size:14px;">Average Time on Page</div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="font-size:24px;font-weight:600;color:#0891b2;">${visitorStats.allTime.pageViews}</div>
+                                <div style="color:#666;font-size:14px;">Total Page Views</div>
+                            </div>
+                            <div>
+                                <div style="font-size:24px;font-weight:600;color:#7c3aed;">${visitorStats.allTime.visitors}</div>
+                                <div style="color:#666;font-size:14px;">Total Unique Visitors</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="crm-card">
+                        <h3>📊 Quick Stats</h3>
+                        <div style="padding:20px;">
+                            <div style="margin-bottom:16px;">
+                                <div style="font-size:24px;font-weight:600;color:#dc2626;">${visitorStats.today.pageViews}</div>
+                                <div style="color:#666;font-size:14px;">Page Views Today</div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <div style="font-size:24px;font-weight:600;color:#ea580c;">${visitorStats.last7Days.pageViews}</div>
+                                <div style="color:#666;font-size:14px;">Page Views (7 days)</div>
+                            </div>
+                            <div>
+                                <div style="font-size:24px;font-weight:600;color:#ca8a04;">${visitorStats.last30Days.pageViews}</div>
+                                <div style="color:#666;font-size:14px;">Page Views (30 days)</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3154,6 +3244,13 @@ class CRMDashboard {
               <p class="crm-setting-help">⚠️ This will merge with existing data. Backup first!</p>
             </div>
 
+            <div class="crm-card">
+              <h3>📊 Visitor Analytics</h3>
+              <p class="crm-setting-desc">Manage website visitor tracking data</p>
+              <button class="crm-btn" onclick="window.crmDashboard.resetVisitorStats()">🔄 Reset Visitor Stats</button>
+              <p class="crm-setting-help">Clears all visitor tracking data (page views, visitors, sessions)</p>
+            </div>
+
             <div class="crm-card" style="grid-column:1 / -1;">
               <h3>🗑️ Clear Data</h3>
               <p class="crm-setting-desc">⚠️ Danger Zone - These actions cannot be undone!</p>
@@ -3299,6 +3396,20 @@ class CRMDashboard {
         this.save('ccc_projects', this.projects);
         alert('✅ All projects cleared!');
         this.render();
+    }
+
+    resetVisitorStats() {
+        if (!confirm('Reset all visitor tracking data? This will clear all page views, visitor counts, and analytics. This cannot be undone!')) {
+            return;
+        }
+
+        if (typeof VisitorTracker !== 'undefined' && typeof VisitorTracker.resetAnalytics === 'function') {
+            VisitorTracker.resetAnalytics();
+            alert('✅ Visitor analytics reset successfully!\n\nAll visitor tracking data has been cleared.');
+            this.render();
+        } else {
+            alert('❌ Visitor tracking system not available');
+        }
     }
 
     runDiagnostics() {
