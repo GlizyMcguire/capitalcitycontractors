@@ -382,11 +382,29 @@ class EmailJSIntegration {
     }
     
     showSuccess() {
+        // Track Lead conversion with Meta Pixel (with test event code)
+        if (typeof fbq !== 'undefined') {
+            try {
+                fbq('track', 'Lead', {
+                    content_name: 'Quote Request',
+                    content_category: 'Quote Form',
+                    currency: 'CAD',
+                    value: 0.00
+                }, {
+                    eventID: 'quote_' + Date.now(),
+                    test_event_code: 'TEST42844'
+                });
+                console.log('✅ Meta Pixel Lead event tracked with test code TEST42844');
+            } catch (error) {
+                console.warn('⚠️ Meta Pixel tracking failed:', error);
+            }
+        }
+
         // Show success modal
         const modal = document.getElementById('successModal');
         if (modal) {
             modal.style.display = 'block';
-            
+
             // Set up close button
             const closeBtn = document.getElementById('closeModal');
             if (closeBtn) {
@@ -394,7 +412,7 @@ class EmailJSIntegration {
                     modal.style.display = 'none';
                 };
             }
-            
+
             // Close on outside click
             modal.onclick = (e) => {
                 if (e.target === modal) {
@@ -402,7 +420,7 @@ class EmailJSIntegration {
                 }
             };
         }
-        
+
         console.log('✅ Quote request sent successfully');
     }
     
