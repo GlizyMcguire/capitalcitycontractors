@@ -419,9 +419,12 @@ class EmailJSIntegration {
     }
     
     showSuccess() {
+        console.log('🎉 showSuccess() called - displaying modal');
+
         // Show success modal
         const modal = document.getElementById('successModal');
         if (modal) {
+            console.log('✅ Success modal found, displaying...');
             modal.style.display = 'block';
 
             // Set up close button
@@ -438,21 +441,8 @@ class EmailJSIntegration {
                     modal.style.display = 'none';
                 }
             };
-        }
-
-        // Track Lead conversion with Meta Pixel - AFTER modal is shown
-        try {
-            if (typeof fbq !== 'undefined') {
-                fbq('track', 'Lead', {
-                    content_name: 'Quote Request',
-                    content_category: 'Quote Form',
-                    currency: 'CAD',
-                    value: 0.00
-                });
-                console.log('✅ Meta Pixel Lead event tracked');
-            }
-        } catch (error) {
-            console.warn('⚠️ Meta Pixel tracking failed (non-critical):', error);
+        } else {
+            console.error('❌ Success modal not found in DOM');
         }
 
         console.log('✅ Quote request sent successfully');
