@@ -736,6 +736,8 @@ class CRMDashboard {
             case 'tasks': return this.renderTasks();
             case 'marketing': return this.renderMarketing();
             case 'forms-codes': return this.renderFormsAndCodes();
+            case 'reports': return this.renderReports();
+            case 'settings': return this.renderSettings();
             default: return this.renderDashboard();
         }
     }

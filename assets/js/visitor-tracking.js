@@ -5,11 +5,12 @@
  */
 
 class VisitorTracker {
-    constructor() {
+    constructor(trackImmediately = false) {
         this.storageKey = 'ccc_visitor_analytics';
         this.sessionKey = 'ccc_visitor_session';
         this.visitorIdKey = 'ccc_visitor_id';
-        
+        this.lastPageViewKey = 'ccc_last_pageview';
+
         // Bot detection patterns
         this.botPatterns = [
             /bot/i, /crawl/i, /spider/i, /slurp/i, /mediapartners/i,
@@ -19,39 +20,71 @@ class VisitorTracker {
             /headless/i, /phantom/i, /selenium/i, /webdriver/i,
             /preview/i, /prerender/i, /lighthouse/i, /pagespeed/i
         ];
-        
-        this.init();
+
+        // Only track if explicitly requested
+        if (trackImmediately) {
+            this.init();
+        }
     }
-    
+
     init() {
         // Don't track if it's a bot
         if (this.isBot()) {
             console.log('🤖 Bot detected - skipping visitor tracking');
             return;
         }
-        
+
         // Don't track if user has Do Not Track enabled
         if (navigator.doNotTrack === '1' || window.doNotTrack === '1') {
             console.log('🚫 Do Not Track enabled - skipping visitor tracking');
             return;
         }
-        
-        console.log('👤 Initializing visitor tracking');
-        
+
+        // Check if this is a real page load (not just a tab switch or internal navigation)
+        if (!this.isRealPageLoad()) {
+            console.log('⏭️ Not a real page load - skipping tracking');
+            return;
+        }
+
+        console.log('👤 Tracking page view');
+
         // Get or create visitor ID
         const visitorId = this.getOrCreateVisitorId();
-        
+
         // Get or create session
         const session = this.getOrCreateSession(visitorId);
-        
+
         // Track page view
         this.trackPageView(visitorId, session);
-        
+
         // Track time on page
         this.trackTimeOnPage(session);
-        
+
         // Track interactions (to verify human behavior)
         this.trackInteractions(session);
+    }
+
+    isRealPageLoad() {
+        // Check if this is a real page load by comparing with last page view timestamp
+        const lastPageView = localStorage.getItem(this.lastPageViewKey);
+        const now = Date.now();
+
+        if (!lastPageView) {
+            // First page view ever
+            localStorage.setItem(this.lastPageViewKey, now.toString());
+            return true;
+        }
+
+        const timeSinceLastPageView = now - parseInt(lastPageView);
+
+        // If less than 1 second since last page view, it's likely a tab switch or internal navigation
+        if (timeSinceLastPageView < 1000) {
+            return false;
+        }
+
+        // Update last page view timestamp
+        localStorage.setItem(this.lastPageViewKey, now.toString());
+        return true;
     }
     
     isBot() {
@@ -264,26 +297,47 @@ class VisitorTracker {
         localStorage.setItem(this.storageKey, JSON.stringify(analytics));
     }
     
-    // Public method to get analytics summary
+    // Public static method to get analytics summary (READ-ONLY, does not track)
     static getAnalyticsSummary() {
-        const tracker = new VisitorTracker();
-        const analytics = tracker.getAnalytics();
-        
+        // Read analytics data directly from localStorage without creating a tracking instance
+        const storageKey = 'ccc_visitor_analytics';
+        const data = localStorage.getItem(storageKey);
+
+        let analytics;
+        if (data) {
+            analytics = JSON.parse(data);
+
+            // Convert arrays back to Sets for dailyStats (for compatibility)
+            if (analytics.dailyStats) {
+                analytics.dailyStats = analytics.dailyStats.map(stat => ({
+                    ...stat,
+                    uniqueVisitors: Array.isArray(stat.uniqueVisitors) ? stat.uniqueVisitors : Array.from(stat.uniqueVisitors || []),
+                    sessions: Array.isArray(stat.sessions) ? stat.sessions : Array.from(stat.sessions || [])
+                }));
+            }
+        } else {
+            analytics = {
+                visitors: [],
+                pageViews: [],
+                dailyStats: []
+            };
+        }
+
         const now = new Date();
         const today = now.toISOString().split('T')[0];
         const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
         const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-        
+
         // Calculate metrics
         const todayStats = analytics.dailyStats.find(d => d.date === today) || { uniqueVisitors: [], pageViews: 0 };
         const last7Days = analytics.dailyStats.filter(d => d.date >= sevenDaysAgo);
         const last30Days = analytics.dailyStats.filter(d => d.date >= thirtyDaysAgo);
-        
+
         const uniqueVisitors7d = new Set(last7Days.flatMap(d => d.uniqueVisitors)).size;
         const uniqueVisitors30d = new Set(last30Days.flatMap(d => d.uniqueVisitors)).size;
         const pageViews7d = last7Days.reduce((sum, d) => sum + d.pageViews, 0);
         const pageViews30d = last30Days.reduce((sum, d) => sum + d.pageViews, 0);
-        
+
         return {
             today: {
                 visitors: todayStats.uniqueVisitors.length,
@@ -307,8 +361,9 @@ class VisitorTracker {
     }
 }
 
-// Initialize visitor tracking when page loads
+// Initialize visitor tracking ONLY on actual page loads (not tab switches or internal navigation)
 document.addEventListener('DOMContentLoaded', function() {
-    new VisitorTracker();
+    // Pass true to enable tracking on page load
+    new VisitorTracker(true);
 });
 
