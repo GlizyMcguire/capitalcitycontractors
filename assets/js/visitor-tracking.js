@@ -239,9 +239,20 @@ class VisitorTracker {
     getAnalytics() {
         const data = localStorage.getItem(this.storageKey);
         if (data) {
-            return JSON.parse(data);
+            const analytics = JSON.parse(data);
+
+            // Convert arrays back to Sets for dailyStats
+            if (analytics.dailyStats) {
+                analytics.dailyStats = analytics.dailyStats.map(stat => ({
+                    ...stat,
+                    uniqueVisitors: new Set(stat.uniqueVisitors || []),
+                    sessions: new Set(stat.sessions || [])
+                }));
+            }
+
+            return analytics;
         }
-        
+
         return {
             visitors: [],
             pageViews: [],
