@@ -3274,16 +3274,27 @@
     <script src="assets/js/crm-dashboard.js?v=20250112-visitor-tracking" defer></script>
 
     <!-- CRM Dashboard Access (Admin Only) -->
-    <script>
-        // Admin access to CRM dashboard
-        // Type in browser console: showCRM() or showCRMDashboard()
-        function showCRMDashboard() {
-            if (typeof showCRM !== 'undefined') {
-                showCRM();
-            } else {
-                console.error('CRM Dashboard not loaded yet. Please wait a moment and try again.');
-            }
-        }
+    <script defer>
+        // Wait for DOM and all deferred scripts to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin access to CRM dashboard
+            // Type in browser console: showCRM() or showCRMDashboard()
+            window.showCRMDashboard = function() {
+                if (typeof showCRM !== 'undefined') {
+                    showCRM();
+                } else {
+                    console.error('CRM Dashboard not loaded yet. Please wait a moment and try again.');
+                    // Retry after a short delay
+                    setTimeout(function() {
+                        if (typeof showCRM !== 'undefined') {
+                            showCRM();
+                        } else {
+                            alert('CRM Dashboard is still loading. Please try again in a moment.');
+                        }
+                    }, 500);
+                }
+            };
+        });
 
         // Quick stats access
         function getLeadStats() {
@@ -3323,8 +3334,7 @@
             }
         }
 
-        // Make functions globally available
-        window.showCRMDashboard = showCRMDashboard;
+        // Make functions globally available (showCRMDashboard is defined above in DOMContentLoaded)
         window.getLeadStats = getLeadStats;
         window.exportLeads = exportLeads;
         window.testEmailSystem = testEmailSystem;
