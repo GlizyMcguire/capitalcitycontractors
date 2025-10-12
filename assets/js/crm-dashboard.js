@@ -160,6 +160,8 @@ class CRMDashboard {
         this.sidebarCollapsed = false;
         this.hotkeysAttached = false;
 
+        // Seed initial templates/filters and tiny demo data if empty (non-destructive)
+        this.seedInitialDataIfEmpty();
         console.log(`✅ Loaded: ${this.contacts.length} contacts, ${this.leads.length} leads, ${this.projects.length} projects`);
     }
 
@@ -241,6 +243,65 @@ class CRMDashboard {
         this.save('ccc_contacts', this.contacts);
         this.save('ccc_leads', this.leads);
     }
+
+
+	    // Seed initial templates/filters and a tiny demo dataset if storage is empty
+	    seedInitialDataIfEmpty(){
+	        try {
+	            if (localStorage.getItem('ccc_seeded_templates_v1')) return;
+
+	            // 1) Task Templates (populate only if none)
+	            const existingTemplates = this.load('ccc_task_templates', []);
+	            if (!existingTemplates || existingTemplates.length === 0) {
+	                const id = () => 'tmpl_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+	                const taskTemplates = [
+	                    { id: id(), title: 'Initial consultation follow-up', type: 'follow-up' },
+	                    { id: id(), title: 'Schedule site visit', type: 'call' },
+	                    { id: id(), title: 'Prepare and send estimate', type: 'work' },
+	                    { id: id(), title: 'Contract signing follow-up', type: 'email' },
+	                    { id: id(), title: 'Project kickoff preparation', type: 'checklist' },
+	                    { id: id(), title: 'Mid-project check-in', type: 'call' },
+	                    { id: id(), title: 'Final walkthrough scheduling', type: 'calendar' },
+	                    { id: id(), title: 'Invoice & payment reminder', type: 'email' },
+	                    { id: id(), title: 'Request Google review', type: 'email' },
+	                    { id: id(), title: '30-day warranty follow-up', type: 'follow-up' }
+	                ];
+	                this.save('ccc_task_templates', taskTemplates);
+	                this.taskTemplates = taskTemplates;
+	            }
+
+	            // 2) Saved Task Filters (populate only if none)
+	            const existingFilters = this.load('ccc_task_filters', []);
+	            if (!existingFilters || existingFilters.length === 0) {
+	                const taskFilters = [
+	                    { id: 'overdue', name: 'Overdue', query: { completed: false, dueBeforeDays: 0 } },
+	                    { id: 'this-week', name: 'This Week', query: { completed: false, dueInDays: 7 } },
+	                    { id: 'leads-only', name: 'Leads Only', query: { entity: 'lead', completed: false } },
+	                    { id: 'projects-only', name: 'Projects Only', query: { entity: 'project', completed: false } }
+	                ];
+	                this.save('ccc_task_filters', taskFilters);
+	            }
+
+	            // 3) Tiny demo dataset (only if both contacts and leads are empty)
+	            if ((this.contacts?.length || 0) === 0 && (this.leads?.length || 0) === 0) {
+	                const c1 = this.addContact({ name: 'Amelia Chen', email: 'amelia.chen@example.com', phone: '613-555-0141', address: '12 Meadowlands Dr', city: 'Nepean', emailConsent: true });
+	                const c2 = this.addContact({ name: 'David Leblanc', email: 'david.leblanc@example.com', phone: '613-555-0142', address: '88 Abbey Rd', city: 'Kanata', smsConsent: true });
+	                const c3 = this.addContact({ name: 'Priya Singh', email: 'priya.singh@example.com', phone: '613-555-0143', address: '305 Montreal Rd', city: 'Vanier', emailConsent: true });
+
+	                this.addLead({ contactId: c1.id, jobType: 'Interior Painting', propertyAddress: c1.address, city: c1.city, leadSource: 'Website', status: 'new', nextAction: 'Book site visit', nextActionDate: new Date(Date.now()+2*86400000).toISOString() });
+	                this.addLead({ contactId: c2.id, jobType: 'Bathroom Reno', propertyAddress: c2.address, city: c2.city, leadSource: 'Google Ads', status: 'qualified', nextAction: 'Prepare estimate', nextActionDate: new Date(Date.now()+4*86400000).toISOString() });
+	                this.addLead({ contactId: c3.id, jobType: 'Drywall', propertyAddress: c3.address, city: c3.city, leadSource: 'Referral', status: 'estimate-sent', nextAction: 'Follow up on estimate', nextActionDate: new Date(Date.now()+6*86400000).toISOString() });
+
+	                // A couple of example tasks
+	                this.addTask({ title: 'Call Amelia - confirm colours', type: 'call', dueDate: new Date(Date.now()+86400000).toISOString(), completed: false });
+	                this.addTask({ title: 'Email David - estimate draft', type: 'email', dueDate: new Date(Date.now()+3*86400000).toISOString(), completed: false });
+	            }
+
+	            localStorage.setItem('ccc_seeded_templates_v1', '1');
+	        } catch (e) {
+	            console.warn('Seed skipped:', e);
+	        }
+	    }
 
     // ==================== CRUD ====================
 
