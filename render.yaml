@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: capitalcity-crm-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: CORS_ORIGINS
+        value: https://glizymcguire.github.io
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DB_PATH
+        value: /data/crm.db
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    healthCheckPath: /api/health
+
