@@ -221,10 +221,44 @@ class VisitorTracker {
         analytics.dailyStats = analytics.dailyStats.filter(ds => ds.date > ninetyDaysAgo.split('T')[0]);
         
         this.saveAnalytics(analytics);
-        
+
+        // Send to backend (best-effort, non-blocking)
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utm_source = urlParams.get('utm_source') || (urlParams.get('fbclid') ? 'facebook' : null) || (document.referrer.includes('facebook') ? 'facebook' : (document.referrer.includes('google') ? 'google' : null));
+            const utm_medium = urlParams.get('utm_medium') || null;
+            const utm_campaign = urlParams.get('utm_campaign') || null;
+            const utm_term = urlParams.get('utm_term') || null;
+            const utm_content = urlParams.get('utm_content') || null;
+
+            const apiBase = (window.CRM_API_BASE_URL) || (document.querySelector('meta[name="crm-api-base"]')?.content) || 'http://localhost:3000/api';
+            const endpoint = apiBase.replace(/\/$/, '') + '/visits/track';
+            const payload = {
+                visitorId,
+                sessionId: session.id,
+                page: pageView.page,
+                title: pageView.title,
+                referrer: pageView.referrer,
+                utm_source,
+                utm_medium,
+                utm_campaign,
+                utm_term,
+                utm_content
+            };
+
+            if (navigator.sendBeacon) {
+                const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                navigator.sendBeacon(endpoint, blob);
+            } else {
+                fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
+            }
+        } catch (e) {
+            // Ignore network errors silently
+        }
+
         console.log('📊 Page view tracked:', pageView.page);
     }
-    
+
     trackTimeOnPage(session) {
         // Track when user leaves the page
         window.addEventListener('beforeunload', () => {
