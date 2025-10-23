@@ -10,7 +10,7 @@ services:
       - key: NODE_VERSION
         value: 18
       - key: CORS_ORIGINS
-        value: https://glizymcguire.github.io
+        value: https://glizymcguire.github.io,https://capitalcitycontractors.ca,https://www.capitalcitycontractors.ca
       - key: JWT_SECRET
         generateValue: true
       - key: DB_PATH
