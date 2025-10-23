@@ -757,9 +757,42 @@ class CRMDashboard {
     // Backend API base URL detection
     getAPIBaseURL() {
         try {
-            return window.CRM_API_BASE_URL || (document.querySelector('meta[name="crm-api-base"]')?.content) || 'http://localhost:3000/api';
+            const saved = (this.settings && this.settings.apiBaseUrl) || (typeof localStorage !== 'undefined' ? localStorage.getItem('crm_api_base_url') : null);
+            return window.CRM_API_BASE_URL || (document.querySelector('meta[name="crm-api-base"]')?.content) || saved || 'http://localhost:3000/api';
         } catch (e) {
             return 'http://localhost:3000/api';
+        }
+
+    saveAPIBase() {
+        const input = document.getElementById('api-base-url');
+        if (!input) return;
+        const v = (input.value || '').trim();
+        if (!v) return alert('Enter a valid API base URL');
+        // Persist in settings and localStorage (used by visitor-tracking)
+        this.settings.apiBaseUrl = v;
+        this.save('ccc_settings', this.settings);
+        try { localStorage.setItem('crm_api_base_url', v); } catch(_) {}
+        // Re-init client and refresh
+        this.apiBase = v;
+        this.api = (typeof CRMAPIClient !== 'undefined') ? new CRMAPIClient(this.apiBase) : null;
+        alert('✅ API Base saved. Attempting to refresh live analytics...');
+        this.refreshAnalytics().catch(()=>{});
+        this.render();
+    }
+
+    async testAPIConnectivity() {
+        const statusEl = document.getElementById('api-conn-status');
+        if (statusEl) statusEl.textContent = 'Testing...';
+        try {
+            if (!this.api) this.api = new CRMAPIClient(this.getAPIBaseURL());
+            const res = await this.api.getAnalyticsSummary({ range: '7d' });
+            if (res && (res.totals || res.dailyStats)) {
+                if (statusEl) statusEl.textContent = '✅ Connected';
+            } else {
+                if (statusEl) statusEl.textContent = '⚠️ Unexpected response';
+            }
+        } catch (e) {
+            if (statusEl) statusEl.textContent = '❌ Cannot connect';
         }
     }
 
@@ -3326,6 +3359,22 @@ class CRMDashboard {
                 <strong>${buildDate}</strong>
               </div>
               <div class="crm-detail-item">
+
+            <div class="crm-card">
+              <h3>🖧 Backend API</h3>
+              <p class="crm-setting-desc">Configure the API base URL used for live data</p>
+              <div class="crm-detail-item">
+                <span>Current Base</span>
+                <strong>${this.apiBase}</strong>
+              </div>
+              <input id="api-base-url" class="crm-input" placeholder="https://your-backend.example.com/api" value="${this.apiBase || ''}">
+              <div style="margin-top:10px;">
+                <button class="crm-btn" onclick="window.crmDashboard.saveAPIBase()">💾 Save API Base</button>
+                <button class="crm-btn-secondary" onclick="window.crmDashboard.testAPIConnectivity()">🔌 Test Connectivity</button>
+                <span id="api-conn-status" class="crm-muted" style="margin-left:8px;"></span>
+              </div>
+            </div>
+
                 <span>Storage Used</span>
                 <strong>${storageKB} KB (${storageMB} MB)</strong>
               </div>

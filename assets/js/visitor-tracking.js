@@ -231,7 +231,8 @@ class VisitorTracker {
             const utm_term = urlParams.get('utm_term') || null;
             const utm_content = urlParams.get('utm_content') || null;
 
-            const apiBase = (window.CRM_API_BASE_URL) || (document.querySelector('meta[name="crm-api-base"]')?.content) || 'http://localhost:3000/api';
+            const storedBase = (typeof localStorage !== 'undefined' && localStorage.getItem('crm_api_base_url')) || null;
+            const apiBase = (window.CRM_API_BASE_URL) || (document.querySelector('meta[name="crm-api-base"]')?.content) || storedBase || 'http://localhost:3000/api';
             const endpoint = apiBase.replace(/\/$/, '') + '/visits/track';
             const payload = {
                 visitorId,
