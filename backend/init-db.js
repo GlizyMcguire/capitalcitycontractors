@@ -131,6 +131,33 @@ db.exec(`
     CREATE INDEX IF NOT EXISTS idx_tasks_completed ON tasks(completed);
 `);
 
+// Create visits tracking table and indexes
+db.exec(`
+    -- Visits tracking table
+    CREATE TABLE IF NOT EXISTS visits (
+        id TEXT PRIMARY KEY,
+        visitorId TEXT,
+        sessionId TEXT,
+        page TEXT NOT NULL,
+        title TEXT,
+        referrer TEXT,
+        utm_source TEXT,
+        utm_medium TEXT,
+        utm_campaign TEXT,
+        utm_term TEXT,
+        utm_content TEXT,
+        userAgent TEXT,
+        ip TEXT,
+        date TEXT NOT NULL,
+        timestamp TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_visits_date ON visits(date);
+    CREATE INDEX IF NOT EXISTS idx_visits_source ON visits(utm_source);
+    CREATE INDEX IF NOT EXISTS idx_visits_page ON visits(page);
+`);
+
+
 console.log('✅ Database tables created\n');
 
 // Create default admin user

@@ -164,6 +164,34 @@ class CRMAPIClient {
             body: JSON.stringify(data)
         });
     }
+
+    // Analytics
+    async getAnalyticsSummary({ range = '30d', start, end } = {}) {
+        const params = new URLSearchParams();
+        if (range) params.set('range', range);
+        if (start) params.set('start', start);
+        if (end) params.set('end', end);
+        return await this.request(`/analytics/summary?${params.toString()}`);
+    }
+
+    // Public visit tracking (no auth)
+    async trackVisit(payload) {
+        // Use fetch directly to avoid requiring auth token
+        const url = `${this.baseURL}/visits/track`;
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            return await res.json();
+        } catch (e) {
+            if (process.env && process.env.NODE_ENV !== 'production') {
+                console.warn('trackVisit failed', e);
+            }
+            return { success: false, error: e?.message };
+        }
+    }
 }
 
 // Export for use in CRM

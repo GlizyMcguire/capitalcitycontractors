@@ -18,12 +18,18 @@ db.pragma('journal_mode = WAL');
 
 // Middleware
 app.use(helmet());
+
+// CORS configuration - allow origins from env or use defaults
+const allowedOrigins = (process.env.CORS_ORIGINS || 'https://glizymcguire.github.io,http://localhost:3000,file://')
+    .split(',')
+    .map(s => s.trim());
 app.use(cors({
-    origin: [
-        'https://glizymcguire.github.io',
-        'http://localhost:3000',
-        'file://' // Allow Electron app
-    ],
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -63,13 +69,13 @@ app.post('/api/auth/login', async (req, res) => {
         const { username, password } = req.body;
 
         const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
-        
+
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
         const validPassword = await bcrypt.compare(password, user.password);
-        
+
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -110,7 +116,7 @@ app.post('/api/contacts', authenticateToken, (req, res) => {
             INSERT INTO contacts (id, name, email, phone, address, city, emailConsent, smsConsent, notes, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
-        
+
         const now = new Date().toISOString();
         stmt.run(
             contact.id,
@@ -138,12 +144,12 @@ app.put('/api/contacts/:id', authenticateToken, (req, res) => {
     try {
         const contact = req.body;
         const stmt = db.prepare(`
-            UPDATE contacts 
-            SET name = ?, email = ?, phone = ?, address = ?, city = ?, 
+            UPDATE contacts
+            SET name = ?, email = ?, phone = ?, address = ?, city = ?,
                 emailConsent = ?, smsConsent = ?, notes = ?, updated_at = ?
             WHERE id = ?
         `);
-        
+
         stmt.run(
             contact.name,
             contact.email || null,
@@ -199,11 +205,11 @@ app.post('/api/leads', authenticateToken, (req, res) => {
     try {
         const lead = req.body;
         const stmt = db.prepare(`
-            INSERT INTO leads (id, contactId, jobType, propertyAddress, estimatedValue, 
+            INSERT INTO leads (id, contactId, jobType, propertyAddress, estimatedValue,
                               stage, source, notes, relatedTo, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `);
-        
+
         const now = new Date().toISOString();
         stmt.run(
             lead.id,
@@ -231,12 +237,12 @@ app.put('/api/leads/:id', authenticateToken, (req, res) => {
     try {
         const lead = req.body;
         const stmt = db.prepare(`
-            UPDATE leads 
+            UPDATE leads
             SET contactId = ?, jobType = ?, propertyAddress = ?, estimatedValue = ?,
                 stage = ?, source = ?, notes = ?, relatedTo = ?, updated_at = ?
             WHERE id = ?
         `);
-        
+
         stmt.run(
             lead.contactId || null,
             lead.jobType || null,
@@ -371,6 +377,159 @@ app.post('/api/sync', authenticateToken, (req, res) => {
 
         // This is a simple implementation - in production you'd want proper conflict resolution
         const now = new Date().toISOString();
+
+// ============================================
+// VISITS & ANALYTICS ENDPOINTS
+// ============================================
+
+// Public endpoint to track website visits/page views (no auth required)
+app.post('/api/visits/track', (req, res) => {
+    try {
+        const {
+            id,
+            visitorId,
+            sessionId,
+            page,
+            title,
+            referrer,
+            utm_source,
+            utm_medium,
+            utm_campaign,
+            utm_term,
+            utm_content
+        } = req.body || {};
+
+        if (!visitorId || !sessionId || !page) {
+            return res.status(400).json({ error: 'Missing required fields: visitorId, sessionId, page' });
+        }
+
+        const now = new Date();
+        const dateStr = now.toISOString().split('T')[0];
+        const ua = req.headers['user-agent'] || '';
+        const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').toString();
+
+        const stmt = db.prepare(`
+            INSERT INTO visits (
+                id, visitorId, sessionId, page, title, referrer,
+                utm_source, utm_medium, utm_campaign, utm_term, utm_content,
+                userAgent, ip, date, timestamp
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+
+        stmt.run(
+            id || 'visit_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9),
+            visitorId,
+            sessionId,
+            page,
+            title || null,
+            referrer || null,
+            utm_source || null,
+            utm_medium || null,
+            utm_campaign || null,
+            utm_term || null,
+            utm_content || null,
+            ua,
+            ip,
+            dateStr,
+            now.toISOString()
+        );
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Track visit error:', error);
+        res.status(500).json({ error: 'Failed to record visit' });
+    }
+});
+
+// Analytics summary for CRM (read-only)
+app.get('/api/analytics/summary', (req, res) => {
+    try {
+        const range = (req.query.range || '30d').toLowerCase();
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+        const sevenDaysAgo = new Date(now - 7*24*60*60*1000).toISOString().split('T')[0];
+        const thirtyDaysAgo = new Date(now - 30*24*60*60*1000).toISOString().split('T')[0];
+
+        const sinceDate = range === '7d' ? sevenDaysAgo : (range === '30d' ? thirtyDaysAgo : (req.query.start || '0000-01-01'));
+        const untilDate = (req.query.end || today);
+
+        // Daily stats
+        const dailyStatsRows = db.prepare(`
+            SELECT date, COUNT(*) as pageViews, COUNT(DISTINCT visitorId) as uniqueVisitors
+            FROM visits
+            WHERE date BETWEEN ? AND ?
+            GROUP BY date
+            ORDER BY date ASC
+        `).all(sinceDate, untilDate);
+        const dailyStats = dailyStatsRows.map(r => ({
+            date: r.date,
+            uniqueVisitors: Array.from({ length: r.uniqueVisitors }),
+            pageViews: r.pageViews,
+            sessions: []
+        }));
+
+        // Totals
+        const todayRow = db.prepare(`
+            SELECT COUNT(*) as pageViews, COUNT(DISTINCT visitorId) as uniqueVisitors
+            FROM visits WHERE date = ?
+        `).get(today) || { pageViews: 0, uniqueVisitors: 0 };
+        const last7Rows = db.prepare(`
+            SELECT COUNT(*) as pageViews, COUNT(DISTINCT visitorId) as uniqueVisitors
+            FROM visits WHERE date >= ?
+        `).get(sevenDaysAgo) || { pageViews: 0, uniqueVisitors: 0 };
+        const last30Rows = db.prepare(`
+            SELECT COUNT(*) as pageViews, COUNT(DISTINCT visitorId) as uniqueVisitors
+            FROM visits WHERE date >= ?
+        `).get(thirtyDaysAgo) || { pageViews: 0, uniqueVisitors: 0 };
+        const allTimeRows = db.prepare(`
+            SELECT COUNT(*) as pageViews, COUNT(DISTINCT visitorId) as uniqueVisitors
+            FROM visits
+        `).get() || { pageViews: 0, uniqueVisitors: 0 };
+
+        // Top pages & referrers
+        const topPages = db.prepare(`
+            SELECT page, COUNT(*) as views
+            FROM visits WHERE date BETWEEN ? AND ?
+            GROUP BY page ORDER BY views DESC LIMIT 10
+        `).all(sinceDate, untilDate);
+        const topReferrers = db.prepare(`
+            SELECT COALESCE(NULLIF(referrer, ''), 'direct') as referrer, COUNT(*) as visits
+            FROM visits WHERE date BETWEEN ? AND ?
+            GROUP BY referrer ORDER BY visits DESC LIMIT 10
+        `).all(sinceDate, untilDate).map(r => ({ referrer: r.referrer, visits: r.visits }));
+
+        // Source breakdown
+        const sources = db.prepare(`
+            SELECT COALESCE(NULLIF(utm_source, ''), 'direct') as source,
+                   COUNT(*) as pageViews,
+                   COUNT(DISTINCT visitorId) as visitors
+            FROM visits WHERE date BETWEEN ? AND ?
+            GROUP BY source ORDER BY pageViews DESC
+        `).all(sinceDate, untilDate);
+
+        // Recent page views
+        const recentPageViews = db.prepare(`
+            SELECT page, title, referrer, date as dateStr, timestamp
+            FROM visits ORDER BY timestamp DESC LIMIT 50
+        `).all().map(r => ({ page: r.page, title: r.title, referrer: r.referrer, timestamp: r.timestamp }));
+
+        res.json({
+            today: { visitors: todayRow.uniqueVisitors, pageViews: todayRow.pageViews },
+            last7Days: { visitors: last7Rows.uniqueVisitors, pageViews: last7Rows.pageViews },
+            last30Days: { visitors: last30Rows.uniqueVisitors, pageViews: last30Rows.pageViews },
+            allTime: { visitors: allTimeRows.uniqueVisitors, pageViews: allTimeRows.pageViews },
+            dailyStats,
+            recentPageViews,
+            topPages,
+            topReferrers,
+            sources,
+            lastUpdated: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('Analytics summary error:', error);
+        res.status(500).json({ error: 'Failed to fetch analytics summary' });
+    }
+});
 
         // Clear existing data (optional - you might want to merge instead)
         // db.prepare('DELETE FROM contacts').run();

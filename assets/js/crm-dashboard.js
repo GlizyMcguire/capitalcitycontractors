@@ -163,7 +163,19 @@ class CRMDashboard {
         // Seed initial templates/filters and tiny demo data if empty (non-destructive)
         this.seedInitialDataIfEmpty();
         console.log(`✅ Loaded: ${this.contacts.length} contacts, ${this.leads.length} leads, ${this.projects.length} projects`);
+
+        // Backend analytics integration (optional)
+        this.analytics = null;
+        this.lastUpdated = null;
+        this.autoRefreshSeconds = 60;
+        this.apiBase = this.getAPIBaseURL();
+        this.api = (typeof CRMAPIClient !== 'undefined') ? new CRMAPIClient(this.apiBase) : null;
+        // Kick off initial analytics fetch (non-blocking)
+        setTimeout(() => this.refreshAnalytics().catch(() => {}), 0);
+        // Auto-refresh periodically
+        setInterval(() => this.refreshAnalytics().catch(() => {}), this.autoRefreshSeconds * 1000);
     }
+
 
     // ==================== STORAGE ====================
 
@@ -742,6 +754,28 @@ class CRMDashboard {
         }
     }
 
+    // Backend API base URL detection
+    getAPIBaseURL() {
+        try {
+            return window.CRM_API_BASE_URL || (document.querySelector('meta[name="crm-api-base"]')?.content) || 'http://localhost:3000/api';
+        } catch (e) {
+            return 'http://localhost:3000/api';
+        }
+    }
+
+    async refreshAnalytics() {
+        if (!this.api) return;
+        try {
+            const data = await this.api.getAnalyticsSummary({ range: '30d' });
+            this.analytics = data;
+            this.lastUpdated = new Date().toISOString();
+            // If currently viewing dashboard or reports, update UI
+            if (['dashboard', 'reports'].includes(this.currentView)) this.render();
+        } catch (e) {
+            // Swallow errors; UI will fallback to local visitor stats
+        }
+    }
+
     switchView(view) {
         this.currentView = view;
         this.selectedLead = null;
@@ -793,8 +827,8 @@ class CRMDashboard {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        // Get visitor analytics
-        const visitorStats = typeof VisitorTracker !== 'undefined' ? VisitorTracker.getAnalyticsSummary() : null;
+        // Get visitor analytics (prefer backend live data; fallback to local)
+        const visitorStats = this.analytics || (typeof VisitorTracker !== 'undefined' ? VisitorTracker.getAnalyticsSummary() : null);
 
         // Get tasks due today or overdue
         const todayAndOverdueTasks = this.tasks.filter(t => {
@@ -853,6 +887,7 @@ class CRMDashboard {
                         <div class="crm-card-label">Page Views (7d)</div>
                     </div>
                 </div>
+                ${this.lastUpdated ? `<div class=\"crm-muted\" style=\"margin-top:6px;\">Live data updated ${new Date(this.lastUpdated).toLocaleTimeString()}</div>` : ''}
             </div>
             ` : ''}
 
@@ -2586,8 +2621,8 @@ class CRMDashboard {
         const conversionRate = totalLeads > 0 ? (won / totalLeads) : 0.25; // Default 25%
         const forecastRevenue = Math.round(pipelineValue * conversionRate);
 
-        // Get visitor analytics
-        const visitorStats = typeof VisitorTracker !== 'undefined' ? VisitorTracker.getAnalyticsSummary() : null;
+        // Get visitor analytics (prefer backend live data; fallback to local)
+        const visitorStats = this.analytics || (typeof VisitorTracker !== 'undefined' ? VisitorTracker.getAnalyticsSummary() : null);
 
         return `
             <div class="crm-view-header">
@@ -2600,6 +2635,8 @@ class CRMDashboard {
                   <button class="crm-filter-btn ${this.reportsDateRange==='year'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('year')">This Year</button>
                   <button class="crm-filter-btn ${this.reportsDateRange==='all'?'active':''}" onclick="window.crmDashboard.setReportsDateRange('all')">All Time</button>
                 </div>
+                <button class="crm-btn" onclick="window.crmDashboard.refreshAnalytics()">🔄 Refresh</button>
+                ${this.lastUpdated ? `<span class="crm-muted" style="margin-left:8px;">Updated ${new Date(this.lastUpdated).toLocaleTimeString()}</span>` : ''}
                 <button class="crm-btn" onclick="window.crmDashboard.exportReportsCSV()">📥 Export CSV</button>
               </div>
             </div>
