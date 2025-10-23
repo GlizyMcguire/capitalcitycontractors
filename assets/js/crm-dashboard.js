@@ -295,7 +295,7 @@ class CRMDashboard {
 	            }
 
 	            // 3) Tiny demo dataset (only if both contacts and leads are empty)
-	            if ((this.contacts?.length || 0) === 0 && (this.leads?.length || 0) === 0) {
+	            if (((typeof location==='undefined') || !/capitalcitycontractors\.ca$/i.test(location.hostname)) && (function(){ try { return localStorage.getItem('crm_demo_seed')==='1'; } catch(_) { return false; } })() && (this.contacts?.length || 0) === 0 && (this.leads?.length || 0) === 0) {
 	                const c1 = this.addContact({ name: 'Amelia Chen', email: 'amelia.chen@example.com', phone: '613-555-0141', address: '12 Meadowlands Dr', city: 'Nepean', emailConsent: true });
 	                const c2 = this.addContact({ name: 'David Leblanc', email: 'david.leblanc@example.com', phone: '613-555-0142', address: '88 Abbey Rd', city: 'Kanata', smsConsent: true });
 	                const c3 = this.addContact({ name: 'Priya Singh', email: 'priya.singh@example.com', phone: '613-555-0143', address: '305 Montreal Rd', city: 'Vanier', emailConsent: true });
