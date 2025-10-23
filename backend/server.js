@@ -38,7 +38,9 @@ app.use(express.json({ limit: '10mb' }));
 // Rate limiting
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    max: 100, // limit each IP to 100 requests per windowMs
+    // Do not rate-limit health checks to keep Render health probe green
+    skip: (req) => req.originalUrl === '/api/health' || req.path === '/health'
 });
 app.use('/api/', limiter);
 
