@@ -3284,21 +3284,52 @@
     <script defer>
         // Wait for DOM and all deferred scripts to load
         document.addEventListener('DOMContentLoaded', function() {
+            // Helper: dynamically load a script once
+            function loadScriptOnce(src) {
+                return new Promise((resolve, reject) => {
+                    // If already present, resolve immediately
+                    const exists = Array.from(document.scripts).some(s => (s.src || '').includes(src));
+                    if (exists) return resolve();
+                    const el = document.createElement('script');
+                    el.src = src; el.defer = true;
+                    el.onload = () => resolve();
+                    el.onerror = () => reject(new Error('Failed to load ' + src));
+                    document.head.appendChild(el);
+                });
+            }
+
+            // Try to ensure CRM script is available even if not embedded on this host
+            async function ensureCRMScriptLoaded() {
+                if (typeof showCRM !== 'undefined') return true;
+                const candidates = [
+                    // Local/relative path (works on GitHub Pages build)
+                    'assets/js/crm-dashboard.js?v=20250112-visitor-tracking',
+                    // Fallback to GitHub Pages (works on custom domains that mirror content)
+                    'https://glizymcguire.github.io/capitalcitycontractors/assets/js/crm-dashboard.js?v=20250112-visitor-tracking'
+                ];
+                for (const src of candidates) {
+                    try {
+                        await loadScriptOnce(src);
+                        if (typeof showCRM !== 'undefined') return true;
+                    } catch (_) { /* try next */ }
+                }
+                return false;
+            }
+
             // Admin access to CRM dashboard
             // Type in browser console: showCRM() or showCRMDashboard()
-            window.showCRMDashboard = function() {
-                if (typeof showCRM !== 'undefined') {
-                    showCRM();
-                } else {
-                    console.error('CRM Dashboard not loaded yet. Please wait a moment and try again.');
-                    // Retry after a short delay
-                    setTimeout(function() {
-                        if (typeof showCRM !== 'undefined') {
-                            showCRM();
-                        } else {
-                            alert('CRM Dashboard is still loading. Please try again in a moment.');
-                        }
-                    }, 500);
+            window.showCRMDashboard = async function() {
+                if (typeof showCRM === 'undefined') {
+                    console.warn('CRM Dashboard not yet loaded. Attempting dynamic load...');
+                    const ok = await ensureCRMScriptLoaded();
+                    if (!ok) {
+                        alert('CRM Dashboard script could not be loaded. Please try again, or open the GitHub Pages site.');
+                        return;
+                    }
+                }
+                try { showCRM(); } catch (e) {
+                    console.error('CRM launch error:', e);
+                    alert('CRM failed to launch. See console for details.');
                 }
             };
         });
