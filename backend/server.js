@@ -379,6 +379,14 @@ app.post('/api/sync', authenticateToken, (req, res) => {
         // This is a simple implementation - in production you'd want proper conflict resolution
         const now = new Date().toISOString();
 
+
+        // NOTE: Minimal placeholder implementation; extend as needed
+        res.json({ success: true, message: 'Data synced successfully (no-op)' });
+    } catch (error) {
+        res.status(500).json({ error: 'Sync failed' });
+    }
+});
+
 // ============================================
 // VISITS & ANALYTICS ENDPOINTS
 // ============================================
@@ -532,16 +540,6 @@ app.get('/api/analytics/summary', (req, res) => {
     }
 });
 
-        // Clear existing data (optional - you might want to merge instead)
-        // db.prepare('DELETE FROM contacts').run();
-        // db.prepare('DELETE FROM leads').run();
-        // ... etc
-
-        res.json({ success: true, message: 'Data synced successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Sync failed' });
-    }
-});
 
 // Health check
 app.get('/api/health', (req, res) => {
