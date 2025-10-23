@@ -13,7 +13,8 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 // Database setup
-const db = new Database(path.join(__dirname, 'crm.db'));
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'crm.db');
+const db = new Database(DB_PATH);
 db.pragma('journal_mode = WAL');
 
 // Middleware
@@ -550,6 +551,6 @@ app.get('/api/health', (req, res) => {
 // Start server
 app.listen(PORT, () => {
     console.log(`🚀 CRM Backend API running on port ${PORT}`);
-    console.log(`📊 Database: ${path.join(__dirname, 'crm.db')}`);
+    console.log(`📊 Database: ${DB_PATH}`);
 });
 
