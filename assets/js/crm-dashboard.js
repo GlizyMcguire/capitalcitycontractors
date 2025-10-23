@@ -763,6 +763,8 @@ class CRMDashboard {
             return 'http://localhost:3000/api';
         }
 
+    }
+
     saveAPIBase() {
         const input = document.getElementById('api-base-url');
         if (!input) return;
