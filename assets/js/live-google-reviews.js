@@ -13,6 +13,7 @@ class LiveGoogleReviews {
             reviewsApiUrl: 'https://maps.googleapis.com/maps/api/place/details/json',
             // Backup: Use JSONP approach for CORS bypass
             corsProxyUrl: 'https://api.allorigins.win/raw?url=',
+            googlePlacesApiKey: null,
             maxReviews: 5,
             autoRefresh: true,
             refreshInterval: 3600000 // 1 hour
@@ -59,6 +60,10 @@ class LiveGoogleReviews {
         this.isLoading = true;
         
         // Try multiple methods in order of preference
+        if (!this.config.googlePlacesApiKey) {
+            throw new Error('Google Places API key not configured for client-side use');
+        }
+
         const methods = [
             () => this.tryDirectAPIWithProxy(),
             () => this.tryAlternativeAPI(),
@@ -91,7 +96,7 @@ class LiveGoogleReviews {
     
     async tryDirectAPIWithProxy() {
         const proxyUrl = this.config.corsProxyUrl;
-        const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=REDACTED_GOOGLE_API_KEY`;
+        const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${this.config.googlePlacesApiKey}`;
         
         const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
         const data = await response.json();
@@ -105,7 +110,7 @@ class LiveGoogleReviews {
     
     async tryAlternativeAPI() {
         // Try alternative approach using Google Places Web Service
-        const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=REDACTED_GOOGLE_API_KEY`;
+        const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${this.config.googlePlacesApiKey}`;
         
         const response = await fetch(url);
         const data = await response.json();
@@ -134,7 +139,7 @@ class LiveGoogleReviews {
                 }
             };
             
-            script.src = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=REDACTED_GOOGLE_API_KEY&callback=${callbackName}`;
+            script.src = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${this.config.googlePlacesApiKey}&callback=${callbackName}`;
             script.onerror = () => {
                 document.head.removeChild(script);
                 delete window[callbackName];
@@ -156,7 +161,7 @@ class LiveGoogleReviews {
     
     async tryEmbedScraping() {
         // Try to extract reviews from Google Maps embed
-        const embedUrl = `https://www.google.com/maps/embed/v1/place?key=REDACTED_GOOGLE_API_KEY&q=place_id:${this.config.placeId}`;
+        const embedUrl = `https://www.google.com/maps/embed/v1/place?key=${this.config.googlePlacesApiKey}&q=place_id:${this.config.placeId}`;
         
         // This approach would require server-side processing, so skip for now
         throw new Error('Embed scraping requires server-side processing');

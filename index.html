@@ -167,9 +167,6 @@
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- API Security Configuration (Load First) -->
-    <script src="assets/js/api-config.js"></script>
-
     <!-- EmailJS for form submission (loaded once) -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
@@ -182,10 +179,8 @@
         })();
     </script>
 
-    <!-- Google Places API for Address Autocomplete - DISABLED due to input field conflicts -->
-    <!-- The autocomplete feature is causing the address field to lock up after typing -->
-    <!-- Address field will work as normal text input until this issue is resolved -->
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=REDACTED_GOOGLE_API_KEY&libraries=places&callback=initAddressAutocomplete" async defer></script> -->
+    <!-- Google Places API for address autocomplete stays disabled. -->
+    <!-- It needs a server-managed key before it should be turned back on. -->
 
     <!-- Structured Data for SEO -->
     <script type="application/ld+json">

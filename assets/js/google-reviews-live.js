@@ -1,15 +1,13 @@
 /**
- * DEFINITIVE Google Reviews Live API Integration
- * Capital City Contractors - Real-time Google Business Profile Reviews
- * Place ID: ChIJAZyYC-K4a04RRe9kJq7UZKo
- * API Key: REDACTED_GOOGLE_API_KEY
+ * Google Reviews display with safe fallback data.
+ * Live API calls stay disabled until a server-managed key is available.
  */
 
 class GoogleReviewsLive {
     constructor() {
         this.config = {
             placeId: 'ChIJAZyYC-K4a04RRe9kJq7UZKo',
-            apiKey: 'REDACTED_GOOGLE_API_KEY',
+            apiKey: null,
             businessName: 'Capital City Contractors',
             maxRetries: 3,
             retryDelay: 2000
@@ -91,6 +89,10 @@ class GoogleReviewsLive {
         this.isLoading = true;
         console.log('🔄 ATTEMPTING: Multiple API methods for live reviews...');
         
+        if (!this.config.apiKey) {
+            throw new Error('Google Places API key not configured for client-side use');
+        }
+
         const methods = [
             () => this.tryDirectAPI(),
             () => this.tryJSONPMethod(),

@@ -1,0 +1,64 @@
+name: Deploy Site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build publish directory
+        run: |
+          mkdir -p dist
+          rsync -av \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.history/' \
+            --exclude='.augment/' \
+            --exclude='node_modules/' \
+            --exclude='backend/' \
+            --exclude='desktop-app/' \
+            --exclude='scripts/' \
+            --exclude='config/' \
+            --exclude='api/' \
+            --exclude='*.md' \
+            --exclude='*.php' \
+            --exclude='*.sh' \
+            --exclude='*.bat' \
+            --exclude='package*.json' \
+            --exclude='render.yaml' \
+            ./ dist/
+          touch dist/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

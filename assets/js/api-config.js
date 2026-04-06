@@ -3,8 +3,8 @@
  * Capital City Contractors
  * 
  * IMPORTANT SECURITY NOTES:
- * - These keys are visible in client-side code (this is unavoidable for static sites)
- * - Security is enforced through API restrictions in Google Cloud Console and EmailJS
+ * - Google Places keys should stay server-side for this site
+ * - EmailJS public identifiers are public by design, but still need dashboard restrictions
  * - Always restrict keys to your domain and specific APIs
  * - Monitor usage regularly for unusual activity
  */
@@ -12,7 +12,7 @@
 const API_SECURITY_CONFIG = {
     // Google Places API Configuration
     google: {
-        apiKey: 'REDACTED_GOOGLE_API_KEY',
+        apiKey: null,
         
         // Security settings (enforced in Google Cloud Console)
         restrictions: {
@@ -309,4 +309,3 @@ console.log('📊 Rate limiting enabled:', {
     emailjs: API_SECURITY_CONFIG.emailjs.rateLimiting.enabled
 });
 console.log('🛡️ Security monitoring enabled:', API_SECURITY_CONFIG.monitoring.enabled);
-

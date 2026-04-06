@@ -8,7 +8,7 @@ class ClientSideGoogleReviews {
     constructor() {
         this.config = {
             placeId: 'ChIJAZyYC-K4a04RRe9kJq7UZKo', // Your verified Place ID
-            apiKey: 'REDACTED_GOOGLE_API_KEY', // Your API key
+            apiKey: null, // Keep the key server-side only
             maxReviews: 5,
             minRating: 4,
             cacheTimeout: 3600000, // 1 hour
@@ -85,6 +85,10 @@ class ClientSideGoogleReviews {
     }
     
     async tryDirectAPI() {
+        if (!this.config.apiKey) {
+            throw new Error('Google Places API key not configured for client-side use');
+        }
+
         const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${this.config.apiKey}`;
         
         try {

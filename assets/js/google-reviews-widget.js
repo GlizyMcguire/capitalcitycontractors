@@ -14,7 +14,8 @@ class GoogleReviewsWidget {
             autoRefresh: true,
             refreshInterval: 3600000, // 1 hour
             // Using a reliable third-party service
-            apiEndpoint: 'https://maps.googleapis.com/maps/api/place/details/json'
+            apiEndpoint: 'https://maps.googleapis.com/maps/api/place/details/json',
+            apiKey: null
         };
         
         this.reviews = [];
@@ -109,6 +110,10 @@ class GoogleReviewsWidget {
         console.log('📍 Place ID:', this.config.placeId);
 
         // Try multiple proven methods for live Google Reviews
+        if (!this.config.apiKey) {
+            throw new Error('Google Places API key not configured for client-side use');
+        }
+
         const methods = [
             () => this.tryDirectGoogleAPI(),
             () => this.tryJSONPCallback(),
@@ -136,7 +141,7 @@ class GoogleReviewsWidget {
     }
 
     async tryDirectGoogleAPI() {
-        const apiKey = 'REDACTED_GOOGLE_API_KEY';
+        const apiKey = this.config.apiKey;
         const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name,formatted_address&key=${apiKey}`;
 
         console.log('🌐 DIRECT API: Calling Google Places API...');
@@ -201,7 +206,7 @@ class GoogleReviewsWidget {
             };
 
             // Create JSONP request
-            const apiKey = 'REDACTED_GOOGLE_API_KEY';
+            const apiKey = this.config.apiKey;
             script.src = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}&callback=${callbackName}`;
 
             document.head.appendChild(script);
@@ -226,7 +231,7 @@ class GoogleReviewsWidget {
             'https://api.codetabs.com/v1/proxy?quest='
         ];
 
-        const apiKey = 'REDACTED_GOOGLE_API_KEY';
+        const apiKey = this.config.apiKey;
         const apiUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${this.config.placeId}&fields=reviews,rating,user_ratings_total,name&key=${apiKey}`;
 
         for (let i = 0; i < proxies.length; i++) {
@@ -262,7 +267,7 @@ class GoogleReviewsWidget {
         console.log('🔄 ALTERNATIVE: Trying different Google API endpoint...');
 
         // Try the findplacefromtext endpoint as alternative
-        const apiKey = 'REDACTED_GOOGLE_API_KEY';
+        const apiKey = this.config.apiKey;
         const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(this.config.businessName)}&inputtype=textquery&fields=place_id,name,rating,user_ratings_total&key=${apiKey}`;
 
         console.log('🔗 Alternative URL:', url);
