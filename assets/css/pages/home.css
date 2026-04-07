@@ -5155,3 +5155,181 @@
         grid-row: auto;
     }
 }
+
+/* Phase 2.4 Live Cleanup */
+.hero-logo-container {
+    grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.88fr);
+    gap: var(--space-8) clamp(2rem, 4vw, 4.5rem);
+}
+
+.hero-copy {
+    max-width: 700px;
+}
+
+.hero-section .hero-title {
+    font-size: clamp(2.7rem, 4.9vw, 4.45rem);
+    line-height: 0.97;
+    letter-spacing: -0.045em;
+    max-width: 11ch;
+}
+
+.hero-section .hero-subtitle {
+    max-width: 36rem;
+    font-size: clamp(1rem, 1.35vw, 1.18rem);
+}
+
+.hero-video-shell {
+    aspect-ratio: 5 / 4;
+}
+
+.urgency-banner {
+    max-width: 920px;
+    background: #111923;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.12);
+}
+
+.urgency-content {
+    gap: var(--space-4);
+    align-items: center;
+}
+
+.hero-cta {
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.hero-cta .btn {
+    min-width: 220px;
+}
+
+.hero-direct-line {
+    grid-column: 1 / -1;
+    margin: calc(var(--space-2) * -1) 0 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.hero-direct-line a {
+    color: var(--text-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.hero-direct-line a:hover {
+    text-decoration: underline;
+}
+
+.contact-cta .cta-content {
+    grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--space-8);
+    align-items: start;
+}
+
+.estimate-copy {
+    max-width: 420px;
+    padding-top: var(--space-1);
+}
+
+.contact-cta .cta-title {
+    max-width: none;
+    font-size: clamp(1.9rem, 2.8vw, 2.45rem);
+}
+
+.contact-cta .cta-subtitle {
+    max-width: 28rem;
+}
+
+.estimate-direct-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: var(--space-5);
+}
+
+.estimate-direct-links a {
+    color: var(--white);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.estimate-direct-links a:hover {
+    text-decoration: underline;
+}
+
+.estimate-divider {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.9);
+}
+
+.estimate-side-note {
+    margin: var(--space-4) 0 0;
+    color: rgba(255, 255, 255, 0.68);
+    line-height: 1.6;
+}
+
+.quote-form-container {
+    padding: var(--space-7);
+}
+
+.quote-form-header {
+    margin-bottom: var(--space-4);
+}
+
+.quote-form-subtitle {
+    max-width: 40rem;
+}
+
+.quote-form textarea {
+    min-height: 132px;
+}
+
+.file-upload-label {
+    min-height: 84px;
+}
+
+@media (max-width: 1024px) {
+    .hero-logo-container,
+    .contact-cta .cta-content {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-section .hero-title,
+    .contact-cta .cta-title {
+        max-width: none;
+    }
+
+    .estimate-copy {
+        max-width: 720px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section .hero-title {
+        font-size: clamp(2.4rem, 9.8vw, 3.45rem);
+        line-height: 0.98;
+    }
+
+    .hero-cta .btn {
+        min-width: 0;
+    }
+
+    .hero-direct-line {
+        text-align: center;
+    }
+
+    .estimate-direct-links {
+        gap: 0.6rem;
+    }
+
+    .estimate-divider {
+        display: none;
+    }
+
+    .estimate-copy {
+        max-width: none;
+    }
+}
