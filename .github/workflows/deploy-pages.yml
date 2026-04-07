@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: read
   pages: write
@@ -19,10 +22,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+
+      - name: Check Pages status
+        id: pages_status
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          PAGES_ADMIN_TOKEN: ${{ secrets.PAGES_ADMIN_TOKEN }}
+        run: |
+          status_code=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages")
+          echo "status_code=$status_code" >> "$GITHUB_OUTPUT"
+
+          if [ "$status_code" = "404" ] && [ -z "$PAGES_ADMIN_TOKEN" ]; then
+            echo "::error::GitHub Pages is not enabled for this repository. Go to Settings > Pages, set Source to GitHub Actions, save, then rerun this workflow."
+            exit 1
+          fi
 
       - name: Configure Pages
+        if: steps.pages_status.outputs.status_code != '404'
         uses: actions/configure-pages@v5
+
+      - name: Configure Pages and enable Pages site
+        if: steps.pages_status.outputs.status_code == '404'
+        uses: actions/configure-pages@v5
+        with:
+          token: ${{ secrets.PAGES_ADMIN_TOKEN }}
+          enablement: true
 
       - name: Build publish directory
         run: |
@@ -48,7 +76,7 @@ jobs:
           touch dist/.nojekyll
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
