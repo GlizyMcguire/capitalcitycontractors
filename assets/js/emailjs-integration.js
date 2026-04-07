@@ -99,6 +99,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const modal = document.getElementById('successModal');
             if (modal) {
                 modal.style.display = 'block';
+            } else if (typeof window.showUserMessage === 'function') {
+                window.showUserMessage('Your request has been sent. We will follow up as soon as possible.', 'success');
+            } else {
+                window.alert('Your request has been sent. We will follow up as soon as possible.');
             }
         } catch (error) {
             reportFormMessage('Failed to send. Please try again or call us at (613) 301-1311.');

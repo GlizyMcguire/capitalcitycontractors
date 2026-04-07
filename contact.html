@@ -55,6 +55,9 @@
     <link rel="stylesheet" href="assets/css/components.css">
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/pages/secondary-pages.css?v=20260407-1">
+    <link rel="stylesheet" href="assets/css/emailjs-form-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
 
         <!-- BreadcrumbList JSON-LD -->
         <script type="application/ld+json">
@@ -89,7 +92,7 @@
   gtag('config', 'AW-1061880613');
 </script>
 </head>
-<body>
+<body class="secondary-page">
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
@@ -100,13 +103,16 @@
 
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
-                    <a href="index.html#home" class="nav-link">Home</a>
+                    <a href="index.html" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="services.html" class="nav-link">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#portfolio" class="nav-link">Portfolio</a>
+                    <a href="portfolio.html" class="nav-link">Portfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a href="blog.html" class="nav-link">Blog</a>
                 </li>
                 <li class="nav-item">
                     <a href="about.html" class="nav-link">About</a>
@@ -131,8 +137,8 @@
     <section class="page-header">
         <div class="container">
             <div class="page-header-content">
-                <h1 class="page-title">Contact Us</h1>
-                <p class="page-subtitle">Share the scope of the work and we will follow up to discuss your estimate.</p>
+                <h1 class="page-title">Request A Quote</h1>
+                <p class="page-subtitle">Tell us what needs to be done and how you want to be reached. A short message is enough to start the estimate.</p>
                 <nav class="breadcrumb">
                     <a href="index.html">Home</a>
                     <span class="separator">/</span>
@@ -149,110 +155,63 @@
                 <!-- Contact Form -->
                 <div class="contact-form-container">
                     <div class="form-header">
-                        <h2 class="form-title">Get Your Free Quote</h2>
-                        <p class="form-subtitle">Fill out the form below and we'll get back to you within 24 hours</p>
+                        <h2 class="form-title">Tell us about the job</h2>
+                        <p class="form-subtitle">Name, one contact method, and a short description are enough to get started.</p>
                     </div>
 
-                    <form class="contact-form" id="contact-form">
+                    <form class="contact-form" id="quoteForm" name="quote-request" novalidate>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="firstName" class="form-label">First Name *</label>
-                                <input type="text" id="firstName" name="firstName" class="form-input" required>
+                                <label for="contact-name" class="form-label">Your Name *</label>
+                                <input type="text" id="contact-name" name="name" class="form-input" required>
                             </div>
                             <div class="form-group">
-                                <label for="lastName" class="form-label">Last Name *</label>
-                                <input type="text" id="lastName" name="lastName" class="form-input" required>
+                                <label for="contact-phone" class="form-label">Phone Number</label>
+                                <input type="tel" id="contact-phone" name="phone" class="form-input">
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="email" class="form-label">Email Address *</label>
-                                <input type="email" id="email" name="email" class="form-input" required>
+                                <label for="contact-email" class="form-label">Email Address</label>
+                                <input type="email" id="contact-email" name="email" class="form-input">
                             </div>
                             <div class="form-group">
-                                <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" class="form-input">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="service" class="form-label">Service Needed *</label>
-                            <select id="service" name="service" class="form-select" required>
-                                <option value="">Select a service in Ottawa area</option>
-                                <option value="interior-painting">Interior Painting Ottawa</option>
-                                <option value="exterior-painting">Exterior Painting Ottawa</option>
-                                <option value="drywall-repair">Drywall Repair & Installation</option>
-                                <option value="taping">Taping & Mudding</option>
-                                <option value="home-renovation">Home Renovation Ottawa</option>
-                                <option value="multiple">Multiple Services</option>
-                                <option value="other">Other Contracting Service</option>
-                            </select>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="location" class="form-label">Project Location *</label>
-                                <select id="location" name="location" class="form-select" required>
-                                    <option value="">Select your area</option>
-                                    <option value="ottawa">Ottawa</option>
-                                    <option value="richmond">Richmond</option>
-                                    <option value="kanata">Kanata</option>
-                                    <option value="nepean">Nepean</option>
-                                    <option value="stittsville">Stittsville</option>
-                                    <option value="orleans">Orleans</option>
-                                    <option value="other-ottawa">Other Ottawa Area</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="projectType" class="form-label">Project Type</label>
-                                <select id="projectType" name="projectType" class="form-select">
-                                    <option value="">Select project type</option>
-                                    <option value="residential">Residential</option>
-                                    <option value="commercial">Commercial</option>
-                                    <option value="both">Both</option>
+                                <label for="contact-service" class="form-label">Service Type</label>
+                                <select id="contact-service" name="service" class="form-select">
+                                    <option value="">Service type (optional)</option>
+                                    <option value="interior-painting">Interior Painting</option>
+                                    <option value="exterior-painting">Exterior Painting</option>
+                                    <option value="drywall">Drywall Installation / Repair</option>
+                                    <option value="taping">Taping & Mudding</option>
+                                    <option value="flooring">Flooring & Carpet</option>
+                                    <option value="renovation">Room Renovation Support</option>
+                                    <option value="multiple">Multiple Services</option>
+                                    <option value="not-sure">Not Sure Yet</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="timeline" class="form-label">Preferred Timeline</label>
-                            <select id="timeline" name="timeline" class="form-select">
-                                <option value="">Select timeline</option>
-                                <option value="asap">As soon as possible</option>
-                                <option value="1-2weeks">1-2 weeks</option>
-                                <option value="1month">Within 1 month</option>
-                                <option value="2-3months">2-3 months</option>
-                                <option value="flexible">Flexible</option>
-                            </select>
-                        </div>
+                        <p class="quote-contact-note">Phone or email is enough. Leave the other blank if you prefer.</p>
 
                         <div class="form-group">
-                            <label for="message" class="form-label">Project Details *</label>
-                            <textarea id="message" name="message" class="form-textarea" rows="5"
-                                placeholder="Please describe your project, including approximate size, specific requirements, and any other details that would help us provide an accurate quote." required></textarea>
-                        </div>
-
-                        <div class="form-group checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="newsletter" name="newsletter" class="form-checkbox">
-                                <span class="checkmark"></span>
-                                I'd like to receive updates about services and special offers
-                            </label>
+                            <label for="contact-message" class="form-label">Project Details *</label>
+                            <textarea id="contact-message" name="message" class="form-textarea" rows="5"
+                                placeholder="What needs to be done?" required></textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-large form-submit">
-                            <i class="fas fa-paper-plane"></i>
-                            Send Message
+                            Request Estimate
                         </button>
+                        <p class="form-secondary-contact">Prefer to call instead? <a href="tel:+16133011311">(613) 301-1311</a></p>
                     </form>
                 </div>
 
                 <!-- Contact Information -->
                 <div class="contact-info-container">
                     <div class="contact-info-header">
-                        <h2 class="info-title">Get In Touch</h2>
-                        <p class="info-subtitle">We're here to help with all your contracting needs</p>
+                        <h2 class="info-title">Direct contact</h2>
+                        <p class="info-subtitle">If you already know the scope, call or email directly and we can sort out the next step.</p>
                     </div>
 
                     <div class="contact-methods">
@@ -262,7 +221,7 @@
                             </div>
                             <div class="method-content">
                                 <h3 class="method-title">Call Us</h3>
-                                <p class="method-text">(613) 301-1311</p>
+                                <p class="method-text"><a href="tel:+16133011311">(613) 301-1311</a></p>
                                 <p class="method-note">Mon-Fri: 7AM-6PM, Sat: 8AM-4PM</p>
                             </div>
                         </div>
@@ -273,8 +232,8 @@
                             </div>
                             <div class="method-content">
                                 <h3 class="method-title">Email Us</h3>
-                                <p class="method-text">info@capitalcitycontractors.ca</p>
-                                <p class="method-note">We respond within 24 hours</p>
+                                <p class="method-text"><a href="mailto:info@capitalcitycontractors.ca">info@capitalcitycontractors.ca</a></p>
+                                <p class="method-note">A few lines about the room, issue, or scope are enough for the first reply.</p>
                             </div>
                         </div>
 
@@ -291,6 +250,17 @@
                                     Saturday: 8:00 AM - 4:00 PM<br>
                                     Sunday: Closed
                                 </p>
+                            </div>
+                        </div>
+
+                        <div class="contact-method">
+                            <div class="method-icon">
+                                <i class="fas fa-location-dot"></i>
+                            </div>
+                            <div class="method-content">
+                                <h3 class="method-title">Service Area</h3>
+                                <p class="method-text">Ottawa and nearby communities</p>
+                                <p class="method-note">Including Kanata, Nepean, Stittsville, Orleans, Richmond, Barrhaven, and nearby areas.</p>
                             </div>
                         </div>
                     </div>
@@ -312,27 +282,27 @@
                         <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="footer-logo-img">
                     </div>
                     <p class="footer-description">
-                        Professional contracting services with a commitment to quality, reliability, and customer satisfaction.
+                        Painting, drywall, flooring, and renovation work across Ottawa, with clear scope and careful site prep.
                     </p>
                 </div>
 
                 <div class="footer-section">
                     <h3 class="footer-title">Services</h3>
                     <ul class="footer-links">
-                        <li><a href="/#services">Painting</a></li>
-                        <li><a href="/#services">Drywall</a></li>
-                        <li><a href="/#services">Taping</a></li>
-                        <li><a href="/#services">Carpet Installation</a></li>
+                        <li><a href="services.html#painting">Painting</a></li>
+                        <li><a href="services.html#drywall">Drywall</a></li>
+                        <li><a href="services.html#taping">Taping & Mudding</a></li>
+                        <li><a href="services.html#carpet">Flooring & Carpet</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-section">
                     <h3 class="footer-title">Company</h3>
                     <ul class="footer-links">
-                        <li><a href="/#about">About Us</a></li>
-                        <li><a href="/#portfolio">Portfolio</a></li>
-                        <li><a href="/#contact">Contact</a></li>
-                        <li><a href="/#contact">Get Quote</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="portfolio.html">Portfolio</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
 
@@ -341,11 +311,15 @@
                     <div class="contact-info">
                         <div class="contact-item">
                             <i class="fas fa-phone"></i>
-                            <span>(613) 301-1311</span>
+                            <a href="tel:+16133011311">(613) 301-1311</a>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
-                            <span>info@capitalcitycontractors.ca</span>
+                            <a href="mailto:info@capitalcitycontractors.ca">info@capitalcitycontractors.ca</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-location-dot"></i>
+                            <span>Ottawa, Ontario, Canada</span>
                         </div>
                     </div>
                 </div>
@@ -357,14 +331,14 @@
                         &copy; 2024 Capital City Contractors. All rights reserved.
                     </p>
                     <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Facebook">
+                        <a href="https://www.facebook.com/profile.php?id=61553561804552" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
+                        <a href="https://www.instagram.com/capitalcitycontractors_/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
+                        <a href="https://share.google/Ca8R2w8eeMLQBzxKd" class="social-link" aria-label="Google Reviews" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-google"></i>
                         </a>
                     </div>
                 </div>
@@ -375,5 +349,6 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/emailjs-integration.js?v=20260407-4" defer></script>
 </body>
 </html>

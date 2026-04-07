@@ -1,0 +1,542 @@
+/* Secondary page system */
+
+.secondary-page {
+    background: #fcfbf8;
+    color: var(--gray-900);
+}
+
+.secondary-page .navbar .nav-container,
+.secondary-page .page-header .container,
+.secondary-page .services-intro .container,
+.secondary-page .services-overview .container,
+.secondary-page .process-section .container,
+.secondary-page .portfolio-filter-section .container,
+.secondary-page .portfolio-gallery .container,
+.secondary-page .company-story .container,
+.secondary-page .certifications-section .container,
+.secondary-page .contact-section .container,
+.secondary-page .cta-section .container,
+.secondary-page .footer .container {
+    max-width: 1180px;
+}
+
+.secondary-page .nav-logo,
+.secondary-page .footer-logo {
+    gap: 0;
+}
+
+.secondary-page .logo-text,
+.secondary-page .footer-logo-text {
+    display: none;
+}
+
+.secondary-page .logo-img {
+    height: 58px;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+}
+
+.secondary-page .page-header {
+    padding: 132px 0 64px;
+    background:
+        radial-gradient(circle at left top, rgba(245, 158, 11, 0.12), transparent 34%),
+        linear-gradient(180deg, #f7f2e8 0%, #ffffff 100%);
+}
+
+.secondary-page .page-header-content {
+    max-width: 780px;
+    text-align: left;
+}
+
+.secondary-page .page-title {
+    margin-bottom: 16px;
+    font-size: clamp(2.6rem, 5vw, 4.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    color: var(--gray-900);
+}
+
+.secondary-page .page-subtitle {
+    max-width: 48rem;
+    font-size: 1.08rem;
+    line-height: 1.75;
+    color: var(--gray-700);
+}
+
+.secondary-page .breadcrumb,
+.secondary-page .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 0;
+    font-size: 0.95rem;
+    color: var(--gray-600);
+}
+
+.secondary-page .breadcrumb a {
+    color: var(--gray-700);
+    text-decoration: none;
+}
+
+.secondary-page .breadcrumb .current {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.secondary-page .services-intro,
+.secondary-page .services-overview,
+.secondary-page .process-section,
+.secondary-page .portfolio-filter-section,
+.secondary-page .portfolio-gallery,
+.secondary-page .company-story,
+.secondary-page .certifications-section,
+.secondary-page .contact-section,
+.secondary-page .cta-section {
+    padding: clamp(64px, 7vw, 92px) 0;
+}
+
+.secondary-page .services-overview,
+.secondary-page .portfolio-gallery,
+.secondary-page .contact-section {
+    background: #ffffff;
+}
+
+.secondary-page .services-intro,
+.secondary-page .certifications-section,
+.secondary-page .cta-section {
+    background: linear-gradient(180deg, #f8f4eb 0%, #ffffff 100%);
+}
+
+.secondary-page .section-header {
+    max-width: 760px;
+    margin: 0 auto 42px;
+    text-align: center;
+}
+
+.secondary-page .section-title,
+.secondary-page .intro-title,
+.secondary-page .form-title,
+.secondary-page .info-title,
+.secondary-page .cta-title {
+    letter-spacing: -0.03em;
+    color: var(--gray-900);
+}
+
+.secondary-page .section-title,
+.secondary-page .intro-title {
+    font-size: clamp(2.05rem, 3.6vw, 3.15rem);
+    line-height: 0.98;
+}
+
+.secondary-page .section-subtitle,
+.secondary-page .intro-description,
+.secondary-page .story-description,
+.secondary-page .cta-subtitle,
+.secondary-page .form-subtitle,
+.secondary-page .info-subtitle {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--gray-700);
+}
+
+.secondary-page .intro-content,
+.secondary-page .story-content,
+.secondary-page .contact-content,
+.secondary-page .cta-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+    align-items: start;
+}
+
+.secondary-page .intro-text,
+.secondary-page .story-text,
+.secondary-page .contact-form-container,
+.secondary-page .contact-info-container,
+.secondary-page .cta-content,
+.secondary-page .cta-content .cta-copy,
+.secondary-page .cta-content .cta-actions {
+    min-width: 0;
+}
+
+.secondary-page .intro-features,
+.secondary-page .story-stats,
+.secondary-page .certifications-grid,
+.secondary-page .process-steps,
+.secondary-page .contact-methods {
+    gap: 18px;
+}
+
+.secondary-page .intro-feature,
+.secondary-page .process-step,
+.secondary-page .cert-item,
+.secondary-page .contact-method,
+.secondary-page .stat-item {
+    padding: 24px;
+    border-radius: 24px;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    background: #ffffff;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.07);
+}
+
+.secondary-page .intro-feature i,
+.secondary-page .cert-icon,
+.secondary-page .method-icon {
+    color: #a16207;
+}
+
+.secondary-page .intro-feature,
+.secondary-page .contact-method {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: start;
+}
+
+.secondary-page .story-image,
+.secondary-page .contact-info-container,
+.secondary-page .contact-form-container {
+    border-radius: 28px;
+    overflow: hidden;
+}
+
+.secondary-page .story-img {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    object-fit: cover;
+    display: block;
+}
+
+.secondary-page .story-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 24px;
+}
+
+.secondary-page .stat-number {
+    font-family: var(--font-heading);
+    font-size: 1.55rem;
+    line-height: 1;
+    color: var(--gray-900);
+}
+
+.secondary-page .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.secondary-page .service-detail-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    background: #ffffff;
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.08);
+    transform: none;
+}
+
+.secondary-page .service-detail-card::before,
+.secondary-page .service-overlay {
+    display: none;
+}
+
+.secondary-page .service-image {
+    height: 260px;
+    background: #ece7dc;
+}
+
+.secondary-page .service-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.secondary-page .service-content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 28px 28px 26px;
+}
+
+.secondary-page .service-title {
+    margin-bottom: 14px;
+    font-size: clamp(1.5rem, 2vw, 1.9rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+}
+
+.secondary-page .service-description {
+    margin-bottom: 18px;
+    line-height: 1.72;
+    color: var(--gray-700);
+}
+
+.secondary-page .service-features {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.secondary-page .service-actions {
+    margin-top: auto;
+}
+
+.secondary-page .service-actions .btn-secondary {
+    display: none;
+}
+
+.secondary-page .service-actions .btn {
+    min-width: 180px;
+}
+
+.secondary-page .process-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.secondary-page .process-step {
+    min-height: 100%;
+}
+
+.secondary-page .step-number {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: #111827;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.secondary-page .step-title,
+.secondary-page .cert-title,
+.secondary-page .method-title {
+    font-size: 1.28rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.secondary-page .step-description,
+.secondary-page .cert-description,
+.secondary-page .method-note {
+    line-height: 1.68;
+    color: var(--gray-700);
+}
+
+.secondary-page .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.secondary-page .filter-btn {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(17, 24, 39, 0.1);
+    background: #ffffff;
+}
+
+.secondary-page .filter-btn.active {
+    background: #111827;
+    border-color: #111827;
+    color: #ffffff;
+}
+
+.secondary-page .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+}
+
+.secondary-page .portfolio-item {
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    background: #ffffff;
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.08);
+}
+
+.secondary-page .portfolio-item.hidden {
+    display: none;
+}
+
+.secondary-page .portfolio-image {
+    position: static;
+}
+
+.secondary-page .portfolio-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.secondary-page .portfolio-overlay {
+    position: static;
+    inset: auto;
+    opacity: 1;
+    background: #ffffff;
+    padding: 24px 24px 26px;
+}
+
+.secondary-page .portfolio-info {
+    transform: none;
+    text-align: left;
+    color: var(--gray-900);
+}
+
+.secondary-page .portfolio-category {
+    margin-bottom: 10px;
+    color: #8a5800;
+    font-weight: 700;
+}
+
+.secondary-page .portfolio-note {
+    margin: 0;
+    color: var(--gray-700);
+    line-height: 1.68;
+}
+
+.secondary-page .portfolio-btn {
+    display: none;
+}
+
+.secondary-page .contact-form-container,
+.secondary-page .contact-info-container {
+    padding: 32px;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    background: #ffffff;
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.08);
+}
+
+.secondary-page .contact-form {
+    display: grid;
+    gap: 18px;
+}
+
+.secondary-page .contact-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.secondary-page .contact-form input,
+.secondary-page .contact-form select,
+.secondary-page .contact-form textarea {
+    border-radius: 16px;
+    border: 1px solid rgba(17, 24, 39, 0.12);
+    background: #ffffff;
+}
+
+.secondary-page .contact-form textarea {
+    min-height: 160px;
+}
+
+.secondary-page .contact-form .checkbox-group {
+    display: none;
+}
+
+.secondary-page .contact-methods {
+    display: grid;
+}
+
+.secondary-page .method-text {
+    color: var(--gray-900);
+    font-weight: 600;
+}
+
+.secondary-page .cta-section {
+    background:
+        radial-gradient(circle at left top, rgba(245, 158, 11, 0.14), transparent 36%),
+        linear-gradient(180deg, #f7f2e8 0%, #ffffff 100%);
+}
+
+.secondary-page .cta-content {
+    padding: 34px;
+    border-radius: 28px;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    background: #ffffff;
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.08);
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.secondary-page .cta-title {
+    font-size: clamp(2.1rem, 3.4vw, 3rem);
+    line-height: 0.98;
+}
+
+.secondary-page .cta-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 18px;
+    justify-content: flex-start;
+}
+
+.secondary-page .footer-description {
+    color: var(--gray-700);
+}
+
+.secondary-page .footer-links a,
+.secondary-page .contact-item a,
+.secondary-page .social-link {
+    color: var(--gray-700);
+}
+
+.secondary-page .footer-links a:hover,
+.secondary-page .contact-item a:hover,
+.secondary-page .social-link:hover {
+    color: var(--gray-900);
+}
+
+@media (max-width: 1100px) {
+    .secondary-page .intro-content,
+    .secondary-page .story-content,
+    .secondary-page .contact-content,
+    .secondary-page .services-grid,
+    .secondary-page .portfolio-grid,
+    .secondary-page .process-steps {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .secondary-page .page-header {
+        padding-top: 118px;
+    }
+
+    .secondary-page .logo-img {
+        height: 52px;
+    }
+
+    .secondary-page .contact-form .form-row,
+    .secondary-page .story-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .secondary-page .contact-form-container,
+    .secondary-page .contact-info-container,
+    .secondary-page .cta-content,
+    .secondary-page .service-content,
+    .secondary-page .process-step,
+    .secondary-page .cert-item {
+        padding: 24px;
+    }
+
+    .secondary-page .portfolio-img,
+    .secondary-page .service-image,
+    .secondary-page .story-img {
+        height: 220px;
+        min-height: 220px;
+    }
+}
