@@ -83,7 +83,7 @@
     <link rel="preload" href="assets/images/CCC logo.jpg" as="image" type="image/jpeg" fetchpriority="high">
     <link rel="preload" href="assets/css/variables.css" as="style" fetchpriority="high">
     <link rel="preload" href="assets/css/base.css" as="style" fetchpriority="high">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" as="style">
     <link rel="preload" href="assets/js/main.js" as="script">
 
     <!-- DNS Prefetch for External Resources -->
@@ -131,8 +131,8 @@
     <!-- Fonts - Optimized Loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -306,41 +306,42 @@
         /* Sticky Chat Button Styling */
         .sticky-chat-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 16px;
+            right: 16px;
             z-index: 1000;
         }
 
         .sticky-chat-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
             color: white;
-            border: none;
+            border: 1px solid rgba(245, 158, 11, 0.28);
             border-radius: 50px;
-            padding: 15px 20px;
-            font-size: 16px;
+            padding: 12px 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .sticky-chat-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.22);
         }
 
         .chat-options-popup {
             position: absolute;
-            bottom: 70px;
+            bottom: 58px;
             right: 0;
             background: white;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             padding: 8px;
             min-width: 180px;
+            border: 1px solid rgba(17, 24, 39, 0.08);
             animation: slideUp 0.3s ease;
         }
 
@@ -358,6 +359,18 @@
 
         .chat-option:hover {
             background-color: #f3f4f6;
+        }
+
+        @media (max-width: 768px) {
+            .sticky-chat-btn {
+                bottom: 12px;
+                right: 12px;
+            }
+
+            .sticky-chat-link {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
         }
 
         .chat-option i {
@@ -1064,14 +1077,13 @@
         }
 
         .section-title {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: var(--text-4xl);
-            font-weight: 800;
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 3vw, 3.25rem);
+            font-weight: 700;
             color: var(--text-primary);
             margin-bottom: var(--space-4);
-            line-height: 1.1;
-            letter-spacing: -0.02em;
-            text-transform: uppercase;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
             position: relative;
         }
 
@@ -1081,19 +1093,19 @@
             bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-color), #f59e0b);
+            width: 42px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--secondary-light));
             border-radius: 2px;
         }
 
         .section-subtitle {
-            font-size: var(--text-lg);
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
             color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 700px;
+            line-height: 1.65;
+            max-width: 760px;
             margin: 0 auto;
-            font-weight: 400;
+            font-weight: 500;
         }
 
         /* Dark sections override */
@@ -1227,7 +1239,7 @@
 
             <ul class="nav-menu" id="nav-menu">
                 <li class="nav-item">
-                    <a href="#top" class="nav-link active" data-nav="home">Home</a>
+                    <a href="#home" class="nav-link active" data-nav="home">Home</a>
                 </li>
                 <li class="nav-item">
                     <a href="#services" class="nav-link" data-nav="services">Services</a>
@@ -1239,7 +1251,7 @@
                     <a href="blog.html" class="nav-link" data-nav="blog">Blog</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#about" class="nav-link" data-nav="about">About</a>
+                    <a href="about.html" class="nav-link" data-nav="about">About</a>
                 </li>
                 <li class="nav-item">
                     <a href="#service-areas" class="nav-link" data-nav="areas">Areas</a>
@@ -1293,11 +1305,10 @@
                 <a href="#contact" class="btn btn-primary btn-large btn-urgent">
                     <i class="fas fa-calculator"></i>
                     Request Free Estimate
-                    <span class="btn-urgency">Tell us about the work</span>
                 </a>
                 <a href="#portfolio" class="btn btn-secondary btn-large">
                     <i class="fas fa-images"></i>
-                    View Recent Work
+                    See Recent Work
                 </a>
                 <a href="tel:+16133011311" class="btn btn-accent btn-large btn-pulse">
                     <i class="fas fa-phone"></i>
@@ -1313,70 +1324,35 @@
             </div>
         </div>
     </section>
-    <!-- Homepage Video Section -->
-    <section class="homepage-video-section">
+    <!-- Field Showcase Section -->
+    <section class="field-showcase-section">
         <div class="container">
-            <div class="video-container">
-                <video class="homepage-video"
-                       autoplay
-                       muted
-                       loop
-                       playsinline
-                       disablepictureinpicture
-                       disableremoteplayback
-                       controlslist="nodownload nofullscreen noremoteplaybook">
-                    <source src="assets/images/homepage-logo.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </div>
-    </section>
-
-    <!-- Spacing Section for Smooth Scrolling Transition -->
-    <div class="section-spacer"></div>
-
-    <!-- Project Planning Section -->
-    <section class="lead-generation-section" id="project-planning" role="complementary">
-        <div class="container">
-            <div class="lead-gen-container">
-                <div class="lead-gen-content">
-                    <div class="offer-badge"><i class="fas fa-clipboard-list"></i><span>Project Planning</span></div>
-                    <h2 class="lead-gen-title">Start with a <span class="highlight-text">clear scope</span></h2>
-                    <p class="lead-gen-subtitle">Helpful project details make the estimate more accurate and keep the work moving smoothly once the job starts.</p>
-                    <div class="professional-indicators">
-                        <div class="indicator-item"><i class="fas fa-house"></i><span>Homes, rentals, and commercial spaces</span></div>
-                        <div class="indicator-item"><i class="fas fa-file-lines"></i><span>Detailed written estimates</span></div>
-                        <div class="indicator-item"><i class="fas fa-broom"></i><span>Protection, prep, and cleanup</span></div>
-                    </div>
-                    <div class="offer-benefits">
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Room names, surfaces, and finish goals</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Current condition of walls, ceilings, or floors</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Target timing and access constraints</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Photos if the work is easier to explain visually</span></div>
+            <div class="field-showcase-grid">
+                <div class="field-showcase-copy">
+                    <p class="field-showcase-eyebrow">On site</p>
+                    <h2 class="field-showcase-title">The prep should look organized before the finish shows up.</h2>
+                    <p class="field-showcase-description">Painting, drywall, flooring, and renovation work around Ottawa usually comes down to scope, access, repairs, masking, and sequence. That part should feel settled before the visible finish work starts.</p>
+                    <div class="field-showcase-points">
+                        <div class="field-point"><i class="fas fa-house-user"></i><span>Homes, rentals, and active commercial spaces</span></div>
+                        <div class="field-point"><i class="fas fa-sheet-plastic"></i><span>Protection, patching, sanding, and cleanup</span></div>
+                        <div class="field-point"><i class="fas fa-calendar-check"></i><span>Practical scheduling and access coordination</span></div>
                     </div>
                 </div>
-                <div class="lead-gen-form-container">
-                    <div class="form-header">
-                        <h3>What to share with us</h3>
-                        <p>Whether you call or use the form below, these details help us quote the work more clearly.</p>
-                    </div>
-                    <div class="project-planning-list">
-                        <div class="planning-item"><i class="fas fa-ruler-combined"></i><div><h4>Scope of work</h4><p>Tell us what rooms, walls, ceilings, trim, floors, or renovation areas need attention.</p></div></div>
-                        <div class="planning-item"><i class="fas fa-screwdriver-wrench"></i><div><h4>Existing condition</h4><p>Let us know about repairs, patching, moisture damage, old finishes, or occupied spaces.</p></div></div>
-                        <div class="planning-item"><i class="fas fa-calendar-days"></i><div><h4>Timing and access</h4><p>Share your preferred timing, access windows, and whether the site is lived in or active during the work.</p></div></div>
-                        <div class="planning-item"><i class="fas fa-camera"></i><div><h4>Photos help</h4><p>Close-up and wide photos often make first conversations faster and more accurate.</p></div></div>
-                    </div>
-                    <div class="success-actions">
-                        <a href="#contact" class="btn btn-primary">Request Free Estimate</a>
-                        <a href="tel:+16133011311" class="btn btn-secondary">Call (613) 301-1311</a>
+                <div class="field-showcase-media">
+                    <div class="video-container">
+                        <video class="homepage-video"
+                               autoplay
+                               muted
+                               loop
+                               playsinline
+                               disablepictureinpicture
+                               disableremoteplayback
+                               controlslist="nodownload nofullscreen noremoteplaybook">
+                            <source src="assets/images/homepage-logo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                 </div>
-            </div>
-            <div class="lead-gen-trust">
-                <div class="lead-gen-trust-item"><i class="fas fa-location-dot"></i><span>Ottawa and nearby communities</span></div>
-                <div class="lead-gen-trust-item"><i class="fas fa-paint-roller"></i><span>Painting, drywall, flooring, and renovation work</span></div>
-                <div class="lead-gen-trust-item"><i class="fas fa-envelope"></i><span>Phone or online estimate requests</span></div>
-                <div class="lead-gen-trust-item"><i class="fas fa-comments"></i><span>Clear next steps before work begins</span></div>
             </div>
         </div>
     </section>
@@ -1384,8 +1360,8 @@
     <section class="services-section" id="services" role="main">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Services</h2>
-                <p class="section-subtitle">Painting, drywall, taping, flooring, and renovation work for homes, rentals, and commercial spaces across Ottawa.</p>
+                <h2 class="section-title">Core Work</h2>
+                <p class="section-subtitle">Most projects come back to the same fundamentals: surface condition, site protection, clean finishing, and a scope that matches the estimate.</p>
             </div>
 
 
@@ -1400,8 +1376,7 @@
                     <div class="service-detail-content">
                         <h3 class="service-detail-title">Professional Painting</h3>
                         <p class="service-detail-description">
-                            Transform your Ottawa home with our expert painting services. We provide both interior painting and exterior painting
-                            using careful surface preparation and materials suited to the job for a clean, durable finish.
+                            Interior and exterior painting for homes, rentals, and commercial spaces, with surface repair, masking, and finish planning based on the room or exterior condition.
                         </p>
 
 
@@ -1434,8 +1409,7 @@
 
 
                         <p class="service-detail-description">
-                            Complete drywall repair and installation solutions for Ottawa homes and businesses. Our skilled team ensures smooth,
-                            professional surfaces ready for painting or wallpaper application.
+                            Drywall installation, repair, and patching for new work, damaged areas, and renovation scopes that need a clean surface before finishing.
                         </p>
                         <ul class="service-features">
                             <li><i class="fas fa-check"></i> New Installation</li>
@@ -1458,8 +1432,7 @@
                     <div class="service-detail-content">
                         <h3 class="service-detail-title">Taping & Mudding</h3>
                         <p class="service-detail-description">
-                            Expert taping and mudding services ensuring seamless joints and perfect surface preparation
-                            for painting or finishing work.
+                            Taping, compound work, sanding, and corner detailing that help new drywall or repairs blend in properly before paint.
                         </p>
                         <ul class="service-features">
                             <li><i class="fas fa-check"></i> Joint Taping</li>
@@ -1482,8 +1455,7 @@
                     <div class="service-detail-content">
                         <h3 class="service-detail-title">Flooring & Carpet Installation</h3>
                         <p class="service-detail-description">
-                            Professional carpet installation services with precision fitting and quality materials
-                            for comfort, durability, and aesthetic appeal.
+                            Flooring and carpet installation with removal, subfloor prep, and trim detail worked into the scope where needed.
                         </p>
                         <ul class="service-features">
                             <li><i class="fas fa-check"></i> Residential & Commercial</li>
@@ -1503,8 +1475,7 @@
             <div class="additional-services">
                 <h3>Additional Services</h3>
                 <p>
-                    We also specialize in <strong>basement renovations</strong>, <strong>bathroom renovations</strong>, and comprehensive <strong>home renovations</strong> throughout Ottawa.
-                    Contact us to discuss your specific project needs and get a free consultation.
+                    Some projects also include <strong>basement work</strong>, <strong>bathroom updates</strong>, or broader <strong>home renovation</strong> scope. If the work crosses multiple rooms or trades, include that in the estimate request so the first conversation starts in the right place.
                 </p>
                 <div class="btn-group">
                     <a href="tel:+16133011311" class="btn btn-primary">
@@ -1524,8 +1495,8 @@
     <section class="portfolio-section" id="portfolio">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Portfolio</h2>
-                <p class="section-subtitle">Showcasing our completed projects and quality craftsmanship</p>
+                <h2 class="section-title">Recent Work</h2>
+                <p class="section-subtitle">A few examples of painting, drywall, flooring, and renovation work completed around Ottawa.</p>
             </div>
 
             <div class="portfolio-slideshow">
@@ -1617,43 +1588,18 @@
         </div>
     </section>
 
-    <!-- Our Trusted Partners Section -->
-    <section class="trusted-partners">
+    <!-- Process Section -->
+    <section class="about-section" id="process">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Our Trusted Partners</h2>
-                <p class="section-subtitle">We are proud to work with these industry leaders</p>
-            </div>
-
-            <div class="partners-logos">
-                <div class="partner-logo">
-                    <img src="assets/images/partners/rona-logo.webp" alt="RONA - Trusted building supply partner" class="partner-img">
-                </div>
-                <div class="partner-logo">
-                    <img src="assets/images/partners/home-depot-logo.webp" alt="The Home Depot - Professional contractor partner" class="partner-img">
-                </div>
-                <div class="partner-logo">
-                    <img src="assets/images/partners/home-hardware-logo.png" alt="Home Hardware - Quality materials supplier" class="partner-img">
-                </div>
-                <div class="partner-logo">
-                    <img src="assets/images/partners/lowes-logo.png" alt="Lowe's - Construction materials partner" class="partner-img">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about-section" id="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">About Capital City Contractors</h2>
-                <p class="section-subtitle">Ottawa contractor support built around clear scope, careful prep, and clean finishing.</p>
+                <h2 class="section-title">How Projects Move</h2>
+                <p class="section-subtitle">The estimate, prep, active work, and closeout should feel connected from the start.</p>
             </div>
             <div class="story-content">
                 <div class="story-text">
-                    <h3 class="story-title">How We Approach The Work</h3>
-                    <p class="story-description">Capital City Contractors supports residential and commercial projects across Ottawa with painting, drywall repair, taping, flooring, and renovation work. The focus is straightforward: understand the scope, prepare surfaces properly, protect the space, and leave behind a clean finish.</p>
-                    <p class="story-description">Some jobs are single-room refreshes. Others are part of a larger renovation. In both cases, the goal stays the same: practical communication, tidy jobsite habits, and workmanship that matches the scope you approved.</p>
+                    <h3 class="story-title">A job feels better when the sequence makes sense.</h3>
+                    <p class="story-description">Some work is a single room. Some work is part of a larger renovation. Either way, the result depends on how the site is reviewed, how surfaces are prepared, and how well the daily work fits the property.</p>
+                    <p class="story-description">That is why the process matters as much as the finish coat. Scope, access, prep, active work, and final walkthrough all need to line up if the finished job is going to feel professional.</p>
                 </div>
                 <div class="story-image">
                     <picture>
@@ -1664,15 +1610,15 @@
             </div>
             <div class="about-stats-container">
                 <div class="story-stats">
-                    <div class="stat-item"><div class="stat-number">Clear</div><div class="stat-label">Written scopes and estimates</div></div>
-                    <div class="stat-item"><div class="stat-number">Careful</div><div class="stat-label">Surface prep and protection</div></div>
-                    <div class="stat-item"><div class="stat-number">Clean</div><div class="stat-label">Finish work and cleanup</div></div>
-                    <div class="stat-item"><div class="stat-number">Local</div><div class="stat-label">Ottawa-area project support</div></div>
+                    <div class="stat-item"><div class="stat-number">1</div><div class="stat-label">Scope review, access, and finish expectations</div></div>
+                    <div class="stat-item"><div class="stat-number">2</div><div class="stat-label">Protection, patching, sanding, and setup</div></div>
+                    <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Active painting, drywall, flooring, or renovation work</div></div>
+                    <div class="stat-item"><div class="stat-number">4</div><div class="stat-label">Cleanup, touch-ups, and final walkthrough</div></div>
                 </div>
                 <div class="certifications-grid">
-                    <div class="cert-item"><div class="cert-icon"><i class="fas fa-comments"></i></div><h3 class="cert-title">Straight Communication</h3><p class="cert-description">Scope, sequencing, and site access are discussed up front so expectations stay aligned.</p></div>
-                    <div class="cert-item"><div class="cert-icon"><i class="fas fa-sheet-plastic"></i></div><h3 class="cert-title">Occupied Space Awareness</h3><p class="cert-description">Protection, masking, and cleanup matter when the property is still in use.</p></div>
-                    <div class="cert-item"><div class="cert-icon"><i class="fas fa-layer-group"></i></div><h3 class="cert-title">Coordinated Scope</h3><p class="cert-description">Painting, drywall, taping, flooring, and renovation tasks are planned to fit the job at hand.</p></div>
+                    <div class="cert-item"><div class="cert-icon"><i class="fas fa-file-lines"></i></div><h3 class="cert-title">The estimate should reflect the site</h3><p class="cert-description">Rooms, surfaces, access issues, and current condition all affect how the work should be planned.</p></div>
+                    <div class="cert-item"><div class="cert-icon"><i class="fas fa-house-user"></i></div><h3 class="cert-title">Occupied spaces need different planning</h3><p class="cert-description">Furniture, tenants, pets, operating businesses, and daily routines all change how a job should be staged.</p></div>
+                    <div class="cert-item"><div class="cert-icon"><i class="fas fa-broom"></i></div><h3 class="cert-title">Closeout is part of the job</h3><p class="cert-description">A walkthrough, cleanup, and any final touch-up work should not feel like an afterthought.</p></div>
                 </div>
             </div>
         </div>
@@ -1681,7 +1627,7 @@
     <section class="testimonials-section section" id="testimonials">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">What Our Customers Say</h2>
+                <h2 class="section-title">Client Feedback</h2>
                 <p class="section-subtitle">Feedback shared by recent clients.</p>
                 <div class="google-rating">
                     <div class="rating-stars">
@@ -1756,109 +1702,24 @@
         </div>
     </section>
 
-    <!-- Blog Section - Renovation Tips & Insights -->
-    <section class="blog-section section" id="blog">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Renovation Tips & Insights</h2>
-                <p class="section-subtitle">Expert advice and success stories from Ottawa's trusted contractors</p>
-            </div>
-
-            <div class="blog-preview-grid">
-                <!-- Featured Blog Post -->
-                <article class="blog-preview-card featured">
-                    <div class="blog-image">
-                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Professional interior paint color selection and trends 2025" loading="lazy" onerror="this.src='assets/images/aboutus.png'">
-                        <div class="blog-category">Paint Trends</div>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">The Complete Guide to 2025 Interior Paint Color Trends</h3>
-                        <p class="blog-excerpt">Comprehensive analysis of 2025's most significant paint trends, from Benjamin Moore's Cinnamon Slate to the color drenching revolution. Includes expert insights on matte finishes and regional considerations for Ottawa homeowners.</p>
-                        <div class="blog-meta">
-                            <span class="blog-date"><i class="fas fa-calendar"></i> Jan 3, 2025</span>
-                            <span class="blog-read-time"><i class="fas fa-clock"></i> 12 min read</span>
-                        </div>
-                        <a href="blog.html#paint-trends-2025" class="blog-read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 2 -->
-                <article class="blog-preview-card">
-                    <div class="blog-image">
-                        <img src="https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Professional interior painting during winter season" loading="lazy" onerror="this.src='assets/images/painting-service.jpg'">
-                        <div class="blog-category">Professional Tips</div>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">Mastering Winter Interior Painting: A Professional's Complete Guide</h3>
-                        <p class="blog-excerpt">Comprehensive professional guide covering temperature control, humidity management, ventilation strategies, and paint selection for successful winter interior projects. Includes Ottawa-specific considerations.</p>
-                        <div class="blog-meta">
-                            <span class="blog-date"><i class="fas fa-calendar"></i> Jan 3, 2025</span>
-                            <span class="blog-read-time"><i class="fas fa-clock"></i> 10 min read</span>
-                        </div>
-                        <a href="blog.html#winter-painting" class="blog-read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-
-                <!-- Blog Post 3 -->
-                <article class="blog-preview-card">
-                    <div class="blog-image">
-                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Professional interior design color palette selection process" loading="lazy" onerror="this.src='assets/images/pic2.jpg'">
-                        <div class="blog-category">Color Guide</div>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">The Science and Art of Interior Paint Color Selection</h3>
-                        <p class="blog-excerpt">In-depth exploration of professional color selection principles, including light analysis, color psychology, architectural considerations, and regional factors specific to Ottawa homes.</p>
-                        <div class="blog-meta">
-                            <span class="blog-date"><i class="fas fa-calendar"></i> Jan 1, 2025</span>
-                            <span class="blog-read-time"><i class="fas fa-clock"></i> 14 min read</span>
-                        </div>
-                        <a href="blog.html#color-selection-guide" class="blog-read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Blog CTA -->
-            <div class="blog-cta">
-                <h3>Get More Renovation Tips & Inspiration</h3>
-                <p>Discover expert advice, customer success stories, and the latest trends in Ottawa home renovations</p>
-                <a href="blog.html" class="btn btn-primary">Visit Our Blog <i class="fas fa-external-link-alt"></i></a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Trust Signals Section -->
-    <section class="trust-section section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">What Clients Can Expect</h2>
-                <p class="section-subtitle">A stronger contractor presence comes from clarity, prep, and follow-through, not inflated claims.</p>
-            </div>
-            <div class="trust-badges">
-                <div class="trust-badge"><div class="badge-icon"><i class="fas fa-file-lines"></i></div><div class="badge-content"><h4 class="badge-title">Clear Estimates</h4><p class="badge-subtitle">Scope and pricing discussed up front</p></div></div>
-                <div class="trust-badge"><div class="badge-icon"><i class="fas fa-location-dot"></i></div><div class="badge-content"><h4 class="badge-title">Ottawa Service Area</h4><p class="badge-subtitle">Homes, rentals, and businesses</p></div></div>
-                <div class="trust-badge"><div class="badge-icon"><i class="fas fa-sheet-plastic"></i></div><div class="badge-content"><h4 class="badge-title">Prep First</h4><p class="badge-subtitle">Protection, patching, sanding, and cleanup</p></div></div>
-                <div class="trust-badge"><div class="badge-icon"><i class="fas fa-comments"></i></div><div class="badge-content"><h4 class="badge-title">Clear Communication</h4><p class="badge-subtitle">Scheduling and next steps explained clearly</p></div></div>
-            </div>
-            <div class="trust-grid">
-                <div class="trust-item"><div class="trust-icon"><i class="fas fa-screwdriver-wrench"></i></div><h3 class="trust-title">Careful Surface Prep</h3><p class="trust-description">Repairs, patching, sanding, masking, and protection are part of how clean results are achieved.</p></div>
-                <div class="trust-item"><div class="trust-icon"><i class="fas fa-house-user"></i></div><h3 class="trust-title">Respect For Occupied Spaces</h3><p class="trust-description">Work planning takes access, furnishings, tenants, and daily use of the property into account.</p></div>
-                <div class="trust-item"><div class="trust-icon"><i class="fas fa-clipboard-list"></i></div><h3 class="trust-title">Transparent Scope</h3><p class="trust-description">The estimate should explain what is included, what needs attention, and what the next step looks like.</p></div>
-                <div class="trust-item"><div class="trust-icon"><i class="fas fa-calendar-check"></i></div><h3 class="trust-title">Responsive Scheduling</h3><p class="trust-description">Good job flow depends on realistic timing, access coordination, and updates when plans shift.</p></div>
-            </div>
-        </div>
-    </section>
     <!-- Contact CTA Section -->
     <section class="contact-cta" id="contact" role="complementary">
         <div class="container">
             <div class="cta-content">
                 <div class="cta-urgency-header">
                     <div class="urgency-badge"><i class="fas fa-calculator"></i><span>Free estimate</span></div>
-                    <h2 class="cta-title">Tell Us About The Work</h2>
-                    <p class="cta-subtitle">Share the scope, project location, timing, and any photos that help explain the job. We?ll follow up to discuss the next step.</p>
+                    <h2 class="cta-title">Request An Estimate</h2>
+                    <p class="cta-subtitle">Tell us what needs attention, where the project is located, when you want to start, and anything about access or current conditions that affects the work. We'll follow up to talk through the next step.</p>
                     <div class="cta-benefits">
                         <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Clear written estimate</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Upload photos if helpful</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Call or form inquiry</span></div>
+                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Phone or form inquiry</span></div>
+                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Photos welcome if they help explain the work</span></div>
+                    </div>
+                    <div class="cta-planning-list">
+                        <div class="cta-planning-item"><strong>Scope:</strong> room names, walls, ceilings, trim, floors, or renovation areas involved</div>
+                        <div class="cta-planning-item"><strong>Current condition:</strong> repairs, patching, moisture issues, or old finishes that need attention</div>
+                        <div class="cta-planning-item"><strong>Timing:</strong> preferred start window, occupancy, and site access details</div>
+                        <div class="cta-planning-item"><strong>Photos:</strong> a few wide and close-up images can make the first conversation faster</div>
                     </div>
                 </div>
                 <div class="quote-form-container">
@@ -1874,7 +1735,7 @@
                         </div>
                         <div class="form-group"><label for="contact-message" class="visually-hidden">Project Description</label><textarea id="contact-message" name="message" placeholder="Description of your project *" rows="3" required aria-required="true"></textarea></div>
                         <div class="form-group"><div class="file-upload-container"><label for="photos" class="file-upload-label"><i class="fas fa-camera"></i><span class="file-upload-text">Attach Photos (Optional)</span><span class="file-upload-info">JPG, PNG, max 5MB each</span></label><input type="file" id="photos" name="photos" accept="image/*" multiple class="file-upload-input"><div class="file-upload-preview" id="filePreview"></div></div></div>
-                        <div class="form-actions"><button type="submit" class="btn btn-primary btn-large">Send Quote Request</button><a href="tel:+16133011311" class="btn btn-secondary btn-large">Call (613) 301-1311</a></div>
+                        <div class="form-actions"><button type="submit" class="btn btn-primary btn-large">Send Estimate Request</button><a href="tel:+16133011311" class="btn btn-secondary btn-large">Call (613) 301-1311</a></div>
                     </form>
                 </div>
             </div>
@@ -1932,34 +1793,34 @@
     <section class="local-areas-section" id="service-areas">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Ottawa Service Areas</h2>
-                <p class="section-subtitle">Professional painting, drywall repair, and home renovation services throughout the National Capital Region</p>
+                <h2 class="section-title">Where We Work</h2>
+                <p class="section-subtitle">Projects across Ottawa and nearby communities where the scope, timing, and access fit the job.</p>
             </div>
 
             <div class="local-areas-grid">
                 <div class="area-card">
                     <h3 class="area-title">Ottawa Central</h3>
-                    <p class="area-description">Serving downtown Ottawa, ByWard Market, Centretown, and surrounding neighborhoods with professional contracting services.</p>
+                    <p class="area-description">Downtown Ottawa, Centretown, the Glebe, Old Ottawa South, and nearby neighbourhoods.</p>
                 </div>
                 <div class="area-card">
                     <h3 class="area-title">Kanata & Stittsville</h3>
-                    <p class="area-description">Expert painting and renovation services for Kanata, Stittsville, and western Ottawa communities.</p>
+                    <p class="area-description">Painting, drywall, flooring, and renovation support for west-end homes, rentals, and commercial units.</p>
                 </div>
                 <div class="area-card">
                     <h3 class="area-title">Nepean & Barrhaven</h3>
-                    <p class="area-description">Quality home improvement services for Nepean, Barrhaven, and southwestern Ottawa areas.</p>
+                    <p class="area-description">Interior refreshes, repair work, and larger renovation scopes across southwest Ottawa.</p>
                 </div>
                 <div class="area-card">
                     <h3 class="area-title">Orleans & Cumberland</h3>
-                    <p class="area-description">Professional contractors serving Orleans, Cumberland, and eastern Ottawa with reliable service.</p>
+                    <p class="area-description">Residential and commercial work for east-end properties where access and timing are planned properly.</p>
                 </div>
                 <div class="area-card">
                     <h3 class="area-title">Richmond & Manotick</h3>
-                    <p class="area-description">Trusted painting and drywall services for Richmond, Manotick, and rural Ottawa communities.</p>
+                    <p class="area-description">Projects in nearby communities where travel, staging, and scope are discussed up front.</p>
                 </div>
                 <div class="area-card">
-                    <h3 class="area-title">Gloucester & Osgoode</h3>
-                    <p class="area-description">Comprehensive renovation services for Gloucester, Osgoode, and southeastern Ottawa regions.</p>
+                    <h3 class="area-title">Gloucester & South Ottawa</h3>
+                    <p class="area-description">Drywall, painting, flooring, and renovation work in Gloucester and surrounding south-end areas.</p>
                 </div>
             </div>
         </div>
@@ -1976,7 +1837,7 @@
                         <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors" class="footer-logo-img">
                     </div>
                     <p class="footer-description">
-                        Professional contracting services with a commitment to quality, reliability, and customer satisfaction.
+                        Painting, drywall, flooring, and renovation work across Ottawa, with clear scope and careful site prep.
                     </p>
                 </div>
 
@@ -1993,10 +1854,10 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Company</h3>
                     <ul class="footer-links">
-                        <li><a href="https://capitalcitycontractors.ca/#about" title="Learn about our experienced Ottawa contractors">About Our Team</a></li>
-                        <li><a href="https://capitalcitycontractors.ca/#portfolio" title="View our completed painting and renovation projects">Our Work Portfolio</a></li>
-                        <li><a href="https://capitalcitycontractors.ca/#contact" title="Get free estimate for your Ottawa renovation project">Free Estimate</a></li>
-                        <li><a href="ottawa-contractors.html" title="Detailed information about our painting and drywall services">Our Services</a></li>
+                        <li><a href="about.html" title="Learn about Capital City Contractors">About</a></li>
+                        <li><a href="portfolio.html" title="View recent project examples">Portfolio</a></li>
+                        <li><a href="#contact" title="Request an estimate for your project">Request Estimate</a></li>
+                        <li><a href="services.html" title="Review our core services">Services</a></li>
                     </ul>
                 </div>
 

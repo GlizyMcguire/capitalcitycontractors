@@ -60,10 +60,10 @@
     --bg-overlay: rgba(0, 0, 0, 0.5);
     --bg-overlay-light: rgba(255, 255, 255, 0.9);
 
-    /* Typography - Professional System */
-    --font-primary: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-heading: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-accent: 'Roboto Slab', Georgia, serif;
+    /* Typography - Practical, sturdy, modern */
+    --font-primary: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-heading: 'Archivo', 'Arial Narrow', sans-serif;
+    --font-accent: 'Archivo', 'Arial Narrow', sans-serif;
 
     /* Font Sizes */
     --text-xs: 0.75rem;      /* 12px */
