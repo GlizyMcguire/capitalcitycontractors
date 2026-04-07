@@ -4499,27 +4499,56 @@
     line-height: 1.65;
 }
 
-.process-note {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-3);
+.process-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-5);
     margin-top: var(--space-6);
-    padding: var(--space-5) var(--space-6);
-    border-radius: 20px;
-    background: #f6f1e7;
+    padding: var(--space-6);
+    border-radius: 24px;
+    background: linear-gradient(180deg, #f7f1e4 0%, #f2eadc 100%);
     border: 1px solid rgba(17, 24, 39, 0.08);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.06);
 }
 
-.process-note strong {
+.process-footer-copy {
+    max-width: 720px;
+}
+
+.process-footer-title {
+    margin: 0 0 var(--space-2);
     font-family: var(--font-heading);
     color: var(--gray-900);
-    white-space: nowrap;
+    font-size: clamp(1.2rem, 1.5vw, 1.45rem);
 }
 
-.process-note p {
+.process-footer-text {
     margin: 0;
     color: var(--gray-700);
     line-height: 1.6;
+}
+
+.process-footer-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-content: center;
+    justify-content: flex-end;
+}
+
+.process-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    color: var(--gray-800);
+    font-size: 0.95rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .cta-quick-note {
@@ -4551,6 +4580,7 @@
 .quote-form {
     display: grid;
     gap: var(--space-4);
+    padding-bottom: var(--space-4);
 }
 
 .quote-form .form-row {
@@ -4564,6 +4594,7 @@
 
 .quote-form-container {
     padding: var(--space-7);
+    padding-bottom: calc(var(--space-7) + var(--space-2));
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 24px 55px rgba(5, 8, 14, 0.28);
 }
@@ -4581,6 +4612,9 @@
 .form-actions {
     gap: var(--space-3);
     flex-wrap: wrap;
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-1);
+    margin-bottom: var(--space-2);
 }
 
 .form-actions .btn {
@@ -4592,9 +4626,8 @@
         grid-template-columns: 1fr;
     }
 
-    .process-note {
-        align-items: flex-start;
-        flex-direction: column;
+    .process-footer {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -4624,14 +4657,14 @@
     }
 
     .process-card,
-    .process-note,
+    .process-footer,
     .cta-quick-note,
     .quote-form-container {
         padding: var(--space-5);
     }
 
-    .process-note strong {
-        white-space: normal;
+    .process-footer-pills {
+        justify-content: flex-start;
     }
 
     .file-upload-label {
