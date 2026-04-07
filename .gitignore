@@ -6,6 +6,9 @@ config/api-keys.php
 .env
 .env.local
 .env.production
+**/.env
+**/.env.*
+!**/.env.example
 
 # Logs and temporary files
 *.log
@@ -50,6 +53,10 @@ composer.lock
 # Database files
 *.sqlite
 *.db
+
+# Local editor history and agent scratch files
+.history/
+.augment/
 
 # Configuration files with sensitive data
 config.php

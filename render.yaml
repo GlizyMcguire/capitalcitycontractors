@@ -7,13 +7,24 @@ services:
     buildCommand: npm install
     startCommand: sh -c "node init-db.js && node server.js"
     envVars:
+      - key: NODE_ENV
+        value: production
       - key: NODE_VERSION
         value: 18
+      - key: TRUST_PROXY
+        value: 1
       - key: CORS_ORIGINS
         value: https://glizymcguire.github.io,https://capitalcitycontractors.ca,https://www.capitalcitycontractors.ca
       - key: JWT_SECRET
         generateValue: true
+      - key: JWT_ISSUER
+        value: capitalcitycontractors-crm
+      - key: JWT_AUDIENCE
+        value: capitalcitycontractors-crm-users
+      - key: ACCESS_TOKEN_TTL
+        value: 12h
+      - key: VISIT_IP_HASH_SALT
+        generateValue: true
       - key: DB_PATH
         value: /tmp/crm.db
     healthCheckPath: /api/health
-

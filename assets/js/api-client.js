@@ -36,11 +36,11 @@ class CRMAPIClient {
             });
 
             if (!response.ok) {
-                if (response.status === 401) {
+                if (response.status === 401 || response.status === 403) {
                     this.clearToken();
                     throw new Error('Authentication required');
                 }
-                const error = await response.json();
+                const error = await response.json().catch(() => ({}));
                 throw new Error(error.error || 'Request failed');
             }
 
@@ -186,7 +186,7 @@ class CRMAPIClient {
             });
             return await res.json();
         } catch (e) {
-            if (process.env && process.env.NODE_ENV !== 'production') {
+            if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production') {
                 console.warn('trackVisit failed', e);
             }
             return { success: false, error: e?.message };
@@ -196,4 +196,3 @@ class CRMAPIClient {
 
 // Export for use in CRM
 window.CRMAPIClient = CRMAPIClient;
-

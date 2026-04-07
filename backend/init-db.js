@@ -1,18 +1,39 @@
 const fs = require('fs');
+const path = require('path');
 const Database = require('better-sqlite3');
 const bcrypt = require('bcrypt');
-const path = require('path');
+require('dotenv').config();
 
 const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'crm.db');
-const dbDir = path.dirname(DB_PATH);
-try { if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true }); } catch (_) {}
+const ADMIN_USERNAME = (process.env.ADMIN_USERNAME || 'admin').trim();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+
+function ensureDirectoryExists(filePath) {
+    const directory = path.dirname(filePath);
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+    }
+}
+
+function isStrongPassword(value) {
+    return typeof value === 'string'
+        && value.length >= 16
+        && /[a-z]/.test(value)
+        && /[A-Z]/.test(value)
+        && /\d/.test(value)
+        && /[^A-Za-z0-9]/.test(value);
+}
+
+ensureDirectoryExists(DB_PATH);
+
 const db = new Database(DB_PATH);
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+db.pragma('busy_timeout = 5000');
 
-console.log('🔧 Initializing database...\n');
+console.log('Initializing CRM database...');
 
-// Create tables
 db.exec(`
-    -- Users table
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
@@ -20,7 +41,6 @@ db.exec(`
         created_at TEXT NOT NULL
     );
 
-    -- Contacts table
     CREATE TABLE IF NOT EXISTS contacts (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -35,7 +55,6 @@ db.exec(`
         updated_at TEXT NOT NULL
     );
 
-    -- Leads table
     CREATE TABLE IF NOT EXISTS leads (
         id TEXT PRIMARY KEY,
         contactId TEXT,
@@ -51,7 +70,6 @@ db.exec(`
         FOREIGN KEY (contactId) REFERENCES contacts(id)
     );
 
-    -- Projects table
     CREATE TABLE IF NOT EXISTS projects (
         id TEXT PRIMARY KEY,
         leadId TEXT,
@@ -69,7 +87,6 @@ db.exec(`
         FOREIGN KEY (contactId) REFERENCES contacts(id)
     );
 
-    -- Tasks table
     CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -83,7 +100,6 @@ db.exec(`
         updated_at TEXT NOT NULL
     );
 
-    -- Campaigns table
     CREATE TABLE IF NOT EXISTS campaigns (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -97,7 +113,6 @@ db.exec(`
         updated_at TEXT NOT NULL
     );
 
-    -- Form submissions table
     CREATE TABLE IF NOT EXISTS submissions (
         id TEXT PRIMARY KEY,
         formType TEXT NOT NULL,
@@ -106,7 +121,6 @@ db.exec(`
         created_at TEXT NOT NULL
     );
 
-    -- Discount codes table
     CREATE TABLE IF NOT EXISTS discount_codes (
         id TEXT PRIMARY KEY,
         code TEXT UNIQUE NOT NULL,
@@ -119,25 +133,12 @@ db.exec(`
         created_at TEXT NOT NULL
     );
 
-    -- Settings table
     CREATE TABLE IF NOT EXISTS settings (
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL,
         updated_at TEXT NOT NULL
     );
 
-    -- Create indexes
-    CREATE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
-    CREATE INDEX IF NOT EXISTS idx_contacts_phone ON contacts(phone);
-    CREATE INDEX IF NOT EXISTS idx_leads_stage ON leads(stage);
-    CREATE INDEX IF NOT EXISTS idx_leads_contactId ON leads(contactId);
-    CREATE INDEX IF NOT EXISTS idx_tasks_dueDate ON tasks(dueDate);
-    CREATE INDEX IF NOT EXISTS idx_tasks_completed ON tasks(completed);
-`);
-
-// Create visits tracking table and indexes
-db.exec(`
-    -- Visits tracking table
     CREATE TABLE IF NOT EXISTS visits (
         id TEXT PRIMARY KEY,
         visitorId TEXT,
@@ -156,37 +157,34 @@ db.exec(`
         timestamp TEXT NOT NULL
     );
 
+    CREATE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
+    CREATE INDEX IF NOT EXISTS idx_contacts_phone ON contacts(phone);
+    CREATE INDEX IF NOT EXISTS idx_leads_stage ON leads(stage);
+    CREATE INDEX IF NOT EXISTS idx_leads_contactId ON leads(contactId);
+    CREATE INDEX IF NOT EXISTS idx_tasks_dueDate ON tasks(dueDate);
+    CREATE INDEX IF NOT EXISTS idx_tasks_completed ON tasks(completed);
     CREATE INDEX IF NOT EXISTS idx_visits_date ON visits(date);
     CREATE INDEX IF NOT EXISTS idx_visits_source ON visits(utm_source);
     CREATE INDEX IF NOT EXISTS idx_visits_page ON visits(page);
 `);
 
+console.log('Database tables ready.');
 
-console.log('✅ Database tables created\n');
-
-// Create default admin user
-const defaultUsername = 'admin';
-const defaultPassword = 'REDACTED_LEGACY_PASSWORD'; // Same as your CRM password
-
-const existingUser = db.prepare('SELECT * FROM users WHERE username = ?').get(defaultUsername);
+const existingUser = db.prepare('SELECT id FROM users WHERE username = ?').get(ADMIN_USERNAME);
 
 if (!existingUser) {
-    const hashedPassword = bcrypt.hashSync(defaultPassword, 10);
-    db.prepare('INSERT INTO users (username, password, created_at) VALUES (?, ?, ?)').run(
-        defaultUsername,
-        hashedPassword,
-        new Date().toISOString()
-    );
-    console.log('✅ Default admin user created');
-    console.log(`   Username: ${defaultUsername}`);
-    console.log(`   Password: ${defaultPassword}`);
-    console.log('   ⚠️  CHANGE THIS PASSWORD IN PRODUCTION!\n');
+    if (!isStrongPassword(ADMIN_PASSWORD)) {
+        console.warn('No bootstrap admin user was created.');
+        console.warn('Set ADMIN_USERNAME and a strong ADMIN_PASSWORD in backend/.env before first login.');
+    } else {
+        const hashedPassword = bcrypt.hashSync(ADMIN_PASSWORD, 12);
+        db.prepare('INSERT INTO users (username, password, created_at) VALUES (?, ?, ?)')
+            .run(ADMIN_USERNAME, hashedPassword, new Date().toISOString());
+        console.log(`Bootstrap admin user created for "${ADMIN_USERNAME}".`);
+    }
 } else {
-    console.log('ℹ️  Admin user already exists\n');
+    console.log(`Admin user "${ADMIN_USERNAME}" already exists.`);
 }
 
-console.log('✅ Database initialization complete!');
-console.log('📊 Database location:', path.join(__dirname, 'crm.db'));
-
+console.log(`Database location: ${DB_PATH}`);
 db.close();
-

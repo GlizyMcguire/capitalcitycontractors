@@ -61,7 +61,7 @@ Your discount code form now includes **address autocomplete** functionality that
 
 3. **Replace `YOUR_GOOGLE_API_KEY`** with your actual API key:
    ```html
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1234567890abcdefghijklmnop&libraries=places&callback=initAddressAutocomplete" async defer></script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_SERVER_MANAGED_API_KEY&libraries=places&callback=initAddressAutocomplete" async defer></script>
    ```
 
 4. **Save the file**

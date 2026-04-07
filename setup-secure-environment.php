@@ -8,8 +8,8 @@ echo "<h1>🔐 Secure Environment Setup for Windows</h1>\n";
 echo "<p>Setting up secure Google Places API configuration...</p>\n";
 
 // Your API credentials (will be moved to secure location)
-$api_key = 'REDACTED_GOOGLE_API_KEY';
-$secret_key = 'REDACTED_GOOGLE_SECRET';
+$api_key = 'configure-this-locally-only';
+$secret_key = 'configure-this-locally-only';
 
 echo "<div style='background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0;'>\n";
 echo "<h3>API Credentials to Configure:</h3>\n";

@@ -36,9 +36,8 @@ echo ========================================
 echo Setup Complete!
 echo ========================================
 echo.
-echo Default Login:
-echo   Username: admin
-echo   Password: REDACTED_LEGACY_PASSWORD
+echo Admin login is read from backend\.env.
+echo Set ADMIN_USERNAME and ADMIN_PASSWORD before first use.
 echo.
 echo Starting server...
 echo Server will be available at: http://localhost:3000
@@ -47,4 +46,3 @@ echo.
 pause
 
 call npm start
-

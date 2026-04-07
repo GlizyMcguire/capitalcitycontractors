@@ -5,8 +5,8 @@
  */
 
 // Your API keys (for immediate testing)
-$api_key = 'REDACTED_GOOGLE_API_KEY';
-$secret_key = 'REDACTED_GOOGLE_SECRET';
+$api_key = 'configure-this-locally-only';
+$secret_key = 'configure-this-locally-only';
 
 echo "<h1>🔍 Place ID Finder for Capital City Contractors</h1>\n";
 echo "<p>Searching for your verified Google Business Profile Place ID...</p>\n";

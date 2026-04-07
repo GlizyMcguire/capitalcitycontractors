@@ -11,7 +11,7 @@ if (file_exists($secure_config_file)) {
     $api_key = $keys['api_key'] ?? null;
 } else {
     // Fallback for immediate testing
-    $api_key = 'REDACTED_GOOGLE_API_KEY';
+    $api_key = 'configure-this-locally-only';
 }
 
 $place_id = 'ChIJAZyYC-K4a04RRe9kJq7UZKo'; // Your verified Place ID
