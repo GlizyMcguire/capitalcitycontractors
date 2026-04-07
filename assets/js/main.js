@@ -575,7 +575,9 @@ initCounterAnimations();
 
 // Counter Animation Function
 function initCounterAnimations() {
-    const counters = document.querySelectorAll('.stat-number');
+    const counters = Array.from(document.querySelectorAll('.stat-number')).filter(counter =>
+        /\d/.test(counter.textContent)
+    );
 
     const counterObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -595,6 +597,11 @@ function initCounterAnimations() {
 function animateCounter(element) {
     const text = element.textContent;
     const target = parseInt(text.replace(/[^\d]/g, ''));
+
+    if (Number.isNaN(target)) {
+        return;
+    }
+
     const suffix = text.replace(/[\d]/g, '');
     const isPercentage = text.includes('%');
     const hasPlus = text.includes('+');

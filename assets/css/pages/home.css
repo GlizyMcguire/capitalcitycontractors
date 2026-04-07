@@ -19,6 +19,29 @@
     text-align: center;
 }
 
+.hero-copy {
+    max-width: 780px;
+    margin: 0 auto var(--space-8);
+}
+
+.hero-section .hero-badge {
+    background: var(--gray-100);
+    color: var(--text-primary);
+    border-color: var(--gray-200);
+}
+
+.hero-section .hero-title {
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+}
+
+.hero-section .hero-subtitle {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--text-secondary);
+}
+
 .hero-full-logo {
     width: 100%;
     max-width: 800px;
@@ -101,6 +124,47 @@
 
 .homepage-video::-webkit-media-controls-start-playback-button {
     display: none !important;
+}
+
+.project-planning-list {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.planning-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    background: var(--gray-50);
+}
+
+.planning-item i {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--white);
+    flex-shrink: 0;
+}
+
+.planning-item h4 {
+    margin-bottom: var(--space-1);
+    color: var(--text-primary);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+}
+
+.planning-item p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
 }
 
 /* What We Offer Section */
@@ -1772,7 +1836,7 @@
 .hero-title .title-line {
     opacity: 0;
     transform: translateY(50px);
-    animation: slideInUp 0.8s ease-out forwards;
+    animation: fadeInUp 0.8s ease-out forwards;
     will-change: opacity, transform;
 }
 
@@ -2916,7 +2980,7 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #667eea, #764ba2, #4facfe, #43e97b);
+    background: linear-gradient(90deg, var(--secondary-color), var(--secondary-light), var(--primary-color));
     background-size: 300% 100%;
     animation: gradientShift 3s ease infinite;
     border-radius: 12px 12px 0 0;
@@ -2940,7 +3004,7 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--gray-700) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
