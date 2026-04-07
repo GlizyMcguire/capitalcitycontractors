@@ -28,6 +28,10 @@ class VisitorTracker {
     }
 
     init() {
+        if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+            return;
+        }
+
         // Don't track if it's a bot
         if (this.isBot()) {
             console.log('🤖 Bot detected - skipping visitor tracking');
@@ -224,6 +228,10 @@ class VisitorTracker {
 
         // Send to backend (best-effort, non-blocking)
         try {
+            if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+                return;
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const utm_source = urlParams.get('utm_source') || (urlParams.get('fbclid') ? 'facebook' : null) || (document.referrer.includes('facebook') ? 'facebook' : (document.referrer.includes('google') ? 'google' : null));
             const utm_medium = urlParams.get('utm_medium') || null;
@@ -308,13 +316,18 @@ class VisitorTracker {
         const data = localStorage.getItem(this.storageKey);
         if (data) {
             const analytics = JSON.parse(data);
+            const normalizeCollection = (value) => {
+                if (Array.isArray(value)) return value;
+                if (value && typeof value === 'object') return Object.values(value);
+                return [];
+            };
 
             // Convert arrays back to Sets for dailyStats
             if (analytics.dailyStats) {
                 analytics.dailyStats = analytics.dailyStats.map(stat => ({
                     ...stat,
-                    uniqueVisitors: new Set(stat.uniqueVisitors || []),
-                    sessions: new Set(stat.sessions || [])
+                    uniqueVisitors: new Set(normalizeCollection(stat.uniqueVisitors)),
+                    sessions: new Set(normalizeCollection(stat.sessions))
                 }));
             }
 
@@ -452,4 +465,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Pass true to enable tracking on page load
     new VisitorTracker(true);
 });
-

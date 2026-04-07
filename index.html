@@ -7,7 +7,7 @@
     <meta name="facebook-domain-verification" content="j2r5ave0rjbzmpmpjqqbymb8298ov0" />
 
     <!-- Security: Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://connect.facebook.net https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://www.facebook.com; connect-src 'self' https://maps.googleapis.com https://api.emailjs.com https://www.facebook.com https://connect.facebook.net https://capitalcity-crm-backend.onrender.com https://www.googletagmanager.com https://www.google-analytics.com https://stats.g.doubleclick.net https://www.googleadservices.com https://region1.google-analytics.com; frame-src 'self' https://www.facebook.com https://connect.facebook.net; form-action 'self' https://api.emailjs.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://maps.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://connect.facebook.net https://www.googletagmanager.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: https://www.facebook.com; connect-src 'self' https://maps.googleapis.com https://api.emailjs.com https://www.facebook.com https://connect.facebook.net https://capitalcity-crm-backend.onrender.com https://www.googletagmanager.com https://www.google-analytics.com https://stats.g.doubleclick.net https://www.googleadservices.com https://region1.google-analytics.com https://www.google.com https://www.google.ca https://googleads.g.doubleclick.net; frame-src 'self' https://www.facebook.com https://connect.facebook.net; form-action 'self' https://api.emailjs.com;">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- Force light color scheme in in-app browsers -->
@@ -21,12 +21,6 @@
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
     <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
     <link rel="canonical" href="https://capitalcitycontractors.ca/">
-
-    <!-- Performance Optimization - Preload Critical Resources -->
-    <link rel="preload" href="assets/css/layout.css" as="style">
-    <link rel="preload" href="assets/css/components.css" as="style">
-    <link rel="preload" href="assets/fonts/inter-v12-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="assets/fonts/inter-v12-latin-700.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- DNS Prefetch for External Resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -81,10 +75,7 @@
 
     <!-- Critical Resource Preloads - Optimized -->
     <link rel="preload" href="assets/images/CCC logo.jpg" as="image" type="image/jpeg" fetchpriority="high">
-    <link rel="preload" href="assets/css/variables.css" as="style" fetchpriority="high">
-    <link rel="preload" href="assets/css/base.css" as="style" fetchpriority="high">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" as="style">
-    <link rel="preload" href="assets/js/main.js" as="script">
+    <link rel="preload" href="assets/js/main.js?v=20260407-3" as="script">
 
     <!-- DNS Prefetch for External Resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -120,9 +111,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Capital City Contractors">
 
-    <!-- Additional Performance Optimizations -->
-    <link rel="preload" href="assets/images/aboutus.png" as="image">
-
     <!-- Preload key slideshow images (optimized) for instant performance -->
     <link rel="preload" href="assets/images/optimized/pic1-1280.jpg" as="image" imagesrcset="assets/images/optimized/pic1-768.jpg 768w, assets/images/optimized/pic1-1280.jpg 1280w, assets/images/optimized/pic1-1920.jpg 1920w" imagesizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px">
     <link rel="preload" href="assets/images/optimized/pic2-1280.jpg" as="image" imagesrcset="assets/images/optimized/pic2-768.jpg 768w, assets/images/optimized/pic2-1280.jpg 1280w, assets/images/optimized/pic2-1920.jpg 1920w" imagesizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px">
@@ -138,7 +126,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- EmailJS for form submission (loaded once) -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
     <script>
         // Initialize EmailJS globally once
         (function() {
@@ -212,7 +200,7 @@
           "mainEntity": [
             {"@type": "Question", "name": "What services does Capital City Contractors provide?", "acceptedAnswer": {"@type": "Answer", "text": "Capital City Contractors provides painting, drywall repair and installation, taping and mudding, flooring work, and renovation support for residential and commercial projects in Ottawa."}},
             {"@type": "Question", "name": "Which areas do you serve?", "acceptedAnswer": {"@type": "Answer", "text": "We work across Ottawa and nearby communities including Kanata, Nepean, Stittsville, Orleans, and Richmond."}},
-            {"@type": "Question", "name": "How do I request an estimate?", "acceptedAnswer": {"@type": "Answer", "text": "Call (613) 301-1311 or use the contact form to share the scope of work, project location, timing, and any photos that help explain the job."}}
+            {"@type": "Question", "name": "How do I request an estimate?", "acceptedAnswer": {"@type": "Answer", "text": "Call (613) 301-1311 or use the contact form to share the room, issue, or scope of work and the best way to reach you. Photos are optional."}}
           ]
         }
       ]
@@ -220,12 +208,12 @@
     </script>
 
     <!-- DEFINITIVE Google Reviews Live API Integration -->
-    <script src="assets/js/google-reviews-live.js"></script>
+    <script src="assets/js/google-reviews-live.js?v=20260407" defer></script>
 
     <!-- EmailJS Form Integration -->
     <link rel="stylesheet" href="assets/css/emailjs-form-styles.css">
     <!-- EmailJS library already loaded in head section -->
-    <script src="assets/js/emailjs-integration.js"></script>
+    <script src="assets/js/emailjs-integration.js?v=20260407-3" defer></script>
 
     <!-- Critical Stylesheets - Load Immediately -->
     <link rel="stylesheet" href="assets/css/reset.css?v=20250829-PERF">
@@ -235,13 +223,13 @@
     <!-- Non-Critical Stylesheets - Load with Media Query Trick -->
     <link rel="stylesheet" href="assets/css/components.css?v=20250829-PERF" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="assets/css/layout.css?v=20250829-PERF" media="print" onload="this.media='all'">
-    <link rel="stylesheet" href="assets/css/pages/home.css?v=20250829-PERF" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="assets/css/pages/home.css?v=20260407-4" media="print" onload="this.media='all'">
 
     <!-- Fallback for browsers without JavaScript -->
     <noscript>
         <link rel="stylesheet" href="assets/css/components.css?v=20250829-PERF">
         <link rel="stylesheet" href="assets/css/layout.css?v=20250829-PERF">
-        <link rel="stylesheet" href="assets/css/pages/home.css?v=20250829-PERF">
+        <link rel="stylesheet" href="assets/css/pages/home.css?v=20260407">
     </noscript>
 
 
@@ -309,6 +297,13 @@
             bottom: 16px;
             right: 16px;
             z-index: 1000;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .sticky-chat-btn.is-hidden {
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
         }
 
         .sticky-chat-link {
@@ -437,6 +432,29 @@
             if (chatBtn && !chatBtn.contains(event.target)) {
                 popup.style.display = 'none';
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBtn = document.querySelector('.sticky-chat-btn');
+            const popup = document.getElementById('chatOptions');
+            const contactSection = document.getElementById('contact');
+
+            if (!chatBtn || !popup || !contactSection || !('IntersectionObserver' in window)) {
+                return;
+            }
+
+            const observer = new IntersectionObserver(function(entries) {
+                const contactVisible = entries.some(entry => entry.isIntersecting);
+                chatBtn.classList.toggle('is-hidden', contactVisible);
+
+                if (contactVisible) {
+                    popup.style.display = 'none';
+                }
+            }, {
+                threshold: 0.2
+            });
+
+            observer.observe(contactSection);
         });
     </script>
 
@@ -1281,23 +1299,38 @@
             <div class="hero-copy">
                 <div class="hero-badge">
                     <i class="fas fa-house"></i>
-                    <span>Ottawa painting, drywall, flooring, and renovation work</span>
+                    <span>Ottawa painting, drywall, flooring, and renovation</span>
                 </div>
                 <h1 class="hero-title">
-                    <span class="title-line">Clear estimates.</span>
-                    <span class="title-line">Careful prep.</span>
-                    <span class="title-line highlight">Clean finishes.</span>
+                    <span class="title-line">Painting, drywall, flooring,</span>
+                    <span class="title-line">and renovation work</span>
+                    <span class="title-line highlight">across Ottawa.</span>
                 </h1>
-                <p class="hero-subtitle">Capital City Contractors helps homeowners, property managers, and businesses across Ottawa with painting, drywall repair, taping, flooring, and renovation work.</p>
+                <p class="hero-subtitle">Capital City Contractors works on homes, rental properties, and commercial interiors that need clean work, straightforward communication, and a finish that looks properly handled.</p>
             </div>
 
-            <img src="assets/images/CCC logo.jpg" alt="Capital City Contractors - Painting, drywall, flooring, and renovation services in Ottawa" class="hero-full-logo" width="800" height="400">
+            <div class="hero-visual-panel" aria-label="Recent on-site work">
+                <div class="hero-video-shell">
+                    <video class="homepage-video hero-video"
+                           autoplay
+                           muted
+                           loop
+                           playsinline
+                           disablepictureinpicture
+                           disableremoteplayback
+                           controlslist="nodownload nofullscreen noremoteplayback">
+                        <source src="assets/images/homepage-logo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="hero-visual-caption">Recent on-site work around Ottawa</div>
+            </div>
 
             <div class="urgency-banner">
                 <div class="urgency-content">
                     <i class="fas fa-location-dot"></i>
                     <span class="urgency-text">Serving Ottawa, Kanata, Nepean, Stittsville, Orleans, Richmond, and nearby communities</span>
-                    <span class="urgency-subtext">Free estimates by phone or online request</span>
+                    <span class="urgency-subtext">Free written estimates and phone consultations</span>
                 </div>
             </div>
 
@@ -1318,41 +1351,32 @@
             </div>
 
             <div class="hero-trust-indicators">
-                <div class="trust-indicator"><i class="fas fa-building"></i><span>Residential & commercial</span></div>
-                <div class="trust-indicator"><i class="fas fa-list-check"></i><span>Detailed written estimates</span></div>
-                <div class="trust-indicator"><i class="fas fa-broom"></i><span>Careful prep & cleanup</span></div>
+                <div class="trust-indicator"><i class="fas fa-building"></i><span>Homes, rentals, and commercial interiors</span></div>
+                <div class="trust-indicator"><i class="fas fa-list-check"></i><span>Free written estimates</span></div>
+                <div class="trust-indicator"><i class="fas fa-screwdriver-wrench"></i><span>Painting, drywall, flooring, and room updates</span></div>
             </div>
         </div>
     </section>
-    <!-- Field Showcase Section -->
-    <section class="field-showcase-section">
+    <!-- Project Fit Section -->
+    <section class="project-fit-section">
         <div class="container">
-            <div class="field-showcase-grid">
-                <div class="field-showcase-copy">
-                    <p class="field-showcase-eyebrow">On site</p>
-                    <h2 class="field-showcase-title">The prep should look organized before the finish shows up.</h2>
-                    <p class="field-showcase-description">Painting, drywall, flooring, and renovation work around Ottawa usually comes down to scope, access, repairs, masking, and sequence. That part should feel settled before the visible finish work starts.</p>
-                    <div class="field-showcase-points">
-                        <div class="field-point"><i class="fas fa-house-user"></i><span>Homes, rentals, and active commercial spaces</span></div>
-                        <div class="field-point"><i class="fas fa-sheet-plastic"></i><span>Protection, patching, sanding, and cleanup</span></div>
-                        <div class="field-point"><i class="fas fa-calendar-check"></i><span>Practical scheduling and access coordination</span></div>
-                    </div>
-                </div>
-                <div class="field-showcase-media">
-                    <div class="video-container">
-                        <video class="homepage-video"
-                               autoplay
-                               muted
-                               loop
-                               playsinline
-                               disablepictureinpicture
-                               disableremoteplayback
-                               controlslist="nodownload nofullscreen noremoteplaybook">
-                            <source src="assets/images/homepage-logo.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
+            <div class="section-header">
+                <h2 class="section-title">What We Usually Get Called For</h2>
+                <p class="section-subtitle">Most jobs start with one area in mind, then turn into a wider scope once the room, unit, or property is actually reviewed.</p>
+            </div>
+            <div class="project-fit-grid">
+                <article class="project-fit-card">
+                    <h3 class="project-fit-title">Interior painting and repainting</h3>
+                    <p class="project-fit-text">Walls, ceilings, trim, stairwells, common areas, rentals, and homes that need a clean refresh.</p>
+                </article>
+                <article class="project-fit-card">
+                    <h3 class="project-fit-title">Drywall repair and finishing</h3>
+                    <p class="project-fit-text">Damage, patching, new board, corner repair, taping, mudding, and prep before paint goes on.</p>
+                </article>
+                <article class="project-fit-card">
+                    <h3 class="project-fit-title">Flooring and connected room updates</h3>
+                    <p class="project-fit-text">Projects that combine painting, drywall, flooring, and finish work under one clear scope instead of four separate calls.</p>
+                </article>
             </div>
         </div>
     </section>
@@ -1360,8 +1384,8 @@
     <section class="services-section" id="services" role="main">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Core Work</h2>
-                <p class="section-subtitle">Most projects come back to the same fundamentals: surface condition, site protection, clean finishing, and a scope that matches the estimate.</p>
+                <h2 class="section-title">Services</h2>
+                <p class="section-subtitle">Painting, drywall, taping, flooring, and renovation work for homes, rentals, and commercial interiors across Ottawa.</p>
             </div>
 
 
@@ -1475,7 +1499,7 @@
             <div class="additional-services">
                 <h3>Additional Services</h3>
                 <p>
-                    Some projects also include <strong>basement work</strong>, <strong>bathroom updates</strong>, or broader <strong>home renovation</strong> scope. If the work crosses multiple rooms or trades, include that in the estimate request so the first conversation starts in the right place.
+                    Some projects also include <strong>basement work</strong>, <strong>bathroom updates</strong>, or broader <strong>room renovation</strong> scope. If the work crosses rooms or trades, mention that in the estimate request and we will sort out the right next step from there.
                 </p>
                 <div class="btn-group">
                     <a href="tel:+16133011311" class="btn btn-primary">
@@ -1588,53 +1612,33 @@
         </div>
     </section>
 
-    <!-- Process Section -->
-    <section class="about-section" id="process">
+    <!-- Expertise Section -->
+    <section class="about-section expertise-section" id="process">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">How Projects Move</h2>
-                <p class="section-subtitle">The work should feel organized from the first walkthrough to the final touch-up.</p>
+                <h2 class="section-title">What The Work Needs To Deliver</h2>
+                <p class="section-subtitle">Most clients are not looking for a long speech about process. They need the scope understood, the job handled cleanly, and the finished room to look right.</p>
             </div>
-            <div class="story-content process-content">
-                <div class="story-text">
-                    <h3 class="story-title">You should not need a project brief to ask for a quote.</h3>
-                    <p class="story-description">Most estimate requests start with the area involved, the kind of work, and roughly when you want it done. If photos help, great. If not, that can be sorted out after the first reply.</p>
-                    <p class="story-description">From there, the work usually moves through a quick review, proper prep, active work, and final touch-ups. The goal is simple: the job should feel organized without turning the estimate into homework.</p>
-                </div>
-                <div class="story-image">
-                    <picture>
-                        <source type="image/webp" srcset="assets/images/optimized/aboutus-768.webp 768w, assets/images/optimized/aboutus-1280.webp 1280w, assets/images/optimized/aboutus-1920.webp 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px">
-                        <img src="assets/images/optimized/aboutus-1280.jpg" srcset="assets/images/optimized/aboutus-768.jpg 768w, assets/images/optimized/aboutus-1280.jpg 1280w, assets/images/optimized/aboutus-1920.jpg 1920w" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 900px, 1000px" alt="Capital City Contractors team providing professional contracting services" class="story-img" decoding="sync" loading="eager" width="1000" height="667">
-                    </picture>
-                </div>
-            </div>
-            <div class="process-grid" aria-label="Project steps">
-                <article class="process-card">
-                    <div class="process-step">01</div>
-                    <h3 class="process-card-title">First look</h3>
-                    <p class="process-card-text">We confirm the rooms or areas involved, current condition, and the best next step for pricing or a site visit.</p>
+            <div class="expertise-grid">
+                <article class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-layer-group"></i></div>
+                    <h3 class="expertise-title">Scope that makes sense</h3>
+                    <p class="expertise-text">Painting, drywall, flooring, and smaller updates often overlap. It helps when one company can quote the job as it actually sits instead of forcing it into separate pieces.</p>
                 </article>
-                <article class="process-card">
-                    <div class="process-step">02</div>
-                    <h3 class="process-card-title">Prep before finish</h3>
-                    <p class="process-card-text">Protection, patching, sanding, surface prep, and staging get handled before the visible finish work starts.</p>
+                <article class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-house-user"></i></div>
+                    <h3 class="expertise-title">Work handled cleanly</h3>
+                    <p class="expertise-text">Occupied homes, rental turnovers, common areas, and active interiors need orderly staging, clean protection, and communication that does not disappear mid-job.</p>
                 </article>
-                <article class="process-card">
-                    <div class="process-step">03</div>
-                    <h3 class="process-card-title">Closeout</h3>
-                    <p class="process-card-text">Cleanup, touch-ups, and a final walkthrough close the job out so nothing feels rushed at the end.</p>
+                <article class="expertise-card">
+                    <div class="expertise-icon"><i class="fas fa-file-signature"></i></div>
+                    <h3 class="expertise-title">A finish that looks complete</h3>
+                    <p class="expertise-text">The repaired wall, fresh paint, flooring, and trim detail all need to read as one finished result, not a handful of separate fixes.</p>
                 </article>
             </div>
-            <div class="process-footer">
-                <div class="process-footer-copy">
-                    <h3 class="process-footer-title">Enough to get started</h3>
-                    <p class="process-footer-text">A short note, your contact info, and the kind of work are enough to get the conversation moving. If the job needs a site visit or more detail, that gets sorted out after the first reply.</p>
-                </div>
-                <div class="process-footer-pills" aria-label="What to expect first">
-                    <span class="process-pill">Short first message</span>
-                    <span class="process-pill">Photos optional</span>
-                    <span class="process-pill">Site visit if needed</span>
-                </div>
+            <div class="expertise-summary">
+                <strong>Recent work and recent reviews tell you more than a long list of promises.</strong>
+                <p>That is the real read on the company: what gets handled, what the finished spaces look like, and what clients say once the job is done.</p>
             </div>
         </div>
     </section>
@@ -1643,7 +1647,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">Client Feedback</h2>
-                <p class="section-subtitle">Feedback shared by recent clients.</p>
+                <p class="section-subtitle">Recent Google reviews from clients who hired Capital City Contractors for painting, renovation, and interior work.</p>
                 <div class="google-rating">
                     <div class="rating-stars">
                         <i class="fas fa-star"></i>
@@ -1721,34 +1725,45 @@
     <section class="contact-cta" id="contact" role="complementary">
         <div class="container">
             <div class="cta-content">
-                <div class="cta-urgency-header">
-                    <div class="urgency-badge"><i class="fas fa-calculator"></i><span>Free estimate</span></div>
-                    <h2 class="cta-title">Request An Estimate</h2>
-                    <p class="cta-subtitle">Keep the first message simple. Your contact info, the kind of work, and a short description are enough to get started.</p>
-                    <div class="cta-benefits">
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Short form</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Photos are optional</span></div>
-                        <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Phone call works too</span></div>
+                <div class="estimate-overview">
+                    <div class="cta-urgency-header">
+                        <div class="urgency-badge"><i class="fas fa-calculator"></i><span>Free estimate</span></div>
+                        <h2 class="cta-title">Get A Quote For The Work</h2>
+                        <p class="cta-subtitle">Start with the room, the issue, or the update you want handled. One phone number or email is enough for the first reply.</p>
                     </div>
-                    <div class="cta-quick-note">
-                        <h3 class="cta-note-title">What helps most</h3>
-                        <p class="cta-note-text">The area involved, the type of work, and roughly when you want to start. If there is anything unusual about access or timing, you can add it, but it is not required for the first reply.</p>
+                    <div class="estimate-contact-strip" aria-label="Direct contact options">
+                        <a class="estimate-contact-card" href="tel:+16133011311">
+                            <span class="estimate-contact-label">Call</span>
+                            <strong>(613) 301-1311</strong>
+                            <span class="estimate-contact-copy">Best if the scope is easier to explain out loud.</span>
+                        </a>
+                        <a class="estimate-contact-card" href="mailto:info@capitalcitycontractors.ca">
+                            <span class="estimate-contact-label">Email</span>
+                            <strong>info@capitalcitycontractors.ca</strong>
+                            <span class="estimate-contact-copy">Useful if you want to send a short summary first.</span>
+                        </a>
                     </div>
                 </div>
                 <div class="quote-form-container">
+                    <div class="quote-form-header">
+                        <h3 class="quote-form-title">Project details</h3>
+                        <p class="quote-form-subtitle">If you do not know the exact service name yet, describe the room or problem and we will sort it out from there.</p>
+                    </div>
                     <form class="quote-form" id="quoteForm" name="quote-request" enctype="multipart/form-data" novalidate>
                         <p class="bot-field"><label>Don't fill this out if you're human: <input name="bot-field" /></label></p>
                         <div class="form-row">
                             <div class="form-group"><label for="contact-name" class="visually-hidden">Full Name</label><input type="text" id="contact-name" name="name" placeholder="Your Name *" required aria-required="true"></div>
-                            <div class="form-group"><label for="contact-phone" class="visually-hidden">Phone Number</label><input type="tel" id="contact-phone" name="phone" placeholder="Phone Number *" required aria-required="true"></div>
+                            <div class="form-group"><label for="contact-phone" class="visually-hidden">Phone Number</label><input type="tel" id="contact-phone" name="phone" placeholder="Phone Number"></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="contact-email" class="visually-hidden">Email Address</label><input type="email" id="contact-email" name="email" placeholder="Email Address *" required aria-required="true"></div>
-                            <div class="form-group"><label for="contact-service" class="visually-hidden">Service Type</label><select id="contact-service" name="service" aria-label="Select service type" required aria-required="true"><option value="">What project are you planning? *</option><option value="interior-painting">Interior Painting</option><option value="exterior-painting">Exterior Painting</option><option value="drywall">Drywall Installation/Repair</option><option value="kitchen-renovation">Kitchen Renovation</option><option value="basement-renovation">Basement Renovation</option><option value="bathroom-renovation">Bathroom Renovation</option><option value="multiple">Multiple Projects</option><option value="not-sure">Not Sure Yet</option></select></div>
+                            <div class="form-group"><label for="contact-email" class="visually-hidden">Email Address</label><input type="email" id="contact-email" name="email" placeholder="Email Address"></div>
+                            <div class="form-group"><label for="contact-service" class="visually-hidden">Service Type</label><select id="contact-service" name="service" aria-label="Select service type"><option value="">Service type (optional)</option><option value="interior-painting">Interior Painting</option><option value="exterior-painting">Exterior Painting</option><option value="drywall">Drywall Installation/Repair</option><option value="kitchen-renovation">Kitchen Renovation</option><option value="basement-renovation">Basement Renovation</option><option value="bathroom-renovation">Bathroom Renovation</option><option value="multiple">Multiple Projects</option><option value="not-sure">Not Sure Yet</option></select></div>
                         </div>
-                        <div class="form-group"><label for="contact-message" class="visually-hidden">Project Description</label><textarea id="contact-message" name="message" placeholder="What are you looking to get done? *" rows="4" required aria-required="true"></textarea></div>
-                        <div class="form-group"><div class="file-upload-container"><label for="photos" class="file-upload-label"><i class="fas fa-camera"></i><span class="file-upload-text">Add Photos If Useful</span><span class="file-upload-info">Optional. JPG or PNG, max 5MB each.</span></label><input type="file" id="photos" name="photos" accept="image/*" multiple class="file-upload-input"><div class="file-upload-preview" id="filePreview"></div></div></div>
-                        <div class="form-actions"><button type="submit" class="btn btn-primary btn-large">Send Estimate Request</button><a href="tel:+16133011311" class="btn btn-secondary btn-large">Call (613) 301-1311</a></div>
+                        <p class="quote-contact-note">Phone or email is enough. Leave the other blank if you prefer.</p>
+                        <div class="form-group"><label for="contact-message" class="visually-hidden">Project Description</label><textarea id="contact-message" name="message" placeholder="What needs to be done? *" rows="4" required aria-required="true"></textarea></div>
+                        <div class="form-group"><div class="file-upload-container"><label for="photos" class="file-upload-label"><i class="fas fa-camera"></i><span class="file-upload-text">Add photos (optional)</span><span class="file-upload-info">Helpful for walls, ceilings, floors, or room condition. JPG or PNG, max 5MB each.</span></label><input type="file" id="photos" name="photos" accept="image/*" multiple class="file-upload-input"><div class="file-upload-preview" id="filePreview"></div></div></div>
+                        <div class="form-actions"><button type="submit" class="btn btn-primary btn-large">Request Estimate</button></div>
+                        <p class="form-secondary-contact">Prefer to call instead? <a href="tel:+16133011311">(613) 301-1311</a></p>
                     </form>
                 </div>
             </div>
@@ -2048,7 +2063,7 @@
     <script src="assets/js/performance-monitor.js" defer></script>
 
     <!-- Main JavaScript - Loaded at end for performance -->
-    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/main.js?v=20260407-3" defer></script>
     <script src="assets/js/scroll-animations.js" defer></script>
     <script src="assets/js/image-enhancements.js" defer></script>
 
@@ -2059,7 +2074,7 @@
 
     <!-- Visitor Tracking System (Bot-filtered) -->
 
-    <script src="assets/js/visitor-tracking.js?v=20250112" defer></script>
+    <script src="assets/js/visitor-tracking.js?v=20260407" defer></script>
 
     <!-- SEO EXPERT: 2025-08-24 23:45 - COMPREHENSIVE LOCAL SEO OPTIMIZATION -->
 </body>

@@ -26,18 +26,23 @@ class GoogleReviewsLive {
     }
     
     async init() {
+        // Clear any existing hardcoded content first
+        this.clearHardcodedContent();
+
+        // Without a managed API key, go straight to verified fallback reviews.
+        if (!this.config.apiKey) {
+            this.loadVerifiedReviews();
+            return;
+        }
+
         try {
             console.log('📡 STARTING: Live Google Reviews API fetch...');
-
-            // Clear any existing hardcoded content first
-            this.clearHardcodedContent();
 
             // Show loading state
             this.showLoadingState();
 
             await this.fetchLiveReviews();
         } catch (error) {
-            console.error('❌ CRITICAL ERROR: Google Reviews API integration failed:', error);
             this.handleAPIFailure(error);
         }
     }
@@ -89,10 +94,6 @@ class GoogleReviewsLive {
         this.isLoading = true;
         console.log('🔄 ATTEMPTING: Multiple API methods for live reviews...');
         
-        if (!this.config.apiKey) {
-            throw new Error('Google Places API key not configured for client-side use');
-        }
-
         const methods = [
             () => this.tryDirectAPI(),
             () => this.tryJSONPMethod(),
@@ -444,10 +445,6 @@ class GoogleReviewsLive {
     }
     
     handleAPIFailure(error) {
-        console.error('🚨 CRITICAL: All Google Reviews API methods failed');
-        console.error('📋 Error details:', error.message);
-        console.log('🔄 IMPLEMENTING: Verified Google Business reviews as backup...');
-        
         // Load verified reviews as last resort
         this.loadVerifiedReviews();
     }

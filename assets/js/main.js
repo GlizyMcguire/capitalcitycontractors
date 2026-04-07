@@ -770,6 +770,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Initialize EmailJS
 function initializeEmailJS() {
+    if (window.emailJSIntegration) {
+        return;
+    }
+
     // Initialize EmailJS with your public key
     emailjs.init("3WPfc4g2tSskRQYAX");
 }
